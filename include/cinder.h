@@ -4,8 +4,9 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <limits.h>
+#include <stdint.h>
 
-typedef struct s_cinder_ctx CinderCtx;
+typedef struct CinderCtx CinderCtx;
 
 typedef enum
 {
@@ -62,7 +63,6 @@ typedef struct CinderWindowDesc
 #define CINDER_WINDOW_POS_CENTERED INT_MIN
 
 CinderStatus CinderCreateWindow(const CinderWindowDesc *winDesc);
-void CinderDestroyWindow(void);
 
 // ======================================= CORE LOOP ================================================
 

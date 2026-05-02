@@ -82,6 +82,9 @@ CinderStatus CinderInit(CinderSubsystem flags)
     return CINDER_STATUS_OK;
 }
 
+// Forward declare destruction functions
+void CinderDestroyWindow(void);
+
 void CinderQuit(void)
 {
     CinderDestroyWindow();

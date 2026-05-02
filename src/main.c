@@ -1,6 +1,18 @@
-#include <stdio.h>
+#include "cinder.h"
 
-int main(void) {
-    printf("cinder\n");
-    return 0;
+#include <stddef.h>
+
+int main(void)
+{
+    CinderInit(CINDER_SUBSYSTEM_VIDEO);
+    CinderCreateWindow(NULL);
+
+    while (CinderIsRunning())
+    {
+        CinderBeginFrame();
+        CinderClearBackground(CINDER_RED);
+        CinderEndFrame();
+    }
+
+    CinderQuit();
 }
