@@ -237,6 +237,9 @@ void CinderTimerSetRepeat(CinderTimer *t, bool repeat);
 
 float CinderGetDeltaTime(void);
 
+void CinderSetTargetFPS(int fps);
+float CinderGetFPS(void);
+
 // ======================================= COLOR ================================================
 
 typedef struct CinderColor

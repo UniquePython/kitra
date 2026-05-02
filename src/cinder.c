@@ -37,10 +37,6 @@ typedef struct CinderCtx
     uint64_t lastCounter;
     uint64_t perfFrequency;
     float deltaTime;
-
-    // ------ Delta time (extended) ------
-
-    float smoothedDeltaTime;
     int targetFPS;
     float fps;
 
@@ -431,8 +427,6 @@ void CinderBeginFrame(void)
             gCinderCtx.fps = alpha * instantFPS + (1.0f - alpha) * gCinderCtx.fps;
     }
 
-    gCinderCtx.smoothedDeltaTime = (gCinderCtx.fps > 0.0f) ? (1.0f / gCinderCtx.fps) : gCinderCtx.deltaTime;
-
     // ---------------- Reset per-frame input ----------------
 
     memset(gCinderCtx.keysPressed, false, sizeof(gCinderCtx.keysPressed));
@@ -644,6 +638,16 @@ void CinderTimerSetRepeat(CinderTimer *t, bool repeat)
 float CinderGetDeltaTime(void)
 {
     return gCinderCtx.deltaTime;
+}
+
+void CinderSetTargetFPS(int fps)
+{
+    gCinderCtx.targetFPS = fps;
+}
+
+float CinderGetFPS(void)
+{
+    return gCinderCtx.fps;
 }
 
 // ======================================= COLOR ================================================
