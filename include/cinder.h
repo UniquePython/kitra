@@ -223,6 +223,21 @@ extern const CinderColor CINDER_CYAN;
 
 void CinderClearBackground(CinderColor color);
 
+// --------------------------------------- LINE ---------------------------------------
+
+void CinderDrawLine(int x1, int y1, int x2, int y2, CinderColor color);
+
+// --------------------------------------- CIRCLE ---------------------------------------
+
+void CinderDrawCircle(int x, int y, int radius, CinderColor color);
+void CinderDrawCircleOutline(int x, int y, int radius, CinderColor color);
+
+// --------------------------------------- TRIANGLE ---------------------------------------
+
+void CinderDrawTriangle(int x1, int y1, int x2, int y2, int x3, int y3, CinderColor color);
+
+void CinderDrawTriangleOutline(int x1, int y1, int x2, int y2, int x3, int y3, CinderColor color);
+
 // --------------------------------------- RECTANGLE ---------------------------------------
 
 typedef struct CinderRect
@@ -233,6 +248,9 @@ typedef struct CinderRect
 
 void CinderDrawRect(CinderRect rect, CinderColor color);
 void CinderDrawRectOutline(CinderRect rect, CinderColor color);
+
+void CinderDrawRoundedRect(CinderRect rect, int radius, CinderColor color);
+void CinderDrawRoundedRectOutline(CinderRect rect, int radius, CinderColor color);
 
 // ======================================= TEXTURE ================================================
 

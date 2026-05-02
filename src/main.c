@@ -8,36 +8,36 @@ int main(void)
     if (CinderCreateWindow(NULL) != CINDER_STATUS_OK)
         return -1;
 
-    CinderRect player = {100, 100, 50, 50};
-
-    const float speed = 300.0f; // pixels per second
-
-    float x = 100.0f;
-    float y = 100.0f;
-
     while (CinderIsRunning())
     {
         CinderBeginFrame();
 
-        float dt = CinderGetDeltaTime();
-
-        if (CinderIsKeyDown(CINDER_KEY_W))
-            y -= speed * dt;
-
-        if (CinderIsKeyDown(CINDER_KEY_S))
-            y += speed * dt;
-
-        if (CinderIsKeyDown(CINDER_KEY_A))
-            x -= speed * dt;
-
-        if (CinderIsKeyDown(CINDER_KEY_D))
-            x += speed * dt;
-
-        player.x = (int)x;
-        player.y = (int)y;
-
         CinderClearBackground(CINDER_BLACK);
-        CinderDrawRect(player, CINDER_WHITE);
+
+        // ---------------- LINE ----------------
+        CinderDrawLine(50, 50, 250, 50, CINDER_WHITE);
+
+        // ---------------- CIRCLE ----------------
+        CinderDrawCircle(150, 150, 40, CINDER_RED);
+        CinderDrawCircleOutline(300, 150, 40, CINDER_WHITE);
+
+        // ---------------- TRIANGLE ----------------
+        CinderDrawTriangle(50, 250, 150, 200, 250, 250, CINDER_GREEN);
+        CinderDrawTriangleOutline(300, 250, 400, 200, 500, 250, CINDER_WHITE);
+
+        // ---------------- RECTANGLE ----------------
+        CinderRect rect1 = {50, 300, 100, 60};
+        CinderRect rect2 = {200, 300, 100, 60};
+
+        CinderDrawRect(rect1, CINDER_BLUE);
+        CinderDrawRectOutline(rect2, CINDER_WHITE);
+
+        // ---------------- ROUNDED RECTANGLE ----------------
+        CinderRect rect3 = {350, 300, 120, 60};
+        CinderRect rect4 = {500, 300, 120, 60};
+
+        CinderDrawRoundedRect(rect3, 15, CINDER_YELLOW);
+        CinderDrawRoundedRectOutline(rect4, 15, CINDER_WHITE);
 
         CinderEndFrame();
     }

@@ -2,6 +2,7 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL2_gfxPrimitives.h>
 
 #include <string.h>
 
@@ -463,6 +464,54 @@ void CinderClearBackground(CinderColor color)
     SDL_RenderClear(gCinderCtx.renderer);
 }
 
+#define CINDER_COLOR_UNPACK(c) (c).r, (c).g, (c).b, (c).a
+
+// --------------------------------------- LINE ---------------------------------------
+
+void CinderDrawLine(int x1, int y1, int x2, int y2, CinderColor color)
+{
+    if (!gCinderCtx.renderer)
+        return;
+
+    lineRGBA(gCinderCtx.renderer, x1, y1, x2, y2, CINDER_COLOR_UNPACK(color));
+}
+
+// --------------------------------------- CIRCLE ---------------------------------------
+
+void CinderDrawCircle(int x, int y, int radius, CinderColor color)
+{
+    if (!gCinderCtx.renderer)
+        return;
+
+    filledCircleRGBA(gCinderCtx.renderer, x, y, radius, CINDER_COLOR_UNPACK(color));
+}
+
+void CinderDrawCircleOutline(int x, int y, int radius, CinderColor color)
+{
+    if (!gCinderCtx.renderer)
+        return;
+
+    circleRGBA(gCinderCtx.renderer, x, y, radius, CINDER_COLOR_UNPACK(color));
+}
+
+// --------------------------------------- TRIANGLE ---------------------------------------
+
+void CinderDrawTriangle(int x1, int y1, int x2, int y2, int x3, int y3, CinderColor color)
+{
+    if (!gCinderCtx.renderer)
+        return;
+
+    filledTrigonRGBA(gCinderCtx.renderer, x1, y1, x2, y2, x3, y3, CINDER_COLOR_UNPACK(color));
+}
+
+void CinderDrawTriangleOutline(int x1, int y1, int x2, int y2, int x3, int y3, CinderColor color)
+{
+    if (!gCinderCtx.renderer)
+        return;
+
+    trigonRGBA(gCinderCtx.renderer, x1, y1, x2, y2, x3, y3, CINDER_COLOR_UNPACK(color));
+}
+
 // --------------------------------------- RECTANGLE ---------------------------------------
 
 static SDL_Rect CinderToSDLRect(CinderRect rect)
@@ -490,6 +539,22 @@ void CinderDrawRectOutline(CinderRect rect, CinderColor color)
 
     SDL_SetRenderDrawColor(gCinderCtx.renderer, color.r, color.g, color.b, color.a);
     SDL_RenderFillRect(gCinderCtx.renderer, &sdlRect);
+}
+
+void CinderDrawRoundedRect(CinderRect rect, int radius, CinderColor color)
+{
+    if (!gCinderCtx.renderer)
+        return;
+
+    roundedBoxRGBA(gCinderCtx.renderer, rect.x, rect.y, rect.x + rect.w - 1, rect.y + rect.h - 1, radius, CINDER_COLOR_UNPACK(color));
+}
+
+void CinderDrawRoundedRectOutline(CinderRect rect, int radius, CinderColor color)
+{
+    if (!gCinderCtx.renderer)
+        return;
+
+    roundedRectangleRGBA(gCinderCtx.renderer, rect.x, rect.y, rect.x + rect.w - 1, rect.y + rect.h - 1, radius, CINDER_COLOR_UNPACK(color));
 }
 
 // ======================================= TEXTURE ================================================
