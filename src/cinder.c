@@ -10,11 +10,13 @@ typedef struct CinderCtx
     SDL_Renderer *renderer;
 
     bool isRunning;
+    bool frameBegun;
+
+    const char *errMsg;
 
 } CinderCtx;
 
 CinderCtx gCinderCtx;
-const char *gCinderErrMsg = "";
 
 // ======================================= SUBSYSTEM ================================================
 
@@ -39,7 +41,7 @@ CinderStatus CinderInit(CinderSubsystem flags)
     {
         if (SDL_InitSubSystem(SDL_INIT_EVENTS) < 0)
         {
-            gCinderErrMsg = "Failed to initialize EVENTS subsystem";
+            gCinderCtx.errMsg = "Failed to initialize EVENTS subsystem";
 
             CinderRollbackSubsystems(gCinderCtx.initFlags);
             gCinderCtx.initFlags = 0;
@@ -53,7 +55,7 @@ CinderStatus CinderInit(CinderSubsystem flags)
     {
         if (SDL_InitSubSystem(SDL_INIT_AUDIO) < 0)
         {
-            gCinderErrMsg = "Failed to initialize AUDIO subsystem";
+            gCinderCtx.errMsg = "Failed to initialize AUDIO subsystem";
 
             CinderRollbackSubsystems(gCinderCtx.initFlags);
             gCinderCtx.initFlags = 0;
@@ -67,7 +69,7 @@ CinderStatus CinderInit(CinderSubsystem flags)
     {
         if (SDL_InitSubSystem(SDL_INIT_VIDEO) < 0)
         {
-            gCinderErrMsg = "Failed to initialize VIDEO subsystem";
+            gCinderCtx.errMsg = "Failed to initialize VIDEO subsystem";
 
             CinderRollbackSubsystems(gCinderCtx.initFlags);
             gCinderCtx.initFlags = 0;
@@ -145,7 +147,7 @@ CinderStatus CinderCreateWindow(const CinderWindowDesc *winDesc)
 
     if (!gCinderCtx.window)
     {
-        gCinderErrMsg = SDL_GetError();
+        gCinderCtx.errMsg = SDL_GetError();
         return CINDER_STATUS_WINDOW_CREATE_FAILED;
     }
 
@@ -153,13 +155,15 @@ CinderStatus CinderCreateWindow(const CinderWindowDesc *winDesc)
 
     if (!gCinderCtx.renderer)
     {
-        gCinderErrMsg = SDL_GetError();
+        gCinderCtx.errMsg = SDL_GetError();
 
         SDL_DestroyWindow(gCinderCtx.window);
         gCinderCtx.window = NULL;
 
         return CINDER_STATUS_RENDERER_CREATE_FAILED;
     }
+
+    gCinderCtx.isRunning = true;
 
     return CINDER_STATUS_OK;
 }
@@ -179,9 +183,61 @@ void CinderDestroyWindow(void)
     }
 }
 
+// ======================================= CORE LOOP ================================================
+
+bool CinderIsRunning(void)
+{
+    return gCinderCtx.isRunning;
+}
+
+void CinderRequestQuit(void)
+{
+    gCinderCtx.isRunning = false;
+}
+
+void CinderBeginFrame(void)
+{
+    SDL_Event sdlEvent;
+
+    gCinderCtx.frameBegun = true;
+
+    while (SDL_PollEvent(&sdlEvent))
+    {
+        switch (sdlEvent.type)
+        {
+        case SDL_QUIT:
+            CinderRequestQuit();
+            break;
+
+        default:
+            break;
+        }
+    }
+}
+
+void CinderEndFrame(void)
+{
+    if (!gCinderCtx.frameBegun)
+    {
+        gCinderCtx.errMsg = "CinderEndFrame called without CinderBeginFrame";
+        return;
+    }
+
+    gCinderCtx.frameBegun = false;
+
+    if (gCinderCtx.renderer)
+    {
+        SDL_RenderPresent(gCinderCtx.renderer);
+    }
+    else
+    {
+        gCinderCtx.errMsg = "Renderer is NULL in CinderEndFrame";
+    }
+}
+
 // ======================================= ERROR ================================================
 
 const char *CinderGetError(void)
 {
-    return gCinderErrMsg;
+    return gCinderCtx.errMsg;
 }

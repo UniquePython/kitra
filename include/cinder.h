@@ -64,6 +64,14 @@ typedef struct CinderWindowDesc
 CinderStatus CinderCreateWindow(const CinderWindowDesc *winDesc);
 void CinderDestroyWindow(void);
 
+// ======================================= CORE LOOP ================================================
+
+bool CinderIsRunning(void);
+void CinderRequestQuit(void);
+
+void CinderBeginFrame(void);
+void CinderEndFrame(void);
+
 // ======================================= ERROR ================================================
 
 const char *CinderGetError(void);
