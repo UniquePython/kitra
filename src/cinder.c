@@ -18,14 +18,13 @@ typedef struct CinderCtx
     bool frameBegun;
     bool imgInitialized;
 
-    // ------ Input handling -------
+    // ------ Input handling ------
 
     bool keysDown[CINDER_KEY_COUNT];
     bool keysPressed[CINDER_KEY_COUNT];
 
     CinderVec2i mousePos;
     CinderVec2i prevMousePos;
-
     CinderVec2i mouseDelta;
 
     CinderVec2i scrollDelta;
@@ -33,11 +32,17 @@ typedef struct CinderCtx
     bool mouseDown[CINDER_MOUSE_BUTTON_COUNT];
     bool mousePressed[CINDER_MOUSE_BUTTON_COUNT];
 
-    // ------ Delta time ------
+    // ------ Delta time (raw) ------
 
     uint64_t lastCounter;
     uint64_t perfFrequency;
     float deltaTime;
+
+    // ------ Delta time (extended) ------
+
+    float smoothedDeltaTime;
+    int targetFPS;
+    float fps;
 
     // ------ Logging ------
 
@@ -412,6 +417,22 @@ void CinderBeginFrame(void)
 
     gCinderCtx.lastCounter = now;
 
+    float dt = gCinderCtx.deltaTime;
+
+    if (dt > 0.0f)
+    {
+        float instantFPS = 1.0f / dt;
+
+        const float alpha = 0.1f; // smoothing factor
+
+        if (gCinderCtx.fps == 0.0f)
+            gCinderCtx.fps = instantFPS;
+        else
+            gCinderCtx.fps = alpha * instantFPS + (1.0f - alpha) * gCinderCtx.fps;
+    }
+
+    gCinderCtx.smoothedDeltaTime = (gCinderCtx.fps > 0.0f) ? (1.0f / gCinderCtx.fps) : gCinderCtx.deltaTime;
+
     // ---------------- Reset per-frame input ----------------
 
     memset(gCinderCtx.keysPressed, false, sizeof(gCinderCtx.keysPressed));
@@ -525,6 +546,23 @@ void CinderEndFrame(void)
 
     gCinderCtx.frameBegun = false;
 
+    uint64_t frameEnd = SDL_GetPerformanceCounter();
+
+    double frameTimeSec =
+        (double)(frameEnd - gCinderCtx.lastCounter) /
+        (double)gCinderCtx.perfFrequency;
+
+    if (gCinderCtx.targetFPS > 0)
+    {
+        double targetFrameTime = 1.0 / (double)gCinderCtx.targetFPS;
+
+        if (frameTimeSec < targetFrameTime)
+        {
+            double remaining = targetFrameTime - frameTimeSec;
+            SDL_Delay((Uint32)(remaining * 1000.0));
+        }
+    }
+
     if (gCinderCtx.renderer)
     {
         SDL_RenderPresent(gCinderCtx.renderer);
@@ -533,6 +571,74 @@ void CinderEndFrame(void)
     {
         CINDER_LOG(CINDER_LOG_WARNING, "Renderer is NULL in CinderEndFrame");
     }
+}
+
+// ======================================= DELTA TIME ================================================
+
+static inline double Cinder_GetTimeSeconds(uint64_t counter)
+{
+    return (double)counter / (double)gCinderCtx.perfFrequency;
+}
+
+CinderTimer CinderStartTimer(void)
+{
+    uint64_t now = SDL_GetPerformanceCounter();
+
+    return (CinderTimer){
+        .start = now,
+        .last = now,
+        .repeat = false};
+}
+
+void CinderResetTimer(CinderTimer *t)
+{
+    if (!t)
+        return;
+
+    uint64_t now = SDL_GetPerformanceCounter();
+
+    t->start = now;
+    t->last = now;
+}
+
+float CinderGetTimerElapsed(const CinderTimer *t)
+{
+    if (!t)
+        return 0.0f;
+
+    uint64_t now = SDL_GetPerformanceCounter();
+
+    return (float)((double)(now - t->start) / (double)gCinderCtx.perfFrequency);
+}
+
+bool CinderTimerDone(CinderTimer *t, float duration)
+{
+    if (!t)
+        return false;
+
+    uint64_t now = SDL_GetPerformanceCounter();
+
+    float elapsed =
+        (float)((double)(now - t->last) / (double)gCinderCtx.perfFrequency);
+
+    if (elapsed >= duration)
+    {
+        if (t->repeat)
+        {
+            t->last = now;
+        }
+
+        return true;
+    }
+
+    return false;
+}
+
+void CinderTimerSetRepeat(CinderTimer *t, bool repeat)
+{
+    if (!t)
+        return;
+    t->repeat = repeat;
 }
 
 float CinderGetDeltaTime(void)

@@ -218,6 +218,23 @@ void CinderRequestQuit(void);
 void CinderBeginFrame(void);
 void CinderEndFrame(void);
 
+// ======================================= DELTA TIME ================================================
+
+typedef struct CinderTimer
+{
+    uint64_t start;
+    uint64_t last;
+    bool repeat;
+} CinderTimer;
+
+CinderTimer CinderStartTimer(void);
+void CinderResetTimer(CinderTimer *t);
+
+float CinderGetTimerElapsed(const CinderTimer *t);
+bool CinderTimerDone(CinderTimer *t, float duration);
+
+void CinderTimerSetRepeat(CinderTimer *t, bool repeat);
+
 float CinderGetDeltaTime(void);
 
 // ======================================= COLOR ================================================
