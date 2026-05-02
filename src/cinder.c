@@ -1,6 +1,7 @@
 #include "cinder.h"
 
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 
 #include <string.h>
 
@@ -13,6 +14,7 @@ typedef struct CinderCtx
 
     bool isRunning;
     bool frameBegun;
+    bool imgInitialized;
 
     bool keysDown[CINDER_KEY_COUNT];
     bool keysPressed[CINDER_KEY_COUNT];
@@ -48,6 +50,7 @@ CinderStatus CinderInit(CinderSubsystem flags)
 
     gCinderCtx.isRunning = false;
     gCinderCtx.frameBegun = false;
+    gCinderCtx.imgInitialized = false;
 
     memset(gCinderCtx.keysDown, false, sizeof(gCinderCtx.keysDown));
     memset(gCinderCtx.keysPressed, false, sizeof(gCinderCtx.keysPressed));
@@ -109,6 +112,9 @@ void CinderQuit(void)
     CinderDestroyWindow();
 
     gCinderCtx.initFlags = 0;
+
+    if (gCinderCtx.imgInitialized)
+        IMG_Quit();
 
     SDL_Quit();
 }
@@ -484,6 +490,125 @@ void CinderDrawRectOutline(CinderRect rect, CinderColor color)
 
     SDL_SetRenderDrawColor(gCinderCtx.renderer, color.r, color.g, color.b, color.a);
     SDL_RenderFillRect(gCinderCtx.renderer, &sdlRect);
+}
+
+// ======================================= TEXTURE ================================================
+
+typedef struct CinderTexture
+{
+    SDL_Texture *handle;
+
+    int width, height;
+
+} CinderTexture;
+
+CinderTexture *CinderLoadTexture(const char *path)
+{
+    if (!gCinderCtx.imgInitialized)
+    {
+        int flags = IMG_INIT_PNG | IMG_INIT_JPG | IMG_INIT_WEBP | IMG_INIT_TIF | IMG_INIT_JXL | IMG_INIT_AVIF;
+        int impFormats = IMG_INIT_PNG | IMG_INIT_JPG;
+
+        int initted = IMG_Init(flags);
+        if ((initted & impFormats) != impFormats)
+        {
+            gCinderCtx.errMsg = IMG_GetError();
+            gCinderCtx.imgInitialized = false;
+            return NULL;
+        }
+        gCinderCtx.imgInitialized = true;
+    }
+
+    if (!gCinderCtx.renderer)
+    {
+        gCinderCtx.errMsg = "Renderer not initialized";
+        return NULL;
+    }
+
+    SDL_Surface *surface = IMG_Load(path);
+    if (!surface)
+    {
+        gCinderCtx.errMsg = IMG_GetError();
+        return NULL;
+    }
+
+    SDL_Texture *tex = SDL_CreateTextureFromSurface(gCinderCtx.renderer, surface);
+    if (!tex)
+    {
+        gCinderCtx.errMsg = SDL_GetError();
+        SDL_FreeSurface(surface);
+        return NULL;
+    }
+
+    CinderTexture *cTex = malloc(sizeof(CinderTexture));
+    if (!cTex)
+    {
+        gCinderCtx.errMsg = "Failed to allocate CinderTexture";
+        SDL_DestroyTexture(tex);
+        SDL_FreeSurface(surface);
+        return NULL;
+    }
+
+    cTex->handle = tex;
+
+    SDL_FreeSurface(surface);
+    SDL_QueryTexture(tex, NULL, NULL, &cTex->width, &cTex->height);
+
+    return cTex;
+}
+
+void CinderDrawTextureEx(CinderTexture *tex, const CinderRect *src, const CinderRect *dst)
+{
+    if (!gCinderCtx.renderer || !tex)
+        return;
+
+    SDL_Rect sdlSrc;
+    SDL_Rect sdlDst;
+
+    SDL_Rect *pSrc = NULL;
+    SDL_Rect *pDst = NULL;
+
+    if (src)
+    {
+        sdlSrc.x = src->x;
+        sdlSrc.y = src->y;
+        sdlSrc.w = (int)src->w;
+        sdlSrc.h = (int)src->h;
+        pSrc = &sdlSrc;
+    }
+
+    if (dst)
+    {
+        sdlDst.x = dst->x;
+        sdlDst.y = dst->y;
+        sdlDst.w = (int)dst->w;
+        sdlDst.h = (int)dst->h;
+        pDst = &sdlDst;
+    }
+
+    SDL_RenderCopy(gCinderCtx.renderer, tex->handle, pSrc, pDst);
+}
+
+void CinderDrawTexture(CinderTexture *tex, int x, int y)
+{
+    if (!tex)
+        return;
+
+    CinderRect dst = {x, y, tex->width, tex->height};
+
+    CinderDrawTextureEx(tex, NULL, &dst);
+}
+
+void CinderDestroyTexture(CinderTexture **tex)
+{
+    if (!tex || !*tex)
+        return;
+
+    if ((*tex)->handle)
+        SDL_DestroyTexture((*tex)->handle);
+
+    free(*tex);
+    *tex = NULL;
 }
 
 // ======================================= ERROR ================================================

@@ -233,6 +233,15 @@ typedef struct CinderRect
 void CinderDrawRect(CinderRect rect, CinderColor color);
 void CinderDrawRectOutline(CinderRect rect, CinderColor color);
 
+// ======================================= TEXTURE ================================================
+
+typedef struct CinderTexture CinderTexture;
+
+CinderTexture *CinderLoadTexture(const char *path);
+void CinderDrawTextureEx(CinderTexture *tex, const CinderRect *src, const CinderRect *dst);
+void CinderDrawTexture(CinderTexture *tex, int x, int y);
+void CinderDestroyTexture(CinderTexture **tex);
+
 // ======================================= ERROR ================================================
 
 const char *CinderGetError(void);
