@@ -476,6 +476,11 @@ void CinderDrawLine(int x1, int y1, int x2, int y2, CinderColor color)
     lineRGBA(gCinderCtx.renderer, x1, y1, x2, y2, CINDER_COLOR_UNPACK(color));
 }
 
+void CinderDrawLineV(CinderVec2i start, CinderVec2i end, CinderColor color)
+{
+    CinderDrawLine(start.x, start.y, end.x, end.y, color);
+}
+
 // --------------------------------------- CIRCLE ---------------------------------------
 
 void CinderDrawCircle(int x, int y, int radius, CinderColor color)
@@ -486,12 +491,22 @@ void CinderDrawCircle(int x, int y, int radius, CinderColor color)
     filledCircleRGBA(gCinderCtx.renderer, x, y, radius, CINDER_COLOR_UNPACK(color));
 }
 
+void CinderDrawCircleV(CinderVec2i pos, int radius, CinderColor color)
+{
+    CinderDrawCircle(pos.x, pos.y, radius, color);
+}
+
 void CinderDrawCircleOutline(int x, int y, int radius, CinderColor color)
 {
     if (!gCinderCtx.renderer)
         return;
 
     circleRGBA(gCinderCtx.renderer, x, y, radius, CINDER_COLOR_UNPACK(color));
+}
+
+void CinderDrawCircleOutlineV(CinderVec2i pos, int radius, CinderColor color)
+{
+    CinderDrawCircleOutline(pos.x, pos.y, radius, color);
 }
 
 // --------------------------------------- TRIANGLE ---------------------------------------
@@ -504,12 +519,22 @@ void CinderDrawTriangle(int x1, int y1, int x2, int y2, int x3, int y3, CinderCo
     filledTrigonRGBA(gCinderCtx.renderer, x1, y1, x2, y2, x3, y3, CINDER_COLOR_UNPACK(color));
 }
 
+void CinderDrawTriangleV(CinderVec2i p1, CinderVec2i p2, CinderVec2i p3, CinderColor color)
+{
+    CinderDrawTriangle(p1.x, p1.y, p2.x, p2.y, p3.x, p3.y, color);
+}
+
 void CinderDrawTriangleOutline(int x1, int y1, int x2, int y2, int x3, int y3, CinderColor color)
 {
     if (!gCinderCtx.renderer)
         return;
 
     trigonRGBA(gCinderCtx.renderer, x1, y1, x2, y2, x3, y3, CINDER_COLOR_UNPACK(color));
+}
+
+void CinderDrawTriangleOutlineV(CinderVec2i p1, CinderVec2i p2, CinderVec2i p3, CinderColor color)
+{
+    CinderDrawTriangleOutline(p1.x, p1.y, p2.x, p2.y, p3.x, p3.y, color);
 }
 
 // --------------------------------------- RECTANGLE ---------------------------------------

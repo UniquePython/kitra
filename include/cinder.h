@@ -6,6 +6,8 @@
 #include <limits.h>
 #include <stdint.h>
 
+#include "cinder_math.h"
+
 typedef struct CinderCtx CinderCtx;
 
 typedef enum
@@ -226,25 +228,25 @@ void CinderClearBackground(CinderColor color);
 // --------------------------------------- LINE ---------------------------------------
 
 void CinderDrawLine(int x1, int y1, int x2, int y2, CinderColor color);
+void CinderDrawLineV(CinderVec2i start, CinderVec2i end, CinderColor color);
 
 // --------------------------------------- CIRCLE ---------------------------------------
 
 void CinderDrawCircle(int x, int y, int radius, CinderColor color);
+void CinderDrawCircleV(CinderVec2i pos, int radius, CinderColor color);
+
 void CinderDrawCircleOutline(int x, int y, int radius, CinderColor color);
+void CinderDrawCircleOutlineV(CinderVec2i pos, int radius, CinderColor color);
 
 // --------------------------------------- TRIANGLE ---------------------------------------
 
 void CinderDrawTriangle(int x1, int y1, int x2, int y2, int x3, int y3, CinderColor color);
+void CinderDrawTriangleV(CinderVec2i p1, CinderVec2i p2, CinderVec2i p3, CinderColor color);
 
 void CinderDrawTriangleOutline(int x1, int y1, int x2, int y2, int x3, int y3, CinderColor color);
+void CinderDrawTriangleOutlineV(CinderVec2i p1, CinderVec2i p2, CinderVec2i p3, CinderColor color);
 
 // --------------------------------------- RECTANGLE ---------------------------------------
-
-typedef struct CinderRect
-{
-    int x, y;
-    int w, h;
-} CinderRect;
 
 void CinderDrawRect(CinderRect rect, CinderColor color);
 void CinderDrawRectOutline(CinderRect rect, CinderColor color);
@@ -259,6 +261,7 @@ typedef struct CinderTexture CinderTexture;
 CinderTexture *CinderLoadTexture(const char *path);
 void CinderDrawTextureEx(CinderTexture *tex, const CinderRect *src, const CinderRect *dst);
 void CinderDrawTexture(CinderTexture *tex, int x, int y);
+void CinderDrawTextureAt(CinderTexture *tex, CinderVec2i pos);
 void CinderDestroyTexture(CinderTexture **tex);
 
 // ======================================= ERROR ================================================

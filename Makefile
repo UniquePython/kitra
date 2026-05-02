@@ -1,6 +1,6 @@
 CC      = gcc
 CFLAGS  = -Wall -Wextra -Wshadow -Wdouble-promotion -Wformat=2 -Wundef -std=c11 -I include $(shell pkg-config --cflags sdl2 SDL2_image SDL2_gfx)
-LIBS    = $(shell pkg-config --libs sdl2 SDL2_image SDL2_gfx) -Wl,--allow-shlib-undefined
+LIBS    = -lm $(shell pkg-config --libs sdl2 SDL2_image SDL2_gfx) -Wl,--allow-shlib-undefined
 
 SRC_DIR   = src
 BUILD_DIR = build
