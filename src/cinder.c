@@ -259,9 +259,38 @@ void CinderClearBackground(CinderColor color)
         return;
     }
 
-    SDL_SetRenderDrawColor(gCinderCtx.renderer, color.red, color.green, color.blue, color.alpha);
+    SDL_SetRenderDrawColor(gCinderCtx.renderer, color.r, color.g, color.b, color.a);
 
     SDL_RenderClear(gCinderCtx.renderer);
+}
+
+// --------------------------------------- RECTANGLE ---------------------------------------
+
+static SDL_Rect CinderToSDLRect(CinderRect rect)
+{
+    return (SDL_Rect){rect.x, rect.y, rect.w, rect.h};
+}
+
+void CinderDrawRect(CinderRect rect, CinderColor color)
+{
+    if (!gCinderCtx.renderer)
+        return;
+
+    SDL_Rect sdlRect = CinderToSDLRect(rect);
+
+    SDL_SetRenderDrawColor(gCinderCtx.renderer, color.r, color.g, color.b, color.a);
+    SDL_RenderFillRect(gCinderCtx.renderer, &sdlRect);
+}
+
+void CinderDrawRectOutline(CinderRect rect, CinderColor color)
+{
+    if (!gCinderCtx.renderer)
+        return;
+
+    SDL_Rect sdlRect = CinderToSDLRect(rect);
+
+    SDL_SetRenderDrawColor(gCinderCtx.renderer, color.r, color.g, color.b, color.a);
+    SDL_RenderFillRect(gCinderCtx.renderer, &sdlRect);
 }
 
 // ======================================= ERROR ================================================

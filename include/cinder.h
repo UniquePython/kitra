@@ -76,10 +76,10 @@ void CinderEndFrame(void);
 
 typedef struct CinderColor
 {
-    uint8_t red;
-    uint8_t green;
-    uint8_t blue;
-    uint8_t alpha;
+    uint8_t r;
+    uint8_t g;
+    uint8_t b;
+    uint8_t a;
 } CinderColor;
 
 #define CINDER_COLOR_RGBA(r, g, b, a) \
@@ -99,6 +99,17 @@ extern const CinderColor CINDER_CYAN;
 // ======================================= DRAWING ================================================
 
 void CinderClearBackground(CinderColor color);
+
+// --------------------------------------- RECTANGLE ---------------------------------------
+
+typedef struct CinderRect
+{
+    int x, y;
+    int w, h;
+} CinderRect;
+
+void CinderDrawRect(CinderRect rect, CinderColor color);
+void CinderDrawRectOutline(CinderRect rect, CinderColor color);
 
 // ======================================= ERROR ================================================
 

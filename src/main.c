@@ -10,7 +10,10 @@ int main(void)
     while (CinderIsRunning())
     {
         CinderBeginFrame();
-        CinderClearBackground(CINDER_RED);
+        CinderClearBackground(CINDER_BLACK);
+
+        CinderDrawRect((CinderRect){50, 50, 50, 100}, CINDER_RED);
+
         CinderEndFrame();
     }
 
