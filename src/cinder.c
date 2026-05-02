@@ -17,6 +17,10 @@ typedef struct CinderCtx
     bool keysDown[CINDER_KEY_COUNT];
     bool keysPressed[CINDER_KEY_COUNT];
 
+    uint64_t lastCounter;
+    uint64_t perfFrequency;
+    float deltaTime;
+
     const char *errMsg;
 
 } CinderCtx;
@@ -47,6 +51,10 @@ CinderStatus CinderInit(CinderSubsystem flags)
 
     memset(gCinderCtx.keysDown, false, sizeof(gCinderCtx.keysDown));
     memset(gCinderCtx.keysPressed, false, sizeof(gCinderCtx.keysPressed));
+
+    gCinderCtx.lastCounter = 0;
+    gCinderCtx.perfFrequency = SDL_GetPerformanceFrequency();
+    gCinderCtx.deltaTime = 0.0f;
 
     if (flags & CINDER_SUBSYSTEM_EVENTS)
     {
@@ -332,9 +340,23 @@ void CinderRequestQuit(void)
 
 void CinderBeginFrame(void)
 {
+    // ---------------- Delta Time ----------------
+    uint64_t now = SDL_GetPerformanceCounter();
+
+    if (gCinderCtx.lastCounter == 0)
+        gCinderCtx.deltaTime = 0.0f;
+    else
+        gCinderCtx.deltaTime = (float)(now - gCinderCtx.lastCounter) / (float)gCinderCtx.perfFrequency;
+
+    gCinderCtx.lastCounter = now;
+
+    // ---------------- Reset per-frame input ----------------
+
     memset(gCinderCtx.keysPressed, false, sizeof(gCinderCtx.keysPressed));
 
     gCinderCtx.frameBegun = true;
+
+    // ---------------- Event processing ----------------
 
     SDL_Event sdlEvent;
 
@@ -402,6 +424,11 @@ void CinderEndFrame(void)
     {
         gCinderCtx.errMsg = "Renderer is NULL in CinderEndFrame";
     }
+}
+
+float CinderGetDeltaTime(void)
+{
+    return gCinderCtx.deltaTime;
 }
 
 // ======================================= COLOR ================================================

@@ -192,6 +192,8 @@ void CinderRequestQuit(void);
 void CinderBeginFrame(void);
 void CinderEndFrame(void);
 
+float CinderGetDeltaTime(void);
+
 // ======================================= COLOR ================================================
 
 typedef struct CinderColor
