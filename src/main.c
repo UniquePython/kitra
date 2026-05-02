@@ -14,6 +14,9 @@ int main(void)
 
         CinderDrawRect((CinderRect){50, 50, 50, 100}, CINDER_RED);
 
+        if (CinderIsKeyPressed(CINDER_KEY_Q))
+            CinderRequestQuit();
+
         CinderEndFrame();
     }
 
