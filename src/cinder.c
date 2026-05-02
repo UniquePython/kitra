@@ -235,6 +235,32 @@ void CinderEndFrame(void)
     }
 }
 
+// ======================================= COLOR ================================================
+
+const CinderColor CINDER_BLACK = CINDER_COLOR_RGB(0, 0, 0);
+const CinderColor CINDER_WHITE = CINDER_COLOR_RGB(255, 255, 255);
+const CinderColor CINDER_RED = CINDER_COLOR_RGB(255, 0, 0);
+const CinderColor CINDER_GREEN = CINDER_COLOR_RGB(0, 255, 0);
+const CinderColor CINDER_BLUE = CINDER_COLOR_RGB(0, 0, 255);
+const CinderColor CINDER_YELLOW = CINDER_COLOR_RGB(255, 255, 0);
+const CinderColor CINDER_MAGENTA = CINDER_COLOR_RGB(255, 0, 255);
+const CinderColor CINDER_CYAN = CINDER_COLOR_RGB(0, 255, 255);
+
+// ======================================= DRAWING ================================================
+
+void CinderClearBackground(CinderColor color)
+{
+    if (!gCinderCtx.renderer)
+    {
+        gCinderCtx.errMsg = "Renderer is NULL in CinderClearBackground";
+        return;
+    }
+
+    SDL_SetRenderDrawColor(gCinderCtx.renderer, color.red, color.green, color.blue, color.alpha);
+
+    SDL_RenderClear(gCinderCtx.renderer);
+}
+
 // ======================================= ERROR ================================================
 
 const char *CinderGetError(void)

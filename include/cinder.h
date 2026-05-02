@@ -72,6 +72,34 @@ void CinderRequestQuit(void);
 void CinderBeginFrame(void);
 void CinderEndFrame(void);
 
+// ======================================= COLOR ================================================
+
+typedef struct CinderColor
+{
+    uint8_t red;
+    uint8_t green;
+    uint8_t blue;
+    uint8_t alpha;
+} CinderColor;
+
+#define CINDER_COLOR_RGBA(r, g, b, a) \
+    (CinderColor) { r, g, b, a }
+
+#define CINDER_COLOR_RGB(r, g, b) (CinderColor){r, g, b, 255}
+
+extern const CinderColor CINDER_BLACK;
+extern const CinderColor CINDER_WHITE;
+extern const CinderColor CINDER_RED;
+extern const CinderColor CINDER_GREEN;
+extern const CinderColor CINDER_BLUE;
+extern const CinderColor CINDER_YELLOW;
+extern const CinderColor CINDER_MAGENTA;
+extern const CinderColor CINDER_CYAN;
+
+// ======================================= DRAWING ================================================
+
+void CinderClearBackground(CinderColor color);
+
 // ======================================= ERROR ================================================
 
 const char *CinderGetError(void);
