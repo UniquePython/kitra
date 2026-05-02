@@ -170,7 +170,7 @@ CinderStatus CinderCreateWindow(const CinderWindowDesc *winDesc)
         internalWinDesc.title,
         internalWinDesc.x == CINDER_WINDOW_POS_CENTERED ? SDL_WINDOWPOS_CENTERED : internalWinDesc.x,
         internalWinDesc.y == CINDER_WINDOW_POS_CENTERED ? SDL_WINDOWPOS_CENTERED : internalWinDesc.y,
-        (int)internalWinDesc.width, (int)internalWinDesc.height,
+        internalWinDesc.width, internalWinDesc.height,
         CinderToSDLWindowFlags(internalWinDesc.flags));
 
     if (!gCinderCtx.window)
@@ -572,8 +572,8 @@ void CinderDrawTextureEx(CinderTexture *tex, const CinderRect *src, const Cinder
     {
         sdlSrc.x = src->x;
         sdlSrc.y = src->y;
-        sdlSrc.w = (int)src->w;
-        sdlSrc.h = (int)src->h;
+        sdlSrc.w = src->w;
+        sdlSrc.h = src->h;
         pSrc = &sdlSrc;
     }
 
@@ -581,8 +581,8 @@ void CinderDrawTextureEx(CinderTexture *tex, const CinderRect *src, const Cinder
     {
         sdlDst.x = dst->x;
         sdlDst.y = dst->y;
-        sdlDst.w = (int)dst->w;
-        sdlDst.h = (int)dst->h;
+        sdlDst.w = dst->w;
+        sdlDst.h = dst->h;
         pDst = &sdlDst;
     }
 

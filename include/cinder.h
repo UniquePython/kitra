@@ -50,8 +50,8 @@ typedef enum
 typedef struct CinderWindowDesc
 {
     const char *title;
-    size_t width;
-    size_t height;
+    int width;
+    int height;
 
     int x;
     int y;
@@ -63,6 +63,7 @@ typedef struct CinderWindowDesc
 #define CINDER_WINDOW_POS_CENTERED INT_MIN
 
 CinderStatus CinderCreateWindow(const CinderWindowDesc *winDesc);
+void CinderDestroyWindow(void);
 
 // ======================================= INPUT HANDLING ================================================
 
