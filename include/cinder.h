@@ -278,7 +278,36 @@ void CinderDestroyTexture(CinderTexture **tex);
 
 // ======================================= ERROR ================================================
 
+typedef enum
+{
+    CINDER_LOG_INFO,
+    CINDER_LOG_WARNING,
+    CINDER_LOG_ERROR,
+
+} CinderLogLevel;
+
+typedef void (*CinderErrorCallback)(
+    CinderLogLevel level,
+    const char *message,
+    const char *file,
+    const char *function,
+    int line,
+    void *userdata);
+
+void CinderSetErrorCallback(CinderErrorCallback cb, void *userdata);
+
 CINDER_WARN_UNUSED_RESULT
 const char *CinderGetError(void);
+
+CINDER_WARN_UNUSED_RESULT
+CinderLogLevel CinderGetLastLevel(void);
+
+bool CinderHasError(void);
+
+void CinderLogInternal__(CinderLogLevel level, const char *msg, const char *file, const char *function, int line);
+
+void CinderDefaultLogCallback(CinderLogLevel level, const char *message, const char *file, const char *function, int line, void *userdata);
+
+#define CINDER_LOG(level, msg) CinderLogInternal__((level), (msg), __FILE__, __func__, __LINE__)
 
 #endif /* CINDER_H_ */

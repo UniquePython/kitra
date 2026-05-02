@@ -5,6 +5,7 @@
 #include <SDL2/SDL2_gfxPrimitives.h>
 
 #include <string.h>
+#include <stdio.h>
 
 typedef struct CinderCtx
 {
@@ -24,7 +25,11 @@ typedef struct CinderCtx
     uint64_t perfFrequency;
     float deltaTime;
 
-    const char *errMsg;
+    const char *lastError;
+    CinderLogLevel lastLevel;
+
+    CinderErrorCallback callback;
+    void *callbackUserdata;
 
 } CinderCtx;
 
@@ -60,11 +65,14 @@ CinderStatus CinderInit(CinderSubsystem flags)
     gCinderCtx.perfFrequency = SDL_GetPerformanceFrequency();
     gCinderCtx.deltaTime = 0.0f;
 
+    if (!gCinderCtx.callback)
+        CinderSetErrorCallback(CinderDefaultLogCallback, NULL);
+
     if (flags & CINDER_SUBSYSTEM_EVENTS)
     {
         if (SDL_InitSubSystem(SDL_INIT_EVENTS) < 0)
         {
-            gCinderCtx.errMsg = "Failed to initialize EVENTS subsystem";
+            CINDER_LOG(CINDER_LOG_ERROR, "Failed to initialize EVENTS subsystem");
 
             CinderRollbackSubsystems(gCinderCtx.initFlags);
             gCinderCtx.initFlags = 0;
@@ -78,7 +86,7 @@ CinderStatus CinderInit(CinderSubsystem flags)
     {
         if (SDL_InitSubSystem(SDL_INIT_AUDIO) < 0)
         {
-            gCinderCtx.errMsg = "Failed to initialize AUDIO subsystem";
+            CINDER_LOG(CINDER_LOG_ERROR, "Failed to initialize AUDIO subsystem");
 
             CinderRollbackSubsystems(gCinderCtx.initFlags);
             gCinderCtx.initFlags = 0;
@@ -92,7 +100,7 @@ CinderStatus CinderInit(CinderSubsystem flags)
     {
         if (SDL_InitSubSystem(SDL_INIT_VIDEO) < 0)
         {
-            gCinderCtx.errMsg = "Failed to initialize VIDEO subsystem";
+            CINDER_LOG(CINDER_LOG_ERROR, "Failed to initialize VIDEO subsystem");
 
             CinderRollbackSubsystems(gCinderCtx.initFlags);
             gCinderCtx.initFlags = 0;
@@ -176,7 +184,7 @@ CinderStatus CinderCreateWindow(const CinderWindowDesc *winDesc)
 
     if (!gCinderCtx.window)
     {
-        gCinderCtx.errMsg = SDL_GetError();
+        CINDER_LOG(CINDER_LOG_ERROR, SDL_GetError());
         return CINDER_STATUS_WINDOW_CREATE_FAILED;
     }
 
@@ -184,7 +192,7 @@ CinderStatus CinderCreateWindow(const CinderWindowDesc *winDesc)
 
     if (!gCinderCtx.renderer)
     {
-        gCinderCtx.errMsg = SDL_GetError();
+        CINDER_LOG(CINDER_LOG_ERROR, SDL_GetError());
 
         SDL_DestroyWindow(gCinderCtx.window);
         gCinderCtx.window = NULL;
@@ -417,7 +425,7 @@ void CinderEndFrame(void)
 {
     if (!gCinderCtx.frameBegun)
     {
-        gCinderCtx.errMsg = "CinderEndFrame called without CinderBeginFrame";
+        CINDER_LOG(CINDER_LOG_WARNING, "CinderEndFrame called without CinderBeginFrame");
         return;
     }
 
@@ -429,7 +437,7 @@ void CinderEndFrame(void)
     }
     else
     {
-        gCinderCtx.errMsg = "Renderer is NULL in CinderEndFrame";
+        CINDER_LOG(CINDER_LOG_WARNING, "Renderer is NULL in CinderEndFrame");
     }
 }
 
@@ -455,7 +463,7 @@ void CinderClearBackground(CinderColor color)
 {
     if (!gCinderCtx.renderer)
     {
-        gCinderCtx.errMsg = "Renderer is NULL in CinderClearBackground";
+        CINDER_LOG(CINDER_LOG_WARNING, "Renderer is NULL in CinderClearBackground");
         return;
     }
 
@@ -602,7 +610,7 @@ CinderTexture *CinderLoadTexture(const char *path)
         int initted = IMG_Init(flags);
         if ((initted & impFormats) != impFormats)
         {
-            gCinderCtx.errMsg = IMG_GetError();
+            CINDER_LOG(CINDER_LOG_ERROR, IMG_GetError());
             gCinderCtx.imgInitialized = false;
             return NULL;
         }
@@ -611,21 +619,21 @@ CinderTexture *CinderLoadTexture(const char *path)
 
     if (!gCinderCtx.renderer)
     {
-        gCinderCtx.errMsg = "Renderer not initialized";
+        CINDER_LOG(CINDER_LOG_ERROR, "Renderer not initialized");
         return NULL;
     }
 
     SDL_Surface *surface = IMG_Load(path);
     if (!surface)
     {
-        gCinderCtx.errMsg = IMG_GetError();
+        CINDER_LOG(CINDER_LOG_ERROR, IMG_GetError());
         return NULL;
     }
 
     SDL_Texture *tex = SDL_CreateTextureFromSurface(gCinderCtx.renderer, surface);
     if (!tex)
     {
-        gCinderCtx.errMsg = SDL_GetError();
+        CINDER_LOG(CINDER_LOG_ERROR, SDL_GetError());
         SDL_FreeSurface(surface);
         return NULL;
     }
@@ -633,7 +641,7 @@ CinderTexture *CinderLoadTexture(const char *path)
     CinderTexture *cTex = malloc(sizeof(CinderTexture));
     if (!cTex)
     {
-        gCinderCtx.errMsg = "Failed to allocate CinderTexture";
+        CINDER_LOG(CINDER_LOG_ERROR, "Failed to allocate CinderTexture");
         SDL_DestroyTexture(tex);
         SDL_FreeSurface(surface);
         return NULL;
@@ -708,7 +716,92 @@ void CinderDestroyTexture(CinderTexture **tex)
 
 // ======================================= ERROR ================================================
 
+void CinderSetErrorCallback(CinderErrorCallback cb, void *userdata)
+{
+    gCinderCtx.callback = cb;
+    gCinderCtx.callbackUserdata = userdata;
+}
+
 const char *CinderGetError(void)
 {
-    return gCinderCtx.errMsg;
+    return gCinderCtx.lastError;
+}
+
+CinderLogLevel CinderGetLastLevel(void)
+{
+    return gCinderCtx.lastLevel;
+}
+
+bool CinderHasError(void)
+{
+    return gCinderCtx.lastLevel == CINDER_LOG_ERROR;
+}
+
+void CinderLogInternal__(CinderLogLevel level, const char *msg, const char *file, const char *function, int line)
+{
+    gCinderCtx.lastLevel = level;
+    gCinderCtx.lastError = msg;
+
+    if (gCinderCtx.callback)
+    {
+        gCinderCtx.callback(
+            level,
+            msg,
+            file,
+            function,
+            line,
+            gCinderCtx.callbackUserdata);
+    }
+}
+
+static const char *levelToString(CinderLogLevel level)
+{
+    switch (level)
+    {
+    case CINDER_LOG_INFO:
+        return "INFO";
+    case CINDER_LOG_WARNING:
+        return "WARNING";
+    case CINDER_LOG_ERROR:
+        return "ERROR";
+    default:
+        return "UNKNOWN";
+    }
+}
+
+static const char *levelColor(CinderLogLevel level)
+{
+    switch (level)
+    {
+    case CINDER_LOG_INFO:
+        return "\x1b[36m"; // cyan
+    case CINDER_LOG_WARNING:
+        return "\x1b[1;33m"; // bold yellow
+    case CINDER_LOG_ERROR:
+        return "\x1b[1;31m"; // bold red
+    default:
+        return "\x1b[0m";
+    }
+}
+
+static FILE *levelStream(CinderLogLevel level)
+{
+    return (level == CINDER_LOG_ERROR) ? stderr : stdout;
+}
+
+void CinderDefaultLogCallback(CinderLogLevel level, const char *message, const char *file, const char *function, int line, void *userdata)
+{
+    (void)userdata;
+
+    FILE *out = levelStream(level);
+    const char *color = levelColor(level);
+
+    fprintf(out,
+            "%s[%s] %s:%d (%s): %s\x1b[0m\n",
+            color,
+            levelToString(level),
+            file,
+            line,
+            function,
+            message);
 }
