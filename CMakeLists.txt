@@ -19,6 +19,7 @@ find_package(PkgConfig REQUIRED)
 pkg_check_modules(SDL2       REQUIRED IMPORTED_TARGET sdl2)
 pkg_check_modules(SDL2_IMAGE REQUIRED IMPORTED_TARGET SDL2_image)
 pkg_check_modules(SDL2_GFX   REQUIRED IMPORTED_TARGET SDL2_gfx)
+pkg_check_modules(SDL2_TTF   REQUIRED IMPORTED_TARGET SDL2_ttf)
 
 # ============================================================
 # cinder_math — header-only interface library
@@ -68,6 +69,7 @@ target_link_libraries(cinder
         PkgConfig::SDL2
         PkgConfig::SDL2_IMAGE
         PkgConfig::SDL2_GFX
+        PkgConfig::SDL2_TTF
 )
 
 # ============================================================

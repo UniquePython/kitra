@@ -2,6 +2,7 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL2_gfxPrimitives.h>
 
 #include <string.h>
@@ -16,7 +17,9 @@ typedef struct CinderCtx
 
     bool isRunning;
     bool frameBegun;
+
     bool imgInitialized;
+    bool ttfInitialized;
 
     // ------ Input handling ------
 
@@ -73,7 +76,9 @@ CinderStatus CinderInit(CinderSubsystem flags)
 
     gCinderCtx.isRunning = false;
     gCinderCtx.frameBegun = false;
+
     gCinderCtx.imgInitialized = false;
+    gCinderCtx.ttfInitialized = false;
 
     memset(gCinderCtx.keysDown, false, sizeof(gCinderCtx.keysDown));
     memset(gCinderCtx.keysPressed, false, sizeof(gCinderCtx.keysPressed));
@@ -141,6 +146,9 @@ void CinderQuit(void)
 
     if (gCinderCtx.imgInitialized)
         IMG_Quit();
+
+    if (gCinderCtx.ttfInitialized)
+        TTF_Quit();
 
     SDL_Quit();
 }
@@ -916,6 +924,191 @@ void CinderDestroyTexture(CinderTexture **tex)
 
     free(*tex);
     *tex = NULL;
+}
+
+// ======================================= TEXT ================================================
+
+typedef struct CinderFont
+{
+    TTF_Font *handle;
+    int size;
+    char *path;
+} CinderFont;
+
+CinderFont *CinderLoadFont(const char *path, int size)
+{
+    if (!path || size <= 0)
+    {
+        CINDER_LOG(CINDER_LOG_ERROR, "Invalid font path or size");
+        return NULL;
+    }
+
+    if (!gCinderCtx.ttfInitialized)
+    {
+        if (TTF_Init() < 0)
+        {
+            CINDER_LOG(CINDER_LOG_ERROR, TTF_GetError());
+            return NULL;
+        }
+        gCinderCtx.ttfInitialized = true;
+    }
+
+    TTF_Font *font = TTF_OpenFont(path, size);
+    if (!font)
+    {
+        CINDER_LOG(CINDER_LOG_ERROR, TTF_GetError());
+        return NULL;
+    }
+
+    CinderFont *cfont = malloc(sizeof(CinderFont));
+    if (!cfont)
+    {
+        CINDER_LOG(CINDER_LOG_ERROR, "Failed to allocate CinderFont");
+        TTF_CloseFont(font);
+        return NULL;
+    }
+
+    cfont->handle = font;
+    cfont->size = size;
+    cfont->path = strdup(path);
+
+    return cfont;
+}
+
+void CinderDestroyFont(CinderFont **font)
+{
+    if (!font || !*font)
+        return;
+
+    if ((*font)->handle)
+        TTF_CloseFont((*font)->handle);
+
+    if ((*font)->path)
+        free((*font)->path);
+
+    free(*font);
+    *font = NULL;
+}
+
+void CinderDrawText(CinderFont *font, const char *text, int x, int y, CinderColor color)
+{
+    if (!gCinderCtx.renderer || !font || !text)
+        return;
+
+    SDL_Color sdlColor = {color.r, color.g, color.b, color.a};
+
+    SDL_Surface *surface = TTF_RenderUTF8_Blended(font->handle, text, sdlColor);
+    if (!surface)
+    {
+        CINDER_LOG(CINDER_LOG_ERROR, TTF_GetError());
+        return;
+    }
+
+    SDL_Texture *tex = SDL_CreateTextureFromSurface(gCinderCtx.renderer, surface);
+    if (!tex)
+    {
+        CINDER_LOG(CINDER_LOG_ERROR, SDL_GetError());
+        SDL_FreeSurface(surface);
+        return;
+    }
+
+    int w, h;
+    SDL_QueryTexture(tex, NULL, NULL, &w, &h);
+
+    SDL_Rect dst = {x, y, w, h};
+
+    SDL_RenderCopy(gCinderCtx.renderer, tex, NULL, &dst);
+
+    SDL_DestroyTexture(tex);
+}
+
+void CinderDrawTextV(CinderFont *font, const char *text, CinderVec2i pos, CinderColor color)
+{
+    CinderDrawText(font, text, pos.x, pos.y, color);
+}
+
+typedef struct CinderText
+{
+    SDL_Texture *handle;
+    int width;
+    int height;
+
+    CinderFont *font;
+    char *text;
+    CinderColor color;
+} CinderText;
+
+CinderText *CinderCreateText(CinderFont *font, const char *text, CinderColor color)
+{
+    if (!gCinderCtx.renderer || !font || !text)
+        return NULL;
+
+    SDL_Color sdlColor = {color.r, color.g, color.b, color.a};
+
+    SDL_Surface *surface = TTF_RenderUTF8_Blended(font->handle, text, sdlColor);
+    if (!surface)
+    {
+        CINDER_LOG(CINDER_LOG_ERROR, TTF_GetError());
+        return NULL;
+    }
+
+    SDL_Texture *tex = SDL_CreateTextureFromSurface(gCinderCtx.renderer, surface);
+    if (!tex)
+    {
+        CINDER_LOG(CINDER_LOG_ERROR, SDL_GetError());
+        SDL_FreeSurface(surface);
+        return NULL;
+    }
+
+    CinderText *ct = malloc(sizeof(CinderText));
+    if (!ct)
+    {
+        CINDER_LOG(CINDER_LOG_ERROR, "Failed to allocate CinderText");
+        SDL_DestroyTexture(tex);
+        SDL_FreeSurface(surface);
+        return NULL;
+    }
+
+    ct->handle = tex;
+    ct->width = surface->w;
+    ct->height = surface->h;
+    ct->font = font;
+    ct->text = strdup(text);
+    ct->color = color;
+
+    SDL_FreeSurface(surface);
+
+    return ct;
+}
+
+void CinderDrawCachedText(CinderText *t, int x, int y)
+{
+    if (!gCinderCtx.renderer || !t || !t->handle)
+        return;
+
+    SDL_Rect dst = {x, y, t->width, t->height};
+
+    SDL_RenderCopy(gCinderCtx.renderer, t->handle, NULL, &dst);
+}
+
+void CinderDrawCachedTextV(CinderText *t, CinderVec2i pos)
+{
+    CinderDrawCachedText(t, pos.x, pos.y);
+}
+
+void CinderDestroyCachedText(CinderText **t)
+{
+    if (!t || !*t)
+        return;
+
+    if ((*t)->handle)
+        SDL_DestroyTexture((*t)->handle);
+
+    if ((*t)->text)
+        free((*t)->text);
+
+    free(*t);
+    *t = NULL;
 }
 
 // ======================================= ERROR ================================================

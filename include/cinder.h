@@ -316,6 +316,25 @@ void CinderDrawTextureV(CinderTexture *tex, CinderVec2i pos);
 
 void CinderDestroyTexture(CinderTexture **tex);
 
+// ======================================= TEXT ================================================
+
+typedef struct CinderFont CinderFont;
+
+CinderFont *CinderLoadFont(const char *path, int size);
+void CinderDestroyFont(CinderFont **font);
+
+void CinderDrawText(CinderFont *font, const char *text, int x, int y, CinderColor color);
+void CinderDrawTextV(CinderFont *font, const char *text, CinderVec2i pos, CinderColor color);
+
+typedef struct CinderText CinderText;
+
+CinderText *CinderCreateText(CinderFont *font, const char *text, CinderColor color);
+
+void CinderDrawCachedText(CinderText *t, int x, int y);
+void CinderDrawCachedTextV(CinderText *t, CinderVec2i pos);
+
+void CinderDestroyCachedText(CinderText **t);
+
 // ======================================= ERROR ================================================
 
 typedef enum
