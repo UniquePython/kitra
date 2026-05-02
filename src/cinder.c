@@ -689,6 +689,11 @@ void CinderDrawTexture(CinderTexture *tex, int x, int y)
     CinderDrawTextureEx(tex, NULL, &dst);
 }
 
+void CinderDrawTextureV(CinderTexture *tex, CinderVec2i pos)
+{
+    CinderDrawTexture(tex, pos.x, pos.y);
+}
+
 void CinderDestroyTexture(CinderTexture **tex)
 {
     if (!tex || !*tex)

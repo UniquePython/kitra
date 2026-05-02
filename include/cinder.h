@@ -6,6 +6,7 @@
 #include <limits.h>
 #include <stdint.h>
 
+#include "cinder_compiler.h"
 #include "cinder_math.h"
 
 typedef struct CinderCtx CinderCtx;
@@ -32,6 +33,7 @@ typedef enum
 
 } CinderSubsystem;
 
+CINDER_WARN_UNUSED_RESULT
 CinderStatus CinderInit(CinderSubsystem flags);
 void CinderQuit(void);
 
@@ -64,6 +66,7 @@ typedef struct CinderWindowDesc
 
 #define CINDER_WINDOW_POS_CENTERED INT_MIN
 
+CINDER_WARN_UNUSED_RESULT
 CinderStatus CinderCreateWindow(const CinderWindowDesc *winDesc);
 void CinderDestroyWindow(void);
 
@@ -258,14 +261,24 @@ void CinderDrawRoundedRectOutline(CinderRect rect, int radius, CinderColor color
 
 typedef struct CinderTexture CinderTexture;
 
+CINDER_WARN_UNUSED_RESULT
+CINDER_NONNULL(1)
 CinderTexture *CinderLoadTexture(const char *path);
+
+CINDER_NONNULL(1)
 void CinderDrawTextureEx(CinderTexture *tex, const CinderRect *src, const CinderRect *dst);
+
+CINDER_NONNULL(1)
 void CinderDrawTexture(CinderTexture *tex, int x, int y);
-void CinderDrawTextureAt(CinderTexture *tex, CinderVec2i pos);
+
+CINDER_NONNULL(1)
+void CinderDrawTextureV(CinderTexture *tex, CinderVec2i pos);
+
 void CinderDestroyTexture(CinderTexture **tex);
 
 // ======================================= ERROR ================================================
 
+CINDER_WARN_UNUSED_RESULT
 const char *CinderGetError(void);
 
 #endif /* CINDER_H_ */
