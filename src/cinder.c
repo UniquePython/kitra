@@ -771,7 +771,7 @@ void CinderDrawRectOutline(CinderRect rect, CinderColor color)
     SDL_Rect sdlRect = CinderToSDLRect(rect);
 
     SDL_SetRenderDrawColor(gCinderCtx.renderer, color.r, color.g, color.b, color.a);
-    SDL_RenderFillRect(gCinderCtx.renderer, &sdlRect);
+    SDL_RenderDrawRect(gCinderCtx.renderer, &sdlRect);
 }
 
 void CinderDrawRoundedRect(CinderRect rect, int radius, CinderColor color)
