@@ -184,11 +184,31 @@ typedef enum CinderKey
     CINDER_KEY_SCROLLLOCK = 98,
     CINDER_KEY_PAUSE = 99,
 
-    CINDER_KEY_COUNT = 100
+    CINDER_KEY_COUNT
+
 } CinderKey;
+
+typedef enum CinderMouseButton
+{
+    CINDER_MOUSE_LEFT = 0,
+    CINDER_MOUSE_RIGHT = 1,
+    CINDER_MOUSE_MIDDLE = 2,
+    CINDER_MOUSE_SIDE1 = 3,
+    CINDER_MOUSE_SIDE2 = 4,
+
+    CINDER_MOUSE_BUTTON_COUNT
+
+} CinderMouseButton;
 
 bool CinderIsKeyDown(CinderKey key);
 bool CinderIsKeyPressed(CinderKey key);
+
+CinderVec2i CinderGetMousePos(void);
+CinderVec2i CinderGetMouseDelta(void);
+CinderVec2i CinderGetScrollDelta(void);
+
+bool CinderIsMouseButtonDown(CinderMouseButton button);
+bool CinderIsMouseButtonPressed(CinderMouseButton button);
 
 // ======================================= CORE LOOP ================================================
 

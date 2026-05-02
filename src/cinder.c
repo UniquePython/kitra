@@ -18,12 +18,28 @@ typedef struct CinderCtx
     bool frameBegun;
     bool imgInitialized;
 
+    // ------ Input handling -------
+
     bool keysDown[CINDER_KEY_COUNT];
     bool keysPressed[CINDER_KEY_COUNT];
+
+    CinderVec2i mousePos;
+    CinderVec2i prevMousePos;
+
+    CinderVec2i mouseDelta;
+
+    CinderVec2i scrollDelta;
+
+    bool mouseDown[CINDER_MOUSE_BUTTON_COUNT];
+    bool mousePressed[CINDER_MOUSE_BUTTON_COUNT];
+
+    // ------ Delta time ------
 
     uint64_t lastCounter;
     uint64_t perfFrequency;
     float deltaTime;
+
+    // ------ Logging ------
 
     const char *lastError;
     CinderLogLevel lastLevel;
@@ -341,6 +357,37 @@ bool CinderIsKeyPressed(CinderKey key)
     return gCinderCtx.keysPressed[key];
 }
 
+CinderVec2i CinderGetMousePos(void)
+{
+    return gCinderCtx.mousePos;
+}
+
+CinderVec2i CinderGetMouseDelta(void)
+{
+    return gCinderCtx.mouseDelta;
+}
+
+CinderVec2i CinderGetScrollDelta(void)
+{
+    return gCinderCtx.scrollDelta;
+}
+
+bool CinderIsMouseButtonDown(CinderMouseButton button)
+{
+    if (button < 0 || button >= CINDER_MOUSE_BUTTON_COUNT)
+        return false;
+
+    return gCinderCtx.mouseDown[button];
+}
+
+bool CinderIsMouseButtonPressed(CinderMouseButton button)
+{
+    if (button < 0 || button >= CINDER_MOUSE_BUTTON_COUNT)
+        return false;
+
+    return gCinderCtx.mousePressed[button];
+}
+
 // ======================================= CORE LOOP ================================================
 
 bool CinderIsRunning(void)
@@ -368,6 +415,13 @@ void CinderBeginFrame(void)
     // ---------------- Reset per-frame input ----------------
 
     memset(gCinderCtx.keysPressed, false, sizeof(gCinderCtx.keysPressed));
+
+    gCinderCtx.mouseDelta = (CinderVec2i){0, 0};
+    gCinderCtx.scrollDelta = (CinderVec2i){0, 0};
+
+    memset(gCinderCtx.mousePressed, false, sizeof(gCinderCtx.mousePressed));
+
+    gCinderCtx.prevMousePos = gCinderCtx.mousePos;
 
     gCinderCtx.frameBegun = true;
 
@@ -412,6 +466,46 @@ void CinderBeginFrame(void)
                     break;
                 }
             }
+        }
+        break;
+
+        case SDL_MOUSEMOTION:
+        {
+            gCinderCtx.mousePos.x = sdlEvent.motion.x;
+            gCinderCtx.mousePos.y = sdlEvent.motion.y;
+
+            gCinderCtx.mouseDelta.x += sdlEvent.motion.xrel;
+            gCinderCtx.mouseDelta.y += sdlEvent.motion.yrel;
+        }
+        break;
+
+        case SDL_MOUSEBUTTONDOWN:
+        {
+            int btn = sdlEvent.button.button;
+            if (btn >= 1 && btn <= 5)
+            {
+                int index = btn - 1;
+                gCinderCtx.mouseDown[index] = true;
+                gCinderCtx.mousePressed[index] = true;
+            }
+        }
+        break;
+
+        case SDL_MOUSEBUTTONUP:
+        {
+            int btn = sdlEvent.button.button;
+            if (btn >= 1 && btn <= 5)
+            {
+                int index = btn - 1;
+                gCinderCtx.mouseDown[index] = false;
+            }
+        }
+        break;
+
+        case SDL_MOUSEWHEEL:
+        {
+            gCinderCtx.scrollDelta.x += sdlEvent.wheel.x;
+            gCinderCtx.scrollDelta.y += sdlEvent.wheel.y;
         }
         break;
 
