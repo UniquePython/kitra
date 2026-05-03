@@ -8,7 +8,7 @@ struct CinderTexture
 
 CinderTexture *CinderLoadTexture(const char *path)
 {
-    if (!gCinderCtx.imgInitialized)
+    if (!gCinderCtx.core.imgInitialized)
     {
         int flags = IMG_INIT_PNG | IMG_INIT_JPG | IMG_INIT_WEBP | IMG_INIT_TIF;
         int impFormats = IMG_INIT_PNG | IMG_INIT_JPG;
@@ -18,10 +18,10 @@ CinderTexture *CinderLoadTexture(const char *path)
             CINDER_LOG(CINDER_LOG_ERROR, IMG_GetError());
             return NULL;
         }
-        gCinderCtx.imgInitialized = true;
+        gCinderCtx.core.imgInitialized = true;
     }
 
-    if (!gCinderCtx.renderer)
+    if (!gCinderCtx.core.renderer)
     {
         CINDER_LOG(CINDER_LOG_ERROR, "Renderer not initialized");
         return NULL;
@@ -34,7 +34,7 @@ CinderTexture *CinderLoadTexture(const char *path)
         return NULL;
     }
 
-    SDL_Texture *tex = SDL_CreateTextureFromSurface(gCinderCtx.renderer, surface);
+    SDL_Texture *tex = SDL_CreateTextureFromSurface(gCinderCtx.core.renderer, surface);
     SDL_FreeSurface(surface);
 
     if (!tex)
@@ -59,7 +59,7 @@ CinderTexture *CinderLoadTexture(const char *path)
 
 void CinderDrawTextureEx(CinderTexture *tex, const CinderRect *src, const CinderRect *dst)
 {
-    if (!gCinderCtx.renderer || !tex)
+    if (!gCinderCtx.core.renderer || !tex)
         return;
 
     SDL_Rect sdlSrc, sdlDst;
@@ -77,7 +77,7 @@ void CinderDrawTextureEx(CinderTexture *tex, const CinderRect *src, const Cinder
         pDst = &sdlDst;
     }
 
-    SDL_RenderCopy(gCinderCtx.renderer, tex->handle, pSrc, pDst);
+    SDL_RenderCopy(gCinderCtx.core.renderer, tex->handle, pSrc, pDst);
 }
 
 void CinderDrawTexture(CinderTexture *tex, int x, int y)

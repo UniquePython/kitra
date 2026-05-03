@@ -24,14 +24,14 @@ CinderFont *CinderLoadFont(const char *path, int size)
         return NULL;
     }
 
-    if (!gCinderCtx.ttfInitialized)
+    if (!gCinderCtx.core.ttfInitialized)
     {
         if (TTF_Init() < 0)
         {
             CINDER_LOG(CINDER_LOG_ERROR, TTF_GetError());
             return NULL;
         }
-        gCinderCtx.ttfInitialized = true;
+        gCinderCtx.core.ttfInitialized = true;
     }
 
     TTF_Font *font = TTF_OpenFont(path, size);
@@ -67,7 +67,7 @@ void CinderDestroyFont(CinderFont **font)
 
 void CinderDrawText(CinderFont *font, const char *text, int x, int y, CinderColor color)
 {
-    if (!gCinderCtx.renderer || !font || !text)
+    if (!gCinderCtx.core.renderer || !font || !text)
         return;
 
     SDL_Color sdlColor = {color.r, color.g, color.b, color.a};
@@ -79,7 +79,7 @@ void CinderDrawText(CinderFont *font, const char *text, int x, int y, CinderColo
         return;
     }
 
-    SDL_Texture *tex = SDL_CreateTextureFromSurface(gCinderCtx.renderer, surface);
+    SDL_Texture *tex = SDL_CreateTextureFromSurface(gCinderCtx.core.renderer, surface);
     SDL_FreeSurface(surface);
 
     if (!tex)
@@ -90,7 +90,7 @@ void CinderDrawText(CinderFont *font, const char *text, int x, int y, CinderColo
 
     int w, h;
     SDL_QueryTexture(tex, NULL, NULL, &w, &h);
-    SDL_RenderCopy(gCinderCtx.renderer, tex, NULL, &(SDL_Rect){x, y, w, h});
+    SDL_RenderCopy(gCinderCtx.core.renderer, tex, NULL, &(SDL_Rect){x, y, w, h});
     SDL_DestroyTexture(tex);
 }
 
@@ -101,7 +101,7 @@ void CinderDrawTextV(CinderFont *font, const char *text, CinderPoint pos, Cinder
 
 CinderText *CinderCreateText(CinderFont *font, const char *text, CinderColor color)
 {
-    if (!gCinderCtx.renderer || !font || !text)
+    if (!gCinderCtx.core.renderer || !font || !text)
         return NULL;
 
     SDL_Color sdlColor = {color.r, color.g, color.b, color.a};
@@ -113,7 +113,7 @@ CinderText *CinderCreateText(CinderFont *font, const char *text, CinderColor col
         return NULL;
     }
 
-    SDL_Texture *tex = SDL_CreateTextureFromSurface(gCinderCtx.renderer, surface);
+    SDL_Texture *tex = SDL_CreateTextureFromSurface(gCinderCtx.core.renderer, surface);
     SDL_FreeSurface(surface);
 
     if (!tex)
@@ -141,10 +141,10 @@ CinderText *CinderCreateText(CinderFont *font, const char *text, CinderColor col
 
 void CinderDrawCachedText(CinderText *t, int x, int y)
 {
-    if (!gCinderCtx.renderer || !t || !t->handle)
+    if (!gCinderCtx.core.renderer || !t || !t->handle)
         return;
 
-    SDL_RenderCopy(gCinderCtx.renderer, t->handle, NULL, &(SDL_Rect){x, y, t->width, t->height});
+    SDL_RenderCopy(gCinderCtx.core.renderer, t->handle, NULL, &(SDL_Rect){x, y, t->width, t->height});
 }
 
 void CinderDrawCachedTextV(CinderText *t, CinderPoint pos)

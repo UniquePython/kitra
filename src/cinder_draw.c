@@ -9,24 +9,24 @@ static SDL_Rect CinderToSDLRect(CinderRect rect)
 
 void CinderClearBackground(CinderColor color)
 {
-    if (!gCinderCtx.renderer)
+    if (!gCinderCtx.core.renderer)
     {
         CINDER_LOG(CINDER_LOG_WARNING, "Renderer is NULL in CinderClearBackground");
         return;
     }
 
-    SDL_SetRenderDrawColor(gCinderCtx.renderer, color.r, color.g, color.b, color.a);
-    SDL_RenderClear(gCinderCtx.renderer);
+    SDL_SetRenderDrawColor(gCinderCtx.core.renderer, color.r, color.g, color.b, color.a);
+    SDL_RenderClear(gCinderCtx.core.renderer);
 }
 
 // --------------------------------------- LINE ---------------------------------------
 
 void CinderDrawLine(int x1, int y1, int x2, int y2, CinderColor color)
 {
-    if (!gCinderCtx.renderer)
+    if (!gCinderCtx.core.renderer)
         return;
 
-    lineRGBA(gCinderCtx.renderer, x1, y1, x2, y2, CINDER_COLOR_UNPACK(color));
+    lineRGBA(gCinderCtx.core.renderer, x1, y1, x2, y2, CINDER_COLOR_UNPACK(color));
 }
 
 void CinderDrawLineV(CinderPoint start, CinderPoint end, CinderColor color)
@@ -38,10 +38,10 @@ void CinderDrawLineV(CinderPoint start, CinderPoint end, CinderColor color)
 
 void CinderDrawCircle(int x, int y, int radius, CinderColor color)
 {
-    if (!gCinderCtx.renderer)
+    if (!gCinderCtx.core.renderer)
         return;
 
-    filledCircleRGBA(gCinderCtx.renderer, x, y, radius, CINDER_COLOR_UNPACK(color));
+    filledCircleRGBA(gCinderCtx.core.renderer, x, y, radius, CINDER_COLOR_UNPACK(color));
 }
 
 void CinderDrawCircleV(CinderPoint pos, int radius, CinderColor color)
@@ -51,10 +51,10 @@ void CinderDrawCircleV(CinderPoint pos, int radius, CinderColor color)
 
 void CinderDrawCircleOutline(int x, int y, int radius, CinderColor color)
 {
-    if (!gCinderCtx.renderer)
+    if (!gCinderCtx.core.renderer)
         return;
 
-    circleRGBA(gCinderCtx.renderer, x, y, radius, CINDER_COLOR_UNPACK(color));
+    circleRGBA(gCinderCtx.core.renderer, x, y, radius, CINDER_COLOR_UNPACK(color));
 }
 
 void CinderDrawCircleOutlineV(CinderPoint pos, int radius, CinderColor color)
@@ -66,10 +66,10 @@ void CinderDrawCircleOutlineV(CinderPoint pos, int radius, CinderColor color)
 
 void CinderDrawTriangle(int x1, int y1, int x2, int y2, int x3, int y3, CinderColor color)
 {
-    if (!gCinderCtx.renderer)
+    if (!gCinderCtx.core.renderer)
         return;
 
-    filledTrigonRGBA(gCinderCtx.renderer, x1, y1, x2, y2, x3, y3, CINDER_COLOR_UNPACK(color));
+    filledTrigonRGBA(gCinderCtx.core.renderer, x1, y1, x2, y2, x3, y3, CINDER_COLOR_UNPACK(color));
 }
 
 void CinderDrawTriangleV(CinderPoint p1, CinderPoint p2, CinderPoint p3, CinderColor color)
@@ -79,10 +79,10 @@ void CinderDrawTriangleV(CinderPoint p1, CinderPoint p2, CinderPoint p3, CinderC
 
 void CinderDrawTriangleOutline(int x1, int y1, int x2, int y2, int x3, int y3, CinderColor color)
 {
-    if (!gCinderCtx.renderer)
+    if (!gCinderCtx.core.renderer)
         return;
 
-    trigonRGBA(gCinderCtx.renderer, x1, y1, x2, y2, x3, y3, CINDER_COLOR_UNPACK(color));
+    trigonRGBA(gCinderCtx.core.renderer, x1, y1, x2, y2, x3, y3, CINDER_COLOR_UNPACK(color));
 }
 
 void CinderDrawTriangleOutlineV(CinderPoint p1, CinderPoint p2, CinderPoint p3, CinderColor color)
@@ -94,40 +94,40 @@ void CinderDrawTriangleOutlineV(CinderPoint p1, CinderPoint p2, CinderPoint p3, 
 
 void CinderDrawRect(CinderRect rect, CinderColor color)
 {
-    if (!gCinderCtx.renderer)
+    if (!gCinderCtx.core.renderer)
         return;
 
     SDL_Rect sdlRect = CinderToSDLRect(rect);
-    SDL_SetRenderDrawColor(gCinderCtx.renderer, color.r, color.g, color.b, color.a);
-    SDL_RenderFillRect(gCinderCtx.renderer, &sdlRect);
+    SDL_SetRenderDrawColor(gCinderCtx.core.renderer, color.r, color.g, color.b, color.a);
+    SDL_RenderFillRect(gCinderCtx.core.renderer, &sdlRect);
 }
 
 void CinderDrawRectOutline(CinderRect rect, CinderColor color)
 {
-    if (!gCinderCtx.renderer)
+    if (!gCinderCtx.core.renderer)
         return;
 
     SDL_Rect sdlRect = CinderToSDLRect(rect);
-    SDL_SetRenderDrawColor(gCinderCtx.renderer, color.r, color.g, color.b, color.a);
-    SDL_RenderDrawRect(gCinderCtx.renderer, &sdlRect);
+    SDL_SetRenderDrawColor(gCinderCtx.core.renderer, color.r, color.g, color.b, color.a);
+    SDL_RenderDrawRect(gCinderCtx.core.renderer, &sdlRect);
 }
 
 void CinderDrawRoundedRect(CinderRect rect, int radius, CinderColor color)
 {
-    if (!gCinderCtx.renderer)
+    if (!gCinderCtx.core.renderer)
         return;
 
-    roundedBoxRGBA(gCinderCtx.renderer,
+    roundedBoxRGBA(gCinderCtx.core.renderer,
                    rect.x, rect.y, rect.x + rect.w - 1, rect.y + rect.h - 1,
                    radius, CINDER_COLOR_UNPACK(color));
 }
 
 void CinderDrawRoundedRectOutline(CinderRect rect, int radius, CinderColor color)
 {
-    if (!gCinderCtx.renderer)
+    if (!gCinderCtx.core.renderer)
         return;
 
-    roundedRectangleRGBA(gCinderCtx.renderer,
+    roundedRectangleRGBA(gCinderCtx.core.renderer,
                          rect.x, rect.y, rect.x + rect.w - 1, rect.y + rect.h - 1,
                          radius, CINDER_COLOR_UNPACK(color));
 }

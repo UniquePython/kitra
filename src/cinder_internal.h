@@ -15,55 +15,67 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-typedef struct CinderCtx
+typedef struct CinderCoreState
 {
-    // ------ Core ------
-
     SDL_Window *window;
     SDL_Renderer *renderer;
-
     uint32_t initFlags;
-
     bool imgInitialized;
     bool ttfInitialized;
+} CinderCoreState;
 
-    // ------ Loop ------
-
+typedef struct CinderLoopState
+{
     bool isRunning;
     bool frameBegun;
+} CinderLoopState;
 
-    // ------ Timing ------
-
+typedef struct CinderTimingState
+{
     uint64_t perfFrequency;
     uint64_t lastCounter;
-
     float deltaTime;
     float fps;
     int targetFPS;
+} CinderTimingState;
 
-    // ------ Keyboard ------
+typedef struct CinderKeyboardState
+{
+    bool down[CINDER_KEY_COUNT];
+    bool pressed[CINDER_KEY_COUNT];
+} CinderKeyboardState;
 
-    bool keysDown[CINDER_KEY_COUNT];
-    bool keysPressed[CINDER_KEY_COUNT];
-
-    // ------ Mouse ------
-
-    CinderPoint mousePos;
-    CinderPoint prevMousePos;
-    CinderVec2i mouseDelta;
+typedef struct CinderMouseState
+{
+    CinderPoint pos;
+    CinderPoint prevPos;
+    CinderVec2i delta;
     CinderVec2i scrollDelta;
+    bool down[CINDER_MOUSE_BUTTON_COUNT];
+    bool pressed[CINDER_MOUSE_BUTTON_COUNT];
+} CinderMouseState;
 
-    bool mouseDown[CINDER_MOUSE_BUTTON_COUNT];
-    bool mousePressed[CINDER_MOUSE_BUTTON_COUNT];
+typedef struct CinderInputState
+{
+    CinderKeyboardState keyboard;
+    CinderMouseState mouse;
+} CinderInputState;
 
-    // ------ Logging ------
-
+typedef struct CinderLogState
+{
     CinderErrorCallback callback;
-    void *callbackUserdata;
-
+    void *userdata;
     const char *lastError;
     CinderLogLevel lastLevel;
+} CinderLogState;
 
+typedef struct CinderCtx
+{
+    CinderCoreState core;
+    CinderLoopState loop;
+    CinderTimingState timing;
+    CinderInputState input;
+    CinderLogState log;
 } CinderCtx;
 
 extern CinderCtx gCinderCtx;

@@ -28,7 +28,7 @@ float CinderGetTimerElapsed(const CinderTimer *t)
 
     uint64_t now = SDL_GetPerformanceCounter();
 
-    return (float)((double)(now - t->start) / (double)gCinderCtx.perfFrequency);
+    return (float)((double)(now - t->start) / (double)gCinderCtx.timing.perfFrequency);
 }
 
 bool CinderTimerDone(CinderTimer *t, float duration)
@@ -38,7 +38,7 @@ bool CinderTimerDone(CinderTimer *t, float duration)
 
     uint64_t now = SDL_GetPerformanceCounter();
 
-    float elapsed = (float)((double)(now - t->last) / (double)gCinderCtx.perfFrequency);
+    float elapsed = (float)((double)(now - t->last) / (double)gCinderCtx.timing.perfFrequency);
 
     if (elapsed >= duration)
     {
@@ -61,15 +61,15 @@ void CinderTimerSetRepeat(CinderTimer *t, bool repeat)
 
 float CinderGetDeltaTime(void)
 {
-    return gCinderCtx.deltaTime;
+    return gCinderCtx.timing.deltaTime;
 }
 
 void CinderSetTargetFPS(int fps)
 {
-    gCinderCtx.targetFPS = fps;
+    gCinderCtx.timing.targetFPS = fps;
 }
 
 float CinderGetFPS(void)
 {
-    return gCinderCtx.fps;
+    return gCinderCtx.timing.fps;
 }

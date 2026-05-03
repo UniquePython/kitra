@@ -37,38 +37,38 @@ static FILE *levelStream(CinderLogLevel level)
 
 void CinderSetErrorCallback(CinderErrorCallback cb, void *userdata)
 {
-    gCinderCtx.callback = cb;
-    gCinderCtx.callbackUserdata = userdata;
+    gCinderCtx.log.callback = cb;
+    gCinderCtx.log.userdata = userdata;
 }
 
 const char *CinderGetError(void)
 {
-    return gCinderCtx.lastError;
+    return gCinderCtx.log.lastError;
 }
 
 void CinderClearError(void)
 {
-    gCinderCtx.lastError = NULL;
-    gCinderCtx.lastLevel = CINDER_LOG_INFO;
+    gCinderCtx.log.lastError = NULL;
+    gCinderCtx.log.lastLevel = CINDER_LOG_INFO;
 }
 
 CinderLogLevel CinderGetLastLevel(void)
 {
-    return gCinderCtx.lastLevel;
+    return gCinderCtx.log.lastLevel;
 }
 
 bool CinderHasError(void)
 {
-    return gCinderCtx.lastLevel == CINDER_LOG_ERROR;
+    return gCinderCtx.log.lastLevel == CINDER_LOG_ERROR;
 }
 
 void CinderLogInternal__(CinderLogLevel level, const char *msg, const char *file, const char *function, int line)
 {
-    gCinderCtx.lastLevel = level;
-    gCinderCtx.lastError = msg;
+    gCinderCtx.log.lastLevel = level;
+    gCinderCtx.log.lastError = msg;
 
-    if (gCinderCtx.callback)
-        gCinderCtx.callback(level, msg, file, function, line, gCinderCtx.callbackUserdata);
+    if (gCinderCtx.log.callback)
+        gCinderCtx.log.callback(level, msg, file, function, line, gCinderCtx.log.userdata);
 }
 
 void CinderDefaultLogCallback(CinderLogLevel level, const char *message, const char *file, const char *function, int line, void *userdata)

@@ -126,8 +126,8 @@ void CinderInputProcessEvent(const SDL_Event *event)
             CinderKey key = sSdlToCinderKey[event->key.keysym.scancode];
             if (key != CINDER_KEY_UNKNOWN)
             {
-                gCinderCtx.keysDown[key] = true;
-                gCinderCtx.keysPressed[key] = true;
+                gCinderCtx.input.keyboard.down[key] = true;
+                gCinderCtx.input.keyboard.pressed[key] = true;
             }
         }
         break;
@@ -136,15 +136,15 @@ void CinderInputProcessEvent(const SDL_Event *event)
     {
         CinderKey key = sSdlToCinderKey[event->key.keysym.scancode];
         if (key != CINDER_KEY_UNKNOWN)
-            gCinderCtx.keysDown[key] = false;
+            gCinderCtx.input.keyboard.down[key] = false;
     }
     break;
 
     case SDL_MOUSEMOTION:
-        gCinderCtx.mousePos.x = event->motion.x;
-        gCinderCtx.mousePos.y = event->motion.y;
-        gCinderCtx.mouseDelta.x += event->motion.xrel;
-        gCinderCtx.mouseDelta.y += event->motion.yrel;
+        gCinderCtx.input.mouse.pos.x = event->motion.x;
+        gCinderCtx.input.mouse.pos.y = event->motion.y;
+        gCinderCtx.input.mouse.delta.x += event->motion.xrel;
+        gCinderCtx.input.mouse.delta.y += event->motion.yrel;
         break;
 
     case SDL_MOUSEBUTTONDOWN:
@@ -152,8 +152,8 @@ void CinderInputProcessEvent(const SDL_Event *event)
         int index = event->button.button - 1;
         if (index >= 0 && index < CINDER_MOUSE_BUTTON_COUNT)
         {
-            gCinderCtx.mouseDown[index] = true;
-            gCinderCtx.mousePressed[index] = true;
+            gCinderCtx.input.mouse.down[index] = true;
+            gCinderCtx.input.mouse.pressed[index] = true;
         }
     }
     break;
@@ -162,13 +162,13 @@ void CinderInputProcessEvent(const SDL_Event *event)
     {
         int index = event->button.button - 1;
         if (index >= 0 && index < CINDER_MOUSE_BUTTON_COUNT)
-            gCinderCtx.mouseDown[index] = false;
+            gCinderCtx.input.mouse.down[index] = false;
     }
     break;
 
     case SDL_MOUSEWHEEL:
-        gCinderCtx.scrollDelta.x += event->wheel.x;
-        gCinderCtx.scrollDelta.y += event->wheel.y;
+        gCinderCtx.input.mouse.scrollDelta.x += event->wheel.x;
+        gCinderCtx.input.mouse.scrollDelta.y += event->wheel.y;
         break;
 
     default:
@@ -181,7 +181,7 @@ bool CinderIsKeyDown(CinderKey key)
     if (key < 0 || key >= CINDER_KEY_COUNT)
         return false;
 
-    return gCinderCtx.keysDown[key];
+    return gCinderCtx.input.keyboard.down[key];
 }
 
 bool CinderIsKeyPressed(CinderKey key)
@@ -189,22 +189,22 @@ bool CinderIsKeyPressed(CinderKey key)
     if (key < 0 || key >= CINDER_KEY_COUNT)
         return false;
 
-    return gCinderCtx.keysPressed[key];
+    return gCinderCtx.input.keyboard.pressed[key];
 }
 
 CinderPoint CinderGetMousePos(void)
 {
-    return gCinderCtx.mousePos;
+    return gCinderCtx.input.mouse.pos;
 }
 
 CinderVec2i CinderGetMouseDelta(void)
 {
-    return gCinderCtx.mouseDelta;
+    return gCinderCtx.input.mouse.delta;
 }
 
 CinderVec2i CinderGetScrollDelta(void)
 {
-    return gCinderCtx.scrollDelta;
+    return gCinderCtx.input.mouse.scrollDelta;
 }
 
 bool CinderIsMouseButtonDown(CinderMouseButton button)
@@ -212,7 +212,7 @@ bool CinderIsMouseButtonDown(CinderMouseButton button)
     if (button < 0 || button >= CINDER_MOUSE_BUTTON_COUNT)
         return false;
 
-    return gCinderCtx.mouseDown[button];
+    return gCinderCtx.input.mouse.down[button];
 }
 
 bool CinderIsMouseButtonPressed(CinderMouseButton button)
@@ -220,5 +220,5 @@ bool CinderIsMouseButtonPressed(CinderMouseButton button)
     if (button < 0 || button >= CINDER_MOUSE_BUTTON_COUNT)
         return false;
 
-    return gCinderCtx.mousePressed[button];
+    return gCinderCtx.input.mouse.pressed[button];
 }

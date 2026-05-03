@@ -31,45 +31,45 @@ CinderWindowDesc CinderDefaultWindowDesc(void)
 
 CinderStatus CinderCreateWindow(CinderWindowDesc winDesc)
 {
-    gCinderCtx.window = SDL_CreateWindow(
+    gCinderCtx.core.window = SDL_CreateWindow(
         winDesc.title,
         winDesc.centerX ? (int)SDL_WINDOWPOS_CENTERED : winDesc.pos.x,
         winDesc.centerY ? (int)SDL_WINDOWPOS_CENTERED : winDesc.pos.y,
         winDesc.size.w, winDesc.size.h,
         CinderToSDLWindowFlags(winDesc.flags));
 
-    if (!gCinderCtx.window)
+    if (!gCinderCtx.core.window)
     {
         CINDER_LOG(CINDER_LOG_ERROR, SDL_GetError());
         return CINDER_STATUS_WINDOW_CREATE_FAILED;
     }
 
-    gCinderCtx.renderer = SDL_CreateRenderer(gCinderCtx.window, -1, SDL_RENDERER_ACCELERATED);
+    gCinderCtx.core.renderer = SDL_CreateRenderer(gCinderCtx.core.window, -1, SDL_RENDERER_ACCELERATED);
 
-    if (!gCinderCtx.renderer)
+    if (!gCinderCtx.core.renderer)
     {
         CINDER_LOG(CINDER_LOG_ERROR, SDL_GetError());
-        SDL_DestroyWindow(gCinderCtx.window);
-        gCinderCtx.window = NULL;
+        SDL_DestroyWindow(gCinderCtx.core.window);
+        gCinderCtx.core.window = NULL;
         return CINDER_STATUS_RENDERER_CREATE_FAILED;
     }
 
-    gCinderCtx.isRunning = true;
+    gCinderCtx.loop.isRunning = true;
 
     return CINDER_STATUS_OK;
 }
 
 void CinderDestroyWindow(void)
 {
-    if (gCinderCtx.renderer)
+    if (gCinderCtx.core.renderer)
     {
-        SDL_DestroyRenderer(gCinderCtx.renderer);
-        gCinderCtx.renderer = NULL;
+        SDL_DestroyRenderer(gCinderCtx.core.renderer);
+        gCinderCtx.core.renderer = NULL;
     }
 
-    if (gCinderCtx.window)
+    if (gCinderCtx.core.window)
     {
-        SDL_DestroyWindow(gCinderCtx.window);
-        gCinderCtx.window = NULL;
+        SDL_DestroyWindow(gCinderCtx.core.window);
+        gCinderCtx.core.window = NULL;
     }
 }

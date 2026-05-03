@@ -16,11 +16,11 @@ CinderStatus CinderInit(CinderSubsystem flags)
 {
     gCinderCtx = (CinderCtx){0};
 
-    gCinderCtx.perfFrequency = SDL_GetPerformanceFrequency();
+    gCinderCtx.timing.perfFrequency = SDL_GetPerformanceFrequency();
 
     CinderInputInit();
 
-    if (!gCinderCtx.callback)
+    if (!gCinderCtx.log.callback)
         CinderSetErrorCallback(CinderDefaultLogCallback, NULL);
 
     if (flags & CINDER_SUBSYSTEM_EVENTS)
@@ -28,11 +28,11 @@ CinderStatus CinderInit(CinderSubsystem flags)
         if (SDL_InitSubSystem(SDL_INIT_EVENTS) < 0)
         {
             CINDER_LOG(CINDER_LOG_ERROR, "Failed to initialize EVENTS subsystem");
-            CinderRollbackSubsystems(gCinderCtx.initFlags);
-            gCinderCtx.initFlags = 0;
+            CinderRollbackSubsystems(gCinderCtx.core.initFlags);
+            gCinderCtx.core.initFlags = 0;
             return CINDER_STATUS_SUBSYSTEM_INIT_FAILED;
         }
-        gCinderCtx.initFlags |= SDL_INIT_EVENTS;
+        gCinderCtx.core.initFlags |= SDL_INIT_EVENTS;
     }
 
     if (flags & CINDER_SUBSYSTEM_AUDIO)
@@ -40,11 +40,11 @@ CinderStatus CinderInit(CinderSubsystem flags)
         if (SDL_InitSubSystem(SDL_INIT_AUDIO) < 0)
         {
             CINDER_LOG(CINDER_LOG_ERROR, "Failed to initialize AUDIO subsystem");
-            CinderRollbackSubsystems(gCinderCtx.initFlags);
-            gCinderCtx.initFlags = 0;
+            CinderRollbackSubsystems(gCinderCtx.core.initFlags);
+            gCinderCtx.core.initFlags = 0;
             return CINDER_STATUS_SUBSYSTEM_INIT_FAILED;
         }
-        gCinderCtx.initFlags |= SDL_INIT_AUDIO;
+        gCinderCtx.core.initFlags |= SDL_INIT_AUDIO;
     }
 
     if (flags & CINDER_SUBSYSTEM_VIDEO)
@@ -52,11 +52,11 @@ CinderStatus CinderInit(CinderSubsystem flags)
         if (SDL_InitSubSystem(SDL_INIT_VIDEO) < 0)
         {
             CINDER_LOG(CINDER_LOG_ERROR, "Failed to initialize VIDEO subsystem");
-            CinderRollbackSubsystems(gCinderCtx.initFlags);
-            gCinderCtx.initFlags = 0;
+            CinderRollbackSubsystems(gCinderCtx.core.initFlags);
+            gCinderCtx.core.initFlags = 0;
             return CINDER_STATUS_SUBSYSTEM_INIT_FAILED;
         }
-        gCinderCtx.initFlags |= SDL_INIT_VIDEO;
+        gCinderCtx.core.initFlags |= SDL_INIT_VIDEO;
     }
 
     return CINDER_STATUS_OK;
@@ -66,11 +66,11 @@ void CinderQuit(void)
 {
     CinderDestroyWindow();
 
-    gCinderCtx.initFlags = 0;
+    gCinderCtx.core.initFlags = 0;
 
-    if (gCinderCtx.imgInitialized)
+    if (gCinderCtx.core.imgInitialized)
         IMG_Quit();
-    if (gCinderCtx.ttfInitialized)
+    if (gCinderCtx.core.ttfInitialized)
         TTF_Quit();
 
     SDL_Quit();
