@@ -10,7 +10,7 @@ CinderTexture *CinderLoadTexture(const char *path)
 {
     if (!gCinderCtx.imgInitialized)
     {
-        int flags = IMG_INIT_PNG | IMG_INIT_JPG | IMG_INIT_WEBP | IMG_INIT_TIF | IMG_INIT_JXL | IMG_INIT_AVIF;
+        int flags = IMG_INIT_PNG | IMG_INIT_JPG | IMG_INIT_WEBP | IMG_INIT_TIF;
         int impFormats = IMG_INIT_PNG | IMG_INIT_JPG;
 
         if ((IMG_Init(flags) & impFormats) != impFormats)
