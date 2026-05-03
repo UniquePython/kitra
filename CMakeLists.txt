@@ -73,18 +73,34 @@ target_link_libraries(cinder
 )
 
 # ============================================================
-# Test executable — not installed
+# Test executables — not installed
 # ============================================================
 
-add_executable(cinder_test src/main.c)
+# Example 1 - pong
+
+add_executable(pong src/pong.c)
 
 target_link_options(cinder PRIVATE -Wl,--allow-shlib-undefined)
-target_link_options(cinder_test PRIVATE -Wl,--allow-shlib-undefined)
+target_link_options(pong PRIVATE -Wl,--allow-shlib-undefined)
 
-target_link_libraries(cinder_test PRIVATE Cinder::Cinder)
+target_link_libraries(pong PRIVATE Cinder::Cinder)
 
 # Dump the binary next to the source for convenience
-set_target_properties(cinder_test PROPERTIES
+set_target_properties(pong PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+)
+
+# Example 2 - snake
+
+add_executable(snake src/snake.c)
+
+target_link_options(cinder PRIVATE -Wl,--allow-shlib-undefined)
+target_link_options(snake PRIVATE -Wl,--allow-shlib-undefined)
+
+target_link_libraries(snake PRIVATE Cinder::Cinder)
+
+# Dump the binary next to the source for convenience
+set_target_properties(snake PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
 )
 

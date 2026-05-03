@@ -335,6 +335,14 @@ void CinderDrawCachedTextV(CinderText *t, CinderVec2i pos);
 
 void CinderDestroyCachedText(CinderText **t);
 
+typedef struct
+{
+    int width;
+    int height;
+} CinderTextSize;
+
+CinderTextSize CinderMeasureText(CinderFont *font, const char *text);
+
 // ======================================= ERROR ================================================
 
 typedef enum

@@ -1111,6 +1111,27 @@ void CinderDestroyCachedText(CinderText **t)
     *t = NULL;
 }
 
+CinderTextSize CinderMeasureText(CinderFont *font, const char *text)
+{
+    CinderTextSize size = {0, 0};
+
+    if (!font || !font->handle || !text)
+        return size;
+
+    int w = 0, h = 0;
+
+    if (TTF_SizeUTF8(font->handle, text, &w, &h) != 0)
+    {
+        CINDER_LOG(CINDER_LOG_ERROR, TTF_GetError());
+        return size;
+    }
+
+    size.width = w;
+    size.height = h;
+
+    return size;
+}
+
 // ======================================= ERROR ================================================
 
 void CinderSetErrorCallback(CinderErrorCallback cb, void *userdata)
