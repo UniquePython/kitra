@@ -5,7 +5,6 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#include "cinder_compiler.h"
 #include "cinder_math.h"
 
 typedef enum
@@ -30,7 +29,6 @@ typedef enum
 
 } CinderSubsystem;
 
-CINDER_WARN_UNUSED_RESULT
 CinderStatus CinderInit(CinderSubsystem flags);
 void CinderQuit(void);
 
@@ -62,10 +60,8 @@ typedef struct CinderWindowDesc
 
 } CinderWindowDesc;
 
-CINDER_WARN_UNUSED_RESULT
 CinderWindowDesc CinderDefaultWindowDesc(void);
 
-CINDER_WARN_UNUSED_RESULT
 CinderStatus CinderCreateWindow(CinderWindowDesc winDesc);
 void CinderDestroyWindow(void);
 
@@ -300,17 +296,12 @@ void CinderDrawRoundedRectOutline(CinderRect rect, int radius, CinderColor color
 
 typedef struct CinderTexture CinderTexture;
 
-CINDER_WARN_UNUSED_RESULT
-CINDER_NONNULL(1)
 CinderTexture *CinderLoadTexture(const char *path);
 
-CINDER_NONNULL(1)
 void CinderDrawTextureEx(CinderTexture *tex, const CinderRect *src, const CinderRect *dst);
 
-CINDER_NONNULL(1)
 void CinderDrawTexture(CinderTexture *tex, int x, int y);
 
-CINDER_NONNULL(1)
 void CinderDrawTextureV(CinderTexture *tex, CinderPoint pos);
 
 void CinderDestroyTexture(CinderTexture **tex);
@@ -356,12 +347,10 @@ typedef void (*CinderErrorCallback)(
 
 void CinderSetErrorCallback(CinderErrorCallback cb, void *userdata);
 
-CINDER_WARN_UNUSED_RESULT
 const char *CinderGetError(void);
 
 void CinderClearError(void);
 
-CINDER_WARN_UNUSED_RESULT
 CinderLogLevel CinderGetLastLevel(void);
 
 bool CinderHasError(void);

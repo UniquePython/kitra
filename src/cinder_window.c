@@ -35,8 +35,8 @@ CinderStatus CinderCreateWindow(CinderWindowDesc winDesc)
 {
     gCinderCtx.window = SDL_CreateWindow(
         winDesc.title,
-        winDesc.centerX ? SDL_WINDOWPOS_CENTERED : winDesc.pos.x,
-        winDesc.centerY ? SDL_WINDOWPOS_CENTERED : winDesc.pos.y,
+        winDesc.centerX ? (int)SDL_WINDOWPOS_CENTERED : winDesc.pos.x,
+        winDesc.centerY ? (int)SDL_WINDOWPOS_CENTERED : winDesc.pos.y,
         winDesc.size.w, winDesc.size.h,
         CinderToSDLWindowFlags(winDesc.flags));
 
@@ -115,8 +115,8 @@ void CinderBeginFrame(void)
     memset(gCinderCtx.keysPressed, 0, sizeof(gCinderCtx.keysPressed));
     memset(gCinderCtx.mousePressed, 0, sizeof(gCinderCtx.mousePressed));
 
-    gCinderCtx.mouseDelta = (CinderVec2i){0, 0};
-    gCinderCtx.scrollDelta = (CinderVec2i){0, 0};
+    gCinderCtx.mouseDelta = (CinderVec2i){{0, 0}};
+    gCinderCtx.scrollDelta = (CinderVec2i){{0, 0}};
     gCinderCtx.prevMousePos = gCinderCtx.mousePos;
     gCinderCtx.frameBegun = true;
 

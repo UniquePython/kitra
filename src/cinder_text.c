@@ -165,7 +165,7 @@ void CinderDestroyCachedText(CinderText **t)
 
 CinderSize CinderMeasureText(CinderFont *font, const char *text)
 {
-    CinderSize size = {0, 0};
+    CinderSize size = {{0, 0}};
 
     if (!font || !font->handle || !text)
         return size;

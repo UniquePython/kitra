@@ -1,8 +1,6 @@
 #ifndef CINDER_MATH_H_
 #define CINDER_MATH_H_
 
-#include "cinder_compiler.h"
-
 #include <math.h>
 
 // ======================================= VECTORS ================================================
@@ -27,82 +25,82 @@ typedef union CinderVec2f
     };
 } CinderVec2f;
 
-CINDER_INLINE CinderVec2i CinderVec2iAdd(CinderVec2i a, CinderVec2i b)
+static inline CinderVec2i CinderVec2iAdd(CinderVec2i a, CinderVec2i b)
 {
-    return (CinderVec2i){a.x + b.x, a.y + b.y};
+    return (CinderVec2i){{a.x + b.x, a.y + b.y}};
 }
 
-CINDER_INLINE CinderVec2f CinderVec2fAdd(CinderVec2f a, CinderVec2f b)
+static inline CinderVec2f CinderVec2fAdd(CinderVec2f a, CinderVec2f b)
 {
-    return (CinderVec2f){a.x + b.x, a.y + b.y};
+    return (CinderVec2f){{a.x + b.x, a.y + b.y}};
 }
 
-CINDER_INLINE CinderVec2i CinderVec2iSub(CinderVec2i a, CinderVec2i b)
+static inline CinderVec2i CinderVec2iSub(CinderVec2i a, CinderVec2i b)
 {
-    return (CinderVec2i){a.x - b.x, a.y - b.y};
+    return (CinderVec2i){{a.x - b.x, a.y - b.y}};
 }
 
-CINDER_INLINE CinderVec2f CinderVec2fSub(CinderVec2f a, CinderVec2f b)
+static inline CinderVec2f CinderVec2fSub(CinderVec2f a, CinderVec2f b)
 {
-    return (CinderVec2f){a.x - b.x, a.y - b.y};
+    return (CinderVec2f){{a.x - b.x, a.y - b.y}};
 }
 
-CINDER_INLINE CinderVec2i CinderVec2iNegate(CinderVec2i v)
+static inline CinderVec2i CinderVec2iNegate(CinderVec2i v)
 {
-    return (CinderVec2i){-v.x, -v.y};
+    return (CinderVec2i){{-v.x, -v.y}};
 }
 
-CINDER_INLINE CinderVec2f CinderVec2fNegate(CinderVec2f v)
+static inline CinderVec2f CinderVec2fNegate(CinderVec2f v)
 {
-    return (CinderVec2f){-v.x, -v.y};
+    return (CinderVec2f){{-v.x, -v.y}};
 }
 
-CINDER_INLINE CinderVec2i CinderVec2iScale(CinderVec2i v, int factor)
+static inline CinderVec2i CinderVec2iScale(CinderVec2i v, int factor)
 {
-    return (CinderVec2i){v.x * factor, v.y * factor};
+    return (CinderVec2i){{v.x * factor, v.y * factor}};
 }
 
-CINDER_INLINE CinderVec2f CinderVec2fScale(CinderVec2f v, float factor)
+static inline CinderVec2f CinderVec2fScale(CinderVec2f v, float factor)
 {
-    return (CinderVec2f){v.x * factor, v.y * factor};
+    return (CinderVec2f){{v.x * factor, v.y * factor}};
 }
 
-CINDER_INLINE int CinderVec2iLengthSquared(CinderVec2i v)
-{
-    return v.x * v.x + v.y * v.y;
-}
-
-CINDER_INLINE float CinderVec2fLengthSquared(CinderVec2f v)
+static inline int CinderVec2iLengthSquared(CinderVec2i v)
 {
     return v.x * v.x + v.y * v.y;
 }
 
-CINDER_INLINE float CinderVec2iLength(CinderVec2i v)
+static inline float CinderVec2fLengthSquared(CinderVec2f v)
+{
+    return v.x * v.x + v.y * v.y;
+}
+
+static inline float CinderVec2iLength(CinderVec2i v)
 {
     return sqrtf(CinderVec2iLengthSquared(v));
 }
 
-CINDER_INLINE float CinderVec2fLength(CinderVec2f v)
+static inline float CinderVec2fLength(CinderVec2f v)
 {
     return sqrtf(CinderVec2fLengthSquared(v));
 }
 
-CINDER_INLINE int CinderVec2iDot(CinderVec2i a, CinderVec2i b)
+static inline int CinderVec2iDot(CinderVec2i a, CinderVec2i b)
 {
     return a.x * b.x + a.y * b.y;
 }
 
-CINDER_INLINE float CinderVec2fDot(CinderVec2f a, CinderVec2f b)
+static inline float CinderVec2fDot(CinderVec2f a, CinderVec2f b)
 {
     return a.x * b.x + a.y * b.y;
 }
 
-CINDER_INLINE CinderVec2f CinderVec2fNormalize(CinderVec2f v)
+static inline CinderVec2f CinderVec2fNormalize(CinderVec2f v)
 {
     float len = CinderVec2fLength(v);
     if (len == 0.0f)
-        return (CinderVec2f){0.0f, 0.0f};
-    return (CinderVec2f){v.x / len, v.y / len};
+        return (CinderVec2f){{0.0f, 0.0f}};
+    return (CinderVec2f){{v.x / len, v.y / len}};
 }
 
 // --------------------------------------- 3D ---------------------------------------
@@ -125,82 +123,82 @@ typedef union CinderVec3f
     };
 } CinderVec3f;
 
-CINDER_INLINE CinderVec3i CinderVec3iAdd(CinderVec3i a, CinderVec3i b)
+static inline CinderVec3i CinderVec3iAdd(CinderVec3i a, CinderVec3i b)
 {
-    return (CinderVec3i){a.x + b.x, a.y + b.y, a.z + b.z};
+    return (CinderVec3i){{a.x + b.x, a.y + b.y, a.z + b.z}};
 }
 
-CINDER_INLINE CinderVec3f CinderVec3fAdd(CinderVec3f a, CinderVec3f b)
+static inline CinderVec3f CinderVec3fAdd(CinderVec3f a, CinderVec3f b)
 {
-    return (CinderVec3f){a.x + b.x, a.y + b.y, a.z + b.z};
+    return (CinderVec3f){{a.x + b.x, a.y + b.y, a.z + b.z}};
 }
 
-CINDER_INLINE CinderVec3i CinderVec3iSub(CinderVec3i a, CinderVec3i b)
+static inline CinderVec3i CinderVec3iSub(CinderVec3i a, CinderVec3i b)
 {
-    return (CinderVec3i){a.x - b.x, a.y - b.y, a.z - b.z};
+    return (CinderVec3i){{a.x - b.x, a.y - b.y, a.z - b.z}};
 }
 
-CINDER_INLINE CinderVec3f CinderVec3fSub(CinderVec3f a, CinderVec3f b)
+static inline CinderVec3f CinderVec3fSub(CinderVec3f a, CinderVec3f b)
 {
-    return (CinderVec3f){a.x - b.x, a.y - b.y, a.z - b.z};
+    return (CinderVec3f){{a.x - b.x, a.y - b.y, a.z - b.z}};
 }
 
-CINDER_INLINE CinderVec3i CinderVec3iNegate(CinderVec3i v)
+static inline CinderVec3i CinderVec3iNegate(CinderVec3i v)
 {
-    return (CinderVec3i){-v.x, -v.y, -v.z};
+    return (CinderVec3i){{-v.x, -v.y, -v.z}};
 }
 
-CINDER_INLINE CinderVec3f CinderVec3fNegate(CinderVec3f v)
+static inline CinderVec3f CinderVec3fNegate(CinderVec3f v)
 {
-    return (CinderVec3f){-v.x, -v.y, -v.z};
+    return (CinderVec3f){{-v.x, -v.y, -v.z}};
 }
 
-CINDER_INLINE CinderVec3i CinderVec3iScale(CinderVec3i v, int factor)
+static inline CinderVec3i CinderVec3iScale(CinderVec3i v, int factor)
 {
-    return (CinderVec3i){v.x * factor, v.y * factor, v.z * factor};
+    return (CinderVec3i){{v.x * factor, v.y * factor, v.z * factor}};
 }
 
-CINDER_INLINE CinderVec3f CinderVec3fScale(CinderVec3f v, float factor)
+static inline CinderVec3f CinderVec3fScale(CinderVec3f v, float factor)
 {
-    return (CinderVec3f){v.x * factor, v.y * factor, v.z * factor};
+    return (CinderVec3f){{v.x * factor, v.y * factor, v.z * factor}};
 }
 
-CINDER_INLINE int CinderVec3iLengthSquared(CinderVec3i v)
-{
-    return v.x * v.x + v.y * v.y + v.z * v.z;
-}
-
-CINDER_INLINE float CinderVec3fLengthSquared(CinderVec3f v)
+static inline int CinderVec3iLengthSquared(CinderVec3i v)
 {
     return v.x * v.x + v.y * v.y + v.z * v.z;
 }
 
-CINDER_INLINE float CinderVec3iLength(CinderVec3i v)
+static inline float CinderVec3fLengthSquared(CinderVec3f v)
+{
+    return v.x * v.x + v.y * v.y + v.z * v.z;
+}
+
+static inline float CinderVec3iLength(CinderVec3i v)
 {
     return sqrtf(CinderVec3iLengthSquared(v));
 }
 
-CINDER_INLINE float CinderVec3fLength(CinderVec3f v)
+static inline float CinderVec3fLength(CinderVec3f v)
 {
     return sqrtf(CinderVec3fLengthSquared(v));
 }
 
-CINDER_INLINE int CinderVec3iDot(CinderVec3i a, CinderVec3i b)
+static inline int CinderVec3iDot(CinderVec3i a, CinderVec3i b)
 {
     return a.x * b.x + a.y * b.y + a.z * b.z;
 }
 
-CINDER_INLINE float CinderVec3fDot(CinderVec3f a, CinderVec3f b)
+static inline float CinderVec3fDot(CinderVec3f a, CinderVec3f b)
 {
     return a.x * b.x + a.y * b.y + a.z * b.z;
 }
 
-CINDER_INLINE CinderVec3f CinderVec3fNormalize(CinderVec3f v)
+static inline CinderVec3f CinderVec3fNormalize(CinderVec3f v)
 {
     float len = CinderVec3fLength(v);
     if (len == 0.0f)
-        return (CinderVec3f){0.0f, 0.0f, 0.0f};
-    return (CinderVec3f){v.x / len, v.y / len, v.z / len};
+        return (CinderVec3f){{0.0f, 0.0f, 0.0f}};
+    return (CinderVec3f){{v.x / len, v.y / len, v.z / len}};
 }
 
 // ======================================= POINT ================================================

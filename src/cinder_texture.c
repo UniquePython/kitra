@@ -85,7 +85,7 @@ void CinderDrawTexture(CinderTexture *tex, int x, int y)
     if (!tex)
         return;
 
-    CinderRect dst = {x, y, tex->width, tex->height};
+    CinderRect dst = {{x, y, tex->width, tex->height}};
     CinderDrawTextureEx(tex, NULL, &dst);
 }
 
