@@ -23,8 +23,6 @@ pkg_check_modules(SDL2_TTF   REQUIRED IMPORTED_TARGET SDL2_ttf)
 
 # ============================================================
 # cinder_math — header-only interface library
-# Math and compiler utilities only. No SDL dependency.
-# Users can link against this alone without pulling in SDL.
 # ============================================================
 
 add_library(cinder_math INTERFACE)
@@ -36,20 +34,30 @@ target_include_directories(cinder_math
         $<INSTALL_INTERFACE:include>
 )
 
-# cinder_math uses sqrtf etc, so needs libm on Linux
 target_link_libraries(cinder_math INTERFACE m)
 
 # ============================================================
 # cinder — main static library
 # ============================================================
 
-add_library(cinder STATIC src/cinder.c)
+add_library(cinder STATIC
+    src/cinder.c
+    src/cinder_draw.c
+    src/cinder_error.c
+    src/cinder_input.c
+    src/cinder_text.c
+    src/cinder_texture.c
+    src/cinder_timer.c
+    src/cinder_window.c
+)
 add_library(Cinder::Cinder ALIAS cinder)
 
 target_include_directories(cinder
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:include>
+    PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
 target_compile_options(cinder PRIVATE
@@ -61,8 +69,8 @@ target_compile_options(cinder PRIVATE
     -Wundef
 )
 
-# SDL deps are PRIVATE — they do not propagate to the user.
-# cinder_math is PUBLIC — users get it transitively.
+target_link_options(cinder PRIVATE -Wl,--allow-shlib-undefined)
+
 target_link_libraries(cinder
     PUBLIC  Cinder::Math
     PRIVATE
@@ -73,36 +81,17 @@ target_link_libraries(cinder
 )
 
 # ============================================================
-# Test executables — not installed
+# Examples
 # ============================================================
 
-# Example 1 - pong
-
-add_executable(pong src/pong.c)
-
-target_link_options(cinder PRIVATE -Wl,--allow-shlib-undefined)
-target_link_options(pong PRIVATE -Wl,--allow-shlib-undefined)
-
-target_link_libraries(pong PRIVATE Cinder::Cinder)
-
-# Dump the binary next to the source for convenience
-set_target_properties(pong PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-)
-
-# Example 2 - snake
-
-add_executable(snake src/snake.c)
-
-target_link_options(cinder PRIVATE -Wl,--allow-shlib-undefined)
-target_link_options(snake PRIVATE -Wl,--allow-shlib-undefined)
-
-target_link_libraries(snake PRIVATE Cinder::Cinder)
-
-# Dump the binary next to the source for convenience
-set_target_properties(snake PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-)
+foreach(EXAMPLE pong snake)
+    add_executable(${EXAMPLE} examples/${EXAMPLE}/${EXAMPLE}.c)
+    target_link_options(${EXAMPLE} PRIVATE -Wl,--allow-shlib-undefined)
+    target_link_libraries(${EXAMPLE} PRIVATE Cinder::Cinder)
+    set_target_properties(${EXAMPLE} PROPERTIES
+        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+    )
+endforeach()
 
 # ============================================================
 # Install
@@ -111,13 +100,11 @@ set_target_properties(snake PROPERTIES
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 
-# Install the libraries
 install(TARGETS cinder cinder_math
     EXPORT  CinderTargets
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )
 
-# Install the headers
 install(FILES
     include/cinder.h
     include/cinder_math.h
@@ -125,21 +112,18 @@ install(FILES
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/cinder
 )
 
-# Install the export set (lets downstream find_package(Cinder) work)
 install(EXPORT CinderTargets
     FILE      CinderTargets.cmake
     NAMESPACE Cinder::
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/Cinder
 )
 
-# Generate and install version file
 write_basic_package_version_file(
     "${CMAKE_CURRENT_BINARY_DIR}/CinderConfigVersion.cmake"
     VERSION ${PROJECT_VERSION}
     COMPATIBILITY SameMajorVersion
 )
 
-# Generate and install config file
 configure_package_config_file(
     "${CMAKE_CURRENT_SOURCE_DIR}/cmake/CinderConfig.cmake.in"
     "${CMAKE_CURRENT_BINARY_DIR}/CinderConfig.cmake"

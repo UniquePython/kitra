@@ -203,6 +203,28 @@ CINDER_INLINE CinderVec3f CinderVec3fNormalize(CinderVec3f v)
     return (CinderVec3f){v.x / len, v.y / len, v.z / len};
 }
 
+// ======================================= POINT ================================================
+
+typedef union CinderPoint
+{
+    int asArray[2];
+    struct
+    {
+        int x, y;
+    };
+} CinderPoint;
+
+// ======================================= POINT ================================================
+
+typedef union CinderSize
+{
+    int asArray[2];
+    struct
+    {
+        int w, h;
+    };
+} CinderSize;
+
 // ======================================= RECTANGLE ================================================
 
 typedef union CinderRect
@@ -213,7 +235,8 @@ typedef union CinderRect
     };
     struct
     {
-        CinderVec2i pos, size;
+        CinderPoint pos;
+        CinderSize size;
     };
 } CinderRect;
 

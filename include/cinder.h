@@ -3,13 +3,10 @@
 
 #include <stdbool.h>
 #include <stddef.h>
-#include <limits.h>
 #include <stdint.h>
 
 #include "cinder_compiler.h"
 #include "cinder_math.h"
-
-typedef struct CinderCtx CinderCtx;
 
 typedef enum
 {
@@ -54,20 +51,22 @@ typedef enum
 typedef struct CinderWindowDesc
 {
     const char *title;
-    int width;
-    int height;
+    CinderSize size;
 
-    int x;
-    int y;
+    CinderPoint pos;
+
+    bool centerX;
+    bool centerY;
 
     CinderWindowFlags flags;
 
 } CinderWindowDesc;
 
-#define CINDER_WINDOW_POS_CENTERED INT_MIN
+CINDER_WARN_UNUSED_RESULT
+CinderWindowDesc CinderDefaultWindowDesc(void);
 
 CINDER_WARN_UNUSED_RESULT
-CinderStatus CinderCreateWindow(const CinderWindowDesc *winDesc);
+CinderStatus CinderCreateWindow(CinderWindowDesc winDesc);
 void CinderDestroyWindow(void);
 
 // ======================================= INPUT HANDLING ================================================
@@ -203,7 +202,7 @@ typedef enum CinderMouseButton
 bool CinderIsKeyDown(CinderKey key);
 bool CinderIsKeyPressed(CinderKey key);
 
-CinderVec2i CinderGetMousePos(void);
+CinderPoint CinderGetMousePos(void);
 CinderVec2i CinderGetMouseDelta(void);
 CinderVec2i CinderGetScrollDelta(void);
 
@@ -271,23 +270,23 @@ void CinderClearBackground(CinderColor color);
 // --------------------------------------- LINE ---------------------------------------
 
 void CinderDrawLine(int x1, int y1, int x2, int y2, CinderColor color);
-void CinderDrawLineV(CinderVec2i start, CinderVec2i end, CinderColor color);
+void CinderDrawLineV(CinderPoint start, CinderPoint end, CinderColor color);
 
 // --------------------------------------- CIRCLE ---------------------------------------
 
 void CinderDrawCircle(int x, int y, int radius, CinderColor color);
-void CinderDrawCircleV(CinderVec2i pos, int radius, CinderColor color);
+void CinderDrawCircleV(CinderPoint pos, int radius, CinderColor color);
 
 void CinderDrawCircleOutline(int x, int y, int radius, CinderColor color);
-void CinderDrawCircleOutlineV(CinderVec2i pos, int radius, CinderColor color);
+void CinderDrawCircleOutlineV(CinderPoint pos, int radius, CinderColor color);
 
 // --------------------------------------- TRIANGLE ---------------------------------------
 
 void CinderDrawTriangle(int x1, int y1, int x2, int y2, int x3, int y3, CinderColor color);
-void CinderDrawTriangleV(CinderVec2i p1, CinderVec2i p2, CinderVec2i p3, CinderColor color);
+void CinderDrawTriangleV(CinderPoint p1, CinderPoint p2, CinderPoint p3, CinderColor color);
 
 void CinderDrawTriangleOutline(int x1, int y1, int x2, int y2, int x3, int y3, CinderColor color);
-void CinderDrawTriangleOutlineV(CinderVec2i p1, CinderVec2i p2, CinderVec2i p3, CinderColor color);
+void CinderDrawTriangleOutlineV(CinderPoint p1, CinderPoint p2, CinderPoint p3, CinderColor color);
 
 // --------------------------------------- RECTANGLE ---------------------------------------
 
@@ -312,7 +311,7 @@ CINDER_NONNULL(1)
 void CinderDrawTexture(CinderTexture *tex, int x, int y);
 
 CINDER_NONNULL(1)
-void CinderDrawTextureV(CinderTexture *tex, CinderVec2i pos);
+void CinderDrawTextureV(CinderTexture *tex, CinderPoint pos);
 
 void CinderDestroyTexture(CinderTexture **tex);
 
@@ -324,24 +323,18 @@ CinderFont *CinderLoadFont(const char *path, int size);
 void CinderDestroyFont(CinderFont **font);
 
 void CinderDrawText(CinderFont *font, const char *text, int x, int y, CinderColor color);
-void CinderDrawTextV(CinderFont *font, const char *text, CinderVec2i pos, CinderColor color);
+void CinderDrawTextV(CinderFont *font, const char *text, CinderPoint pos, CinderColor color);
 
 typedef struct CinderText CinderText;
 
 CinderText *CinderCreateText(CinderFont *font, const char *text, CinderColor color);
 
 void CinderDrawCachedText(CinderText *t, int x, int y);
-void CinderDrawCachedTextV(CinderText *t, CinderVec2i pos);
+void CinderDrawCachedTextV(CinderText *t, CinderPoint pos);
 
 void CinderDestroyCachedText(CinderText **t);
 
-typedef struct
-{
-    int width;
-    int height;
-} CinderTextSize;
-
-CinderTextSize CinderMeasureText(CinderFont *font, const char *text);
+CinderSize CinderMeasureText(CinderFont *font, const char *text);
 
 // ======================================= ERROR ================================================
 
@@ -365,6 +358,8 @@ void CinderSetErrorCallback(CinderErrorCallback cb, void *userdata);
 
 CINDER_WARN_UNUSED_RESULT
 const char *CinderGetError(void);
+
+void CinderClearError(void);
 
 CINDER_WARN_UNUSED_RESULT
 CinderLogLevel CinderGetLastLevel(void);
