@@ -1,29 +1,13 @@
 #ifndef CINDER_MATH_H_
 #define CINDER_MATH_H_
 
+#include "cinder_types.h"
+
 #include <math.h>
 
 // ======================================= VECTORS ================================================
 
 // --------------------------------------- 2D ---------------------------------------
-
-typedef union CinderVec2i
-{
-    int axes[2];
-    struct
-    {
-        int x, y;
-    };
-} CinderVec2i;
-
-typedef union CinderVec2f
-{
-    float axes[2];
-    struct
-    {
-        float x, y;
-    };
-} CinderVec2f;
 
 static inline CinderVec2i CinderVec2iAdd(CinderVec2i a, CinderVec2i b)
 {
@@ -105,24 +89,6 @@ static inline CinderVec2f CinderVec2fNormalize(CinderVec2f v)
 
 // --------------------------------------- 3D ---------------------------------------
 
-typedef union CinderVec3i
-{
-    int axes[3];
-    struct
-    {
-        int x, y, z;
-    };
-} CinderVec3i;
-
-typedef union CinderVec3f
-{
-    float axes[3];
-    struct
-    {
-        float x, y, z;
-    };
-} CinderVec3f;
-
 static inline CinderVec3i CinderVec3iAdd(CinderVec3i a, CinderVec3i b)
 {
     return (CinderVec3i){{a.x + b.x, a.y + b.y, a.z + b.z}};
@@ -200,42 +166,5 @@ static inline CinderVec3f CinderVec3fNormalize(CinderVec3f v)
         return (CinderVec3f){{0.0f, 0.0f, 0.0f}};
     return (CinderVec3f){{v.x / len, v.y / len, v.z / len}};
 }
-
-// ======================================= POINT ================================================
-
-typedef union CinderPoint
-{
-    int asArray[2];
-    struct
-    {
-        int x, y;
-    };
-} CinderPoint;
-
-// ======================================= POINT ================================================
-
-typedef union CinderSize
-{
-    int asArray[2];
-    struct
-    {
-        int w, h;
-    };
-} CinderSize;
-
-// ======================================= RECTANGLE ================================================
-
-typedef union CinderRect
-{
-    struct
-    {
-        int x, y, w, h;
-    };
-    struct
-    {
-        CinderPoint pos;
-        CinderSize size;
-    };
-} CinderRect;
 
 #endif /* CINDER_MATH_H_ */

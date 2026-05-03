@@ -109,6 +109,7 @@ install(FILES
     include/cinder.h
     include/cinder_math.h
     include/cinder_compiler.h
+    include/cinder_types.h
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/cinder
 )
 
