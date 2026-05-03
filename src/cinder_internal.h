@@ -4,6 +4,7 @@
 #define _POSIX_C_SOURCE 200809L
 
 #include "cinder.h"
+
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
@@ -12,6 +13,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <stdbool.h>
 
 typedef struct CinderCtx
 {

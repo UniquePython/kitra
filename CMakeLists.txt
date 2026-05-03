@@ -41,15 +41,16 @@ target_link_libraries(cinder_math INTERFACE m)
 # ============================================================
 
 add_library(cinder STATIC
-    src/cinder.c
-    src/cinder_draw.c
-    src/cinder_error.c
-    src/cinder_input.c
-    src/cinder_text.c
-    src/cinder_texture.c
-    src/cinder_timer.c
+    src/cinder_subsystem.c
+    src/cinder_color.c
     src/cinder_window.c
     src/cinder_loop.c
+    src/cinder_timer.c
+    src/cinder_input.c
+    src/cinder_draw.c
+    src/cinder_texture.c
+    src/cinder_text.c
+    src/cinder_error.c
 )
 add_library(Cinder::Cinder ALIAS cinder)
 
@@ -108,9 +109,19 @@ install(TARGETS cinder cinder_math
 
 install(FILES
     include/cinder.h
-    include/cinder_math.h
-    include/cinder_compiler.h
     include/cinder_types.h
+    include/cinder_math.h
+    include/cinder_status.h
+    include/cinder_subsystem.h
+    include/cinder_window.h
+    include/cinder_loop.h
+    include/cinder_timer.h
+    include/cinder_input.h
+    include/cinder_color.h
+    include/cinder_draw.h
+    include/cinder_texture.h
+    include/cinder_text.h
+    include/cinder_error.h
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/cinder
 )
 

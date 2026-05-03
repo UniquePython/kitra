@@ -1,6 +1,8 @@
 #ifndef CINDER_TYPES_H_
 #define CINDER_TYPES_H_
 
+#include <stdint.h>
+
 // ======================================= VECTORS ================================================
 
 // --------------------------------------- 2D ---------------------------------------
@@ -63,6 +65,8 @@ typedef union CinderSize
     };
 } CinderSize;
 
+// ======================================= SHAPES ================================================
+
 typedef union CinderRect
 {
     struct
@@ -75,5 +79,12 @@ typedef union CinderRect
         CinderSize size;
     };
 } CinderRect;
+
+// ======================================= COLOR ================================================
+
+typedef struct CinderColor
+{
+    uint8_t r, g, b, a;
+} CinderColor;
 
 #endif /* CINDER_TYPES_H_ */
