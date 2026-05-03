@@ -15,46 +15,52 @@
 
 typedef struct CinderCtx
 {
-    uint32_t initFlags;
+    // ------ Core ------
 
     SDL_Window *window;
     SDL_Renderer *renderer;
 
-    bool isRunning;
-    bool frameBegun;
+    uint32_t initFlags;
 
     bool imgInitialized;
     bool ttfInitialized;
 
-    // ------ Input handling ------
+    // ------ Loop ------
+
+    bool isRunning;
+    bool frameBegun;
+
+    // ------ Timing ------
+
+    uint64_t perfFrequency;
+    uint64_t lastCounter;
+
+    float deltaTime;
+    float fps;
+    int targetFPS;
+
+    // ------ Keyboard ------
 
     bool keysDown[CINDER_KEY_COUNT];
     bool keysPressed[CINDER_KEY_COUNT];
 
+    // ------ Mouse ------
+
     CinderPoint mousePos;
     CinderPoint prevMousePos;
-
     CinderVec2i mouseDelta;
     CinderVec2i scrollDelta;
 
     bool mouseDown[CINDER_MOUSE_BUTTON_COUNT];
     bool mousePressed[CINDER_MOUSE_BUTTON_COUNT];
 
-    // ------ Delta time (raw) ------
-
-    uint64_t lastCounter;
-    uint64_t perfFrequency;
-    float deltaTime;
-    int targetFPS;
-    float fps;
-
     // ------ Logging ------
-
-    const char *lastError;
-    CinderLogLevel lastLevel;
 
     CinderErrorCallback callback;
     void *callbackUserdata;
+
+    const char *lastError;
+    CinderLogLevel lastLevel;
 
 } CinderCtx;
 
