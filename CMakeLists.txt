@@ -49,6 +49,7 @@ add_library(cinder STATIC
     src/cinder_texture.c
     src/cinder_timer.c
     src/cinder_window.c
+    src/cinder_loop.c
 )
 add_library(Cinder::Cinder ALIAS cinder)
 
