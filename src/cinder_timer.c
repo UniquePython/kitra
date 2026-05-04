@@ -43,7 +43,7 @@ bool CinderTimerDone(CinderTimer *t, float duration)
     if (elapsed >= duration)
     {
         if (t->repeat)
-            t->last = now;
+            t->last += (uint64_t)((double)duration * (double)gCinderCtx.timing.perfFrequency);
 
         return true;
     }
