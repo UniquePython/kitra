@@ -1,0 +1,10 @@
+prefix=@CMAKE_INSTALL_PREFIX@
+libdir=@CMAKE_INSTALL_FULL_LIBDIR@
+includedir=@CMAKE_INSTALL_FULL_INCLUDEDIR@/cinder
+
+Name: Cinder
+Description: A minimal, beginner-friendly 2D graphics library for C
+Version: @PROJECT_VERSION@
+Requires: sdl2 SDL2_image SDL2_gfx SDL2_ttf
+Libs: -L${libdir} -lcinder
+Cflags: -I${includedir}

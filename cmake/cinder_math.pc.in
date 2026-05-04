@@ -1,0 +1,9 @@
+prefix=@CMAKE_INSTALL_PREFIX@
+libdir=@CMAKE_INSTALL_FULL_LIBDIR@
+includedir=@CMAKE_INSTALL_FULL_INCLUDEDIR@/cinder
+
+Name: Cinder-Math
+Description: Math utilities and types from the Cinder library. No SDL dependency.
+Version: @PROJECT_VERSION@
+Libs: -L${libdir} -lm
+Cflags: -I${includedir}

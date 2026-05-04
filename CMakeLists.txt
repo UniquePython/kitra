@@ -148,3 +148,25 @@ install(FILES
     "${CMAKE_CURRENT_BINARY_DIR}/CinderConfigVersion.cmake"
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/Cinder
 )
+
+# ============================================================
+# pkg-config
+# ============================================================
+
+configure_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/cinder.pc.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/cinder.pc"
+    @ONLY
+)
+
+configure_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/cinder_math.pc.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/cinder_math.pc"
+    @ONLY
+)
+
+install(FILES
+    "${CMAKE_CURRENT_BINARY_DIR}/cinder.pc"
+    "${CMAKE_CURRENT_BINARY_DIR}/cinder_math.pc"
+    DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig"
+)
