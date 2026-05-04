@@ -57,6 +57,27 @@ CinderTexture *CinderLoadTexture(const char *path)
     return cTex;
 }
 
+void CinderDestroyTexture(CinderTexture **tex)
+{
+    if (!tex || !*tex)
+        return;
+
+    SDL_DestroyTexture((*tex)->handle);
+    free(*tex);
+    *tex = NULL;
+}
+
+CinderSize CinderGetTextureSize(const CinderTexture *tex)
+{
+    if (!tex)
+    {
+        CINDER_LOG(CINDER_LOG_WARNING, "Texture is NULL in CinderGetTextureSize");
+        return (CinderSize){{0, 0}};
+    }
+
+    return (CinderSize){{tex->width, tex->height}};
+}
+
 void CinderDrawTextureEx(CinderTexture *tex, const CinderRect *src, const CinderRect *dst)
 {
     if (!gCinderCtx.core.renderer || !tex)
@@ -92,14 +113,4 @@ void CinderDrawTexture(CinderTexture *tex, int x, int y)
 void CinderDrawTextureP(CinderTexture *tex, CinderPoint pos)
 {
     CinderDrawTexture(tex, pos.x, pos.y);
-}
-
-void CinderDestroyTexture(CinderTexture **tex)
-{
-    if (!tex || !*tex)
-        return;
-
-    SDL_DestroyTexture((*tex)->handle);
-    free(*tex);
-    *tex = NULL;
 }
