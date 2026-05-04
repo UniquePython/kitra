@@ -8,6 +8,9 @@
 
 #define CINDER_PI 3.141592653589793
 
+#define CINDER_DEG2RAD(deg) ((deg) * ((float)CINDER_PI / 180.0f))
+#define CINDER_RAD2DEG(rad) ((rad) * (180.0f / (float)CINDER_PI))
+
 // ======================================= VECTORS ================================================
 
 // --------------------------------------- 2D ---------------------------------------
@@ -88,6 +91,33 @@ static inline CinderVec2f CinderVec2fNormalize(CinderVec2f v)
     if (len == 0.0f)
         return (CinderVec2f){{0.0f, 0.0f}};
     return (CinderVec2f){{v.x / len, v.y / len}};
+}
+
+static inline CinderVec2f CinderVec2fLerp(CinderVec2f a, CinderVec2f b, float t)
+{
+    return (CinderVec2f){{a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t}};
+}
+
+static inline CinderVec2f CinderVec2fRotate(CinderVec2f v, float angle)
+{
+    float c = cosf(angle);
+    float s = sinf(angle);
+    return (CinderVec2f){{v.x * c - v.y * s, v.x * s + v.y * c}};
+}
+
+static inline int CinderVec2iCross(CinderVec2i a, CinderVec2i b)
+{
+    return a.x * b.y - a.y * b.x;
+}
+
+static inline float CinderVec2fCross(CinderVec2f a, CinderVec2f b)
+{
+    return a.x * b.y - a.y * b.x;
+}
+
+static inline float CinderVec2fAngle(CinderVec2f v)
+{
+    return atan2f(v.y, v.x);
 }
 
 // --------------------------------------- 3D ---------------------------------------
