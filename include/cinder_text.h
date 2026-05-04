@@ -12,6 +12,9 @@ void CinderDestroyFont(CinderFont **font);
 void CinderDrawText(CinderFont *font, const char *text, int x, int y, CinderColor color);
 void CinderDrawTextP(CinderFont *font, const char *text, CinderPoint pos, CinderColor color);
 
+void CinderDrawTextF(CinderFont *font, int x, int y, CinderColor color, const char *fmt, ...);
+void CinderDrawTextFP(CinderFont *font, CinderPoint pos, CinderColor color, const char *fmt, ...);
+
 CinderText *CinderCreateText(CinderFont *font, const char *text, CinderColor color);
 
 void CinderDrawCachedText(CinderText *t, int x, int y);

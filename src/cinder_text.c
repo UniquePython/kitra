@@ -1,5 +1,7 @@
 #include "cinder_internal.h"
 
+#include <stdarg.h>
+
 struct CinderFont
 {
     TTF_Font *handle;
@@ -97,6 +99,66 @@ void CinderDrawText(CinderFont *font, const char *text, int x, int y, CinderColo
 void CinderDrawTextP(CinderFont *font, const char *text, CinderPoint pos, CinderColor color)
 {
     CinderDrawText(font, text, pos.x, pos.y, color);
+}
+
+void CinderDrawTextF(CinderFont *font, int x, int y, CinderColor color, const char *fmt, ...)
+{
+    va_list args, args2;
+    va_start(args, fmt);
+    va_copy(args2, args);
+
+    int len = vsnprintf(NULL, 0, fmt, args);
+    va_end(args);
+
+    if (len < 0)
+    {
+        va_end(args2);
+        return;
+    }
+
+    char *buf = malloc((size_t)len + 1);
+    if (!buf)
+    {
+        CINDER_LOG(CINDER_LOG_ERROR, "Failed to allocate text buffer");
+        va_end(args2);
+        return;
+    }
+
+    vsnprintf(buf, (size_t)len + 1, fmt, args2);
+    va_end(args2);
+
+    CinderDrawText(font, buf, x, y, color);
+    free(buf);
+}
+
+void CinderDrawTextFP(CinderFont *font, CinderPoint pos, CinderColor color, const char *fmt, ...)
+{
+    va_list args, args2;
+    va_start(args, fmt);
+    va_copy(args2, args);
+
+    int len = vsnprintf(NULL, 0, fmt, args);
+    va_end(args);
+
+    if (len < 0)
+    {
+        va_end(args2);
+        return;
+    }
+
+    char *buf = malloc((size_t)len + 1);
+    if (!buf)
+    {
+        CINDER_LOG(CINDER_LOG_ERROR, "Failed to allocate text buffer");
+        va_end(args2);
+        return;
+    }
+
+    vsnprintf(buf, (size_t)len + 1, fmt, args2);
+    va_end(args2);
+
+    CinderDrawText(font, buf, pos.x, pos.y, color);
+    free(buf);
 }
 
 CinderText *CinderCreateText(CinderFont *font, const char *text, CinderColor color)
