@@ -38,4 +38,14 @@ void CinderDestroyWindow(void);
 CinderSize CinderGetWindowSize(void);
 bool CinderIsWindowResized(void);
 
+// Backdoor functions
+
+struct SDL_Window;
+struct SDL_Renderer;
+
+/* Do NOT call SDL_DestroyWindow or SDL_DestroyRenderer on these.
+ * Cinder owns these handles and will clean them up in CinderQuit. */
+struct SDL_Window *CinderGetSDLWindow(void);
+struct SDL_Renderer *CinderGetSDLRenderer(void);
+
 #endif /* CINDER_WINDOW_H_ */

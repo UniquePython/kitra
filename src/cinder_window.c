@@ -92,3 +92,15 @@ bool CinderIsWindowResized(void)
 {
     return gCinderCtx.loop.resized;
 }
+
+// Backdoor functions
+
+struct SDL_Window *CinderGetSDLWindow(void)
+{
+    return gCinderCtx.core.window;
+}
+
+struct SDL_Renderer *CinderGetSDLRenderer(void)
+{
+    return gCinderCtx.core.renderer;
+}
