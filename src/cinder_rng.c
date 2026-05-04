@@ -16,12 +16,6 @@
 
 #define PCG_MULTIPLIER UINT64_C(6364136223846793005)
 
-typedef struct CinderRng
-{
-    uint64_t state;
-    uint64_t inc; /* must be odd */
-} CinderRng;
-
 static inline uint32_t rotr32(uint32_t x, unsigned r)
 {
     return (x >> r) | (x << ((-r) & 31u));

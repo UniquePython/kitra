@@ -6,7 +6,11 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-typedef struct CinderRng CinderRng;
+typedef struct CinderRng
+{
+    uint64_t state;
+    uint64_t inc; /* must be odd */
+} CinderRng;
 
 /* -----------------------------------------------------------------------
  * Seeding
