@@ -208,6 +208,28 @@ static inline bool CinderRectCircleOverlap(CinderRect rect, CinderCircle circle)
     return dx * dx + dy * dy < circle.radius * circle.radius;
 }
 
+// ======================================= GEOMETRY ================================================
+
+static inline int CinderRectArea(CinderRect rect)
+{
+    return rect.w * rect.h;
+}
+
+static inline int CinderRectPerimeter(CinderRect rect)
+{
+    return 2 * (rect.w + rect.h);
+}
+
+static inline float CinderCircleArea(CinderCircle circle)
+{
+    return (float)CINDER_PI * (float)circle.radius * (float)circle.radius;
+}
+
+static inline float CinderCirclePerimeter(CinderCircle circle)
+{
+    return 2.0f * (float)CINDER_PI * (float)circle.radius;
+}
+
 // ======================================= EASING ================================================
 
 static inline float CinderEaseLinear(float t)
