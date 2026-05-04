@@ -43,10 +43,10 @@ CinderColor CinderColorLerp(CinderColor a, CinderColor b, float t)
         return b;
 
     return (CinderColor){
-        .r = (uint8_t)(a.r + (b.r - a.r) * t),
-        .g = (uint8_t)(a.g + (b.g - a.g) * t),
-        .b = (uint8_t)(a.b + (b.b - a.b) * t),
-        .a = (uint8_t)(a.a + (b.a - a.a) * t),
+        .r = (uint8_t)((int)a.r + ((int)b.r - (int)a.r) * t),
+        .g = (uint8_t)((int)a.g + ((int)b.g - (int)a.g) * t),
+        .b = (uint8_t)((int)a.b + ((int)b.b - (int)a.b) * t),
+        .a = (uint8_t)((int)a.a + ((int)b.a - (int)a.a) * t),
     };
 }
 
