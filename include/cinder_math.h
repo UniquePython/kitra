@@ -6,6 +6,8 @@
 #include <math.h>
 #include <stdbool.h>
 
+#define CINDER_PI 3.141592653589793
+
 // ======================================= VECTORS ================================================
 
 // --------------------------------------- 2D ---------------------------------------
@@ -204,6 +206,56 @@ static inline bool CinderRectCircleOverlap(CinderRect rect, CinderCircle circle)
     int dx = circle.x - nearX;
     int dy = circle.y - nearY;
     return dx * dx + dy * dy < circle.radius * circle.radius;
+}
+
+// ======================================= EASING ================================================
+
+static inline float CinderEaseLinear(float t)
+{
+    return t;
+}
+
+static inline float CinderEaseInQuad(float t)
+{
+    return t * t;
+}
+
+static inline float CinderEaseOutQuad(float t)
+{
+    return t * (2.0f - t);
+}
+
+static inline float CinderEaseInOutQuad(float t)
+{
+    return t < 0.5f ? 2.0f * t * t : -1.0f + (4.0f - 2.0f * t) * t;
+}
+
+static inline float CinderEaseInSine(float t)
+{
+    return 1.0f - cosf(t * (float)CINDER_PI * 0.5f);
+}
+
+static inline float CinderEaseOutSine(float t)
+{
+    return sinf(t * (float)CINDER_PI * 0.5f);
+}
+
+static inline float CinderEaseInOutSine(float t)
+{
+    return 0.5f * (1.0f - cosf(t * (float)CINDER_PI));
+}
+
+static inline float CinderEaseInBack(float t)
+{
+    const float c = 1.70158f;
+    return t * t * ((c + 1.0f) * t - c);
+}
+
+static inline float CinderEaseOutBack(float t)
+{
+    const float c = 1.70158f;
+    float u = t - 1.0f;
+    return u * u * ((c + 1.0f) * u + c) + 1.0f;
 }
 
 #endif /* CINDER_MATH_H_ */
