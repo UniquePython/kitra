@@ -18,6 +18,15 @@ extern const CinderColor CINDER_BLUE;
 extern const CinderColor CINDER_YELLOW;
 extern const CinderColor CINDER_MAGENTA;
 extern const CinderColor CINDER_CYAN;
+extern const CinderColor CINDER_ORANGE;
+extern const CinderColor CINDER_PURPLE;
+extern const CinderColor CINDER_GRAY;
+extern const CinderColor CINDER_DARK_GRAY;
+extern const CinderColor CINDER_LIGHT_GRAY;
+extern const CinderColor CINDER_TRANSPARENT;
+
+uint32_t CinderColorToU32(CinderColor color);
+CinderColor CinderColorFromU32(uint32_t value);
 
 CinderColor CinderColorLerp(CinderColor a, CinderColor b, float t);
 CinderColor CinderColorFade(CinderColor color, float alpha);

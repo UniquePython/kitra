@@ -1,5 +1,7 @@
 #include "cinder_internal.h"
 
+#include <math.h>
+
 const CinderColor CINDER_BLACK = CINDER_COLOR_RGB(0, 0, 0);
 const CinderColor CINDER_WHITE = CINDER_COLOR_RGB(255, 255, 255);
 const CinderColor CINDER_RED = CINDER_COLOR_RGB(255, 0, 0);
@@ -8,8 +10,30 @@ const CinderColor CINDER_BLUE = CINDER_COLOR_RGB(0, 0, 255);
 const CinderColor CINDER_YELLOW = CINDER_COLOR_RGB(255, 255, 0);
 const CinderColor CINDER_MAGENTA = CINDER_COLOR_RGB(255, 0, 255);
 const CinderColor CINDER_CYAN = CINDER_COLOR_RGB(0, 255, 255);
+const CinderColor CINDER_ORANGE = CINDER_COLOR_RGB(255, 165, 0);
+const CinderColor CINDER_PURPLE = CINDER_COLOR_RGB(128, 0, 128);
+const CinderColor CINDER_GRAY = CINDER_COLOR_RGB(128, 128, 128);
+const CinderColor CINDER_DARK_GRAY = CINDER_COLOR_RGB(64, 64, 64);
+const CinderColor CINDER_LIGHT_GRAY = CINDER_COLOR_RGB(192, 192, 192);
+const CinderColor CINDER_TRANSPARENT = CINDER_COLOR_RGBA(0, 0, 0, 0);
 
-#include <math.h>
+uint32_t CinderColorToU32(CinderColor color)
+{
+    return ((uint32_t)color.r << 24) |
+           ((uint32_t)color.g << 16) |
+           ((uint32_t)color.b << 8) |
+           (uint32_t)color.a;
+}
+
+CinderColor CinderColorFromU32(uint32_t value)
+{
+    return (CinderColor){
+        .r = (uint8_t)(value >> 24),
+        .g = (uint8_t)(value >> 16),
+        .b = (uint8_t)(value >> 8),
+        .a = (uint8_t)(value),
+    };
+}
 
 CinderColor CinderColorLerp(CinderColor a, CinderColor b, float t)
 {
