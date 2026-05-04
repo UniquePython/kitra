@@ -4,6 +4,7 @@
 #include "cinder_types.h"
 
 #include <math.h>
+#include <stdbool.h>
 
 // ======================================= VECTORS ================================================
 
@@ -165,6 +166,44 @@ static inline CinderVec3f CinderVec3fNormalize(CinderVec3f v)
     if (len == 0.0f)
         return (CinderVec3f){{0.0f, 0.0f, 0.0f}};
     return (CinderVec3f){{v.x / len, v.y / len, v.z / len}};
+}
+
+// ======================================= COLLISION ================================================
+
+static inline bool CinderPointInRect(CinderPoint p, CinderRect rect)
+{
+    return p.x >= rect.x && p.x < rect.x + rect.w && p.y >= rect.y && p.y < rect.y + rect.h;
+}
+
+static inline bool CinderPointInCircle(CinderPoint p, CinderCircle circle)
+{
+    int dx = p.x - circle.x;
+    int dy = p.y - circle.y;
+    return dx * dx + dy * dy < circle.radius * circle.radius;
+}
+
+static inline bool CinderRectsOverlap(CinderRect a, CinderRect b)
+{
+    return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
+}
+
+static inline bool CinderCirclesOverlap(CinderCircle a, CinderCircle b)
+{
+    int dx = a.x - b.x;
+    int dy = a.y - b.y;
+    int radSum = a.radius + b.radius;
+    return dx * dx + dy * dy < radSum * radSum;
+}
+
+static inline bool CinderRectCircleOverlap(CinderRect rect, CinderCircle circle)
+{
+    int nearX = circle.x < rect.x ? rect.x : circle.x > rect.x + rect.w ? rect.x + rect.w
+                                                                        : circle.x;
+    int nearY = circle.y < rect.y ? rect.y : circle.y > rect.y + rect.h ? rect.y + rect.h
+                                                                        : circle.y;
+    int dx = circle.x - nearX;
+    int dy = circle.y - nearY;
+    return dx * dx + dy * dy < circle.radius * circle.radius;
 }
 
 #endif /* CINDER_MATH_H_ */
