@@ -23,5 +23,6 @@ void CinderDrawCachedTextP(CinderText *t, CinderPoint pos);
 void CinderDestroyCachedText(CinderText **t);
 
 CinderSize CinderMeasureText(CinderFont *font, const char *text);
+CinderSize CinderMeasureTextF(CinderFont *font, const char *fmt, ...);
 
 #endif /* CINDER_TEXT_H_ */

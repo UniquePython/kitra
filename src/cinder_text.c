@@ -244,3 +244,34 @@ CinderSize CinderMeasureText(CinderFont *font, const char *text)
 
     return size;
 }
+
+CinderSize CinderMeasureTextF(CinderFont *font, const char *fmt, ...)
+{
+    va_list args, args2;
+    va_start(args, fmt);
+    va_copy(args2, args);
+
+    int len = vsnprintf(NULL, 0, fmt, args);
+    va_end(args);
+
+    if (len < 0)
+    {
+        va_end(args2);
+        return (CinderSize){{0, 0}};
+    }
+
+    char *buf = malloc((size_t)len + 1);
+    if (!buf)
+    {
+        CINDER_LOG(CINDER_LOG_ERROR, "Failed to allocate text buffer");
+        va_end(args2);
+        return (CinderSize){{0, 0}};
+    }
+
+    vsnprintf(buf, (size_t)len + 1, fmt, args2);
+    va_end(args2);
+
+    CinderSize size = CinderMeasureText(font, buf);
+    free(buf);
+    return size;
+}
