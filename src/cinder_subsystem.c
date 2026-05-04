@@ -19,6 +19,7 @@ CinderStatus CinderInit(CinderSubsystem flags)
     gCinderCtx.timing.perfFrequency = SDL_GetPerformanceFrequency();
 
     CinderInputInit();
+    CinderRngSeedAuto(&gCinderCtx.rng);
 
     if (!gCinderCtx.log.callback)
         CinderSetErrorCallback(CinderDefaultLogCallback, NULL);

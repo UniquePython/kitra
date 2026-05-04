@@ -76,6 +76,7 @@ typedef struct CinderCtx
     CinderTimingState timing;
     CinderInputState input;
     CinderLogState log;
+    CinderRng rng;
 } CinderCtx;
 
 extern CinderCtx gCinderCtx;
