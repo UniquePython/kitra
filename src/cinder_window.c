@@ -87,3 +87,8 @@ CinderSize CinderGetWindowSize(void)
     SDL_GetWindowSize(gCinderCtx.core.window, &size.w, &size.h);
     return size;
 }
+
+bool CinderIsWindowResized(void)
+{
+    return gCinderCtx.loop.resized;
+}

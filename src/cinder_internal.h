@@ -28,6 +28,7 @@ typedef struct CinderLoopState
 {
     bool isRunning;
     bool frameBegun;
+    bool resized;
 } CinderLoopState;
 
 typedef struct CinderTimingState

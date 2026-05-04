@@ -36,5 +36,6 @@ CinderStatus CinderCreateWindow(CinderWindowDesc winDesc);
 void CinderDestroyWindow(void);
 
 CinderSize CinderGetWindowSize(void);
+bool CinderIsWindowResized(void);
 
 #endif /* CINDER_WINDOW_H_ */

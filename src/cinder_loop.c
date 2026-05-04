@@ -43,6 +43,7 @@ void CinderBeginFrame(void)
     gCinderCtx.input.mouse.scrollDelta = (CinderVec2i){{0, 0}};
     gCinderCtx.input.mouse.prevPos = gCinderCtx.input.mouse.pos;
     gCinderCtx.loop.frameBegun = true;
+    gCinderCtx.loop.resized = false;
 
     // ---------------- Event processing ----------------
 

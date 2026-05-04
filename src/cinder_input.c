@@ -177,6 +177,11 @@ void CinderInputProcessEvent(const SDL_Event *event)
         gCinderCtx.input.mouse.scrollDelta.y += event->wheel.y;
         break;
 
+    case SDL_WINDOWEVENT:
+        if (event->window.event == SDL_WINDOWEVENT_RESIZED)
+            gCinderCtx.loop.resized = true;
+        break;
+
     default:
         break;
     }
