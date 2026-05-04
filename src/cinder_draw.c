@@ -19,6 +19,22 @@ void CinderClearBackground(CinderColor color)
     SDL_RenderClear(gCinderCtx.core.renderer);
 }
 
+// --------------------------------------- POINT ---------------------------------------
+
+void CinderDrawPoint(int x, int y, CinderColor color)
+{
+    if (!gCinderCtx.core.renderer)
+        return;
+
+    SDL_SetRenderDrawColor(gCinderCtx.core.renderer, color.r, color.g, color.b, color.a);
+    SDL_RenderDrawPoint(gCinderCtx.core.renderer, x, y);
+}
+
+void CinderDrawPointP(CinderPoint pos, CinderColor color)
+{
+    CinderDrawPoint(pos.x, pos.y, color);
+}
+
 // --------------------------------------- LINE ---------------------------------------
 
 void CinderDrawLine(int x1, int y1, int x2, int y2, CinderColor color)
@@ -32,6 +48,19 @@ void CinderDrawLine(int x1, int y1, int x2, int y2, CinderColor color)
 void CinderDrawLineP(CinderPoint start, CinderPoint end, CinderColor color)
 {
     CinderDrawLine(start.x, start.y, end.x, end.y, color);
+}
+
+void CinderDrawLineThick(int x1, int y1, int x2, int y2, int width, CinderColor color)
+{
+    if (!gCinderCtx.core.renderer)
+        return;
+
+    thickLineRGBA(gCinderCtx.core.renderer, x1, y1, x2, y2, width, CINDER_COLOR_UNPACK(color));
+}
+
+void CinderDrawLineThickP(CinderPoint start, CinderPoint end, int width, CinderColor color)
+{
+    CinderDrawLineThick(start.x, start.y, end.x, end.y, width, color);
 }
 
 // --------------------------------------- CIRCLE ---------------------------------------
@@ -60,6 +89,44 @@ void CinderDrawCircleOutline(int x, int y, int radius, CinderColor color)
 void CinderDrawCircleOutlineC(CinderCircle circle, CinderColor color)
 {
     CinderDrawCircleOutline(circle.x, circle.y, circle.radius, color);
+}
+
+// --------------------------------------- ELLIPSE ---------------------------------------
+
+void CinderDrawEllipse(int x, int y, int rx, int ry, CinderColor color)
+{
+    if (!gCinderCtx.core.renderer)
+        return;
+
+    filledEllipseRGBA(gCinderCtx.core.renderer, x, y, rx, ry, CINDER_COLOR_UNPACK(color));
+}
+
+void CinderDrawEllipseP(CinderPoint pos, CinderPoint radius, CinderColor color)
+{
+    CinderDrawEllipse(pos.x, pos.y, radius.x, radius.y, color);
+}
+
+void CinderDrawEllipseE(CinderEllipse ellipse, CinderColor color)
+{
+    CinderDrawEllipse(ellipse.x, ellipse.y, ellipse.rx, ellipse.ry, color);
+}
+
+void CinderDrawEllipseOutline(int x, int y, int rx, int ry, CinderColor color)
+{
+    if (!gCinderCtx.core.renderer)
+        return;
+
+    ellipseRGBA(gCinderCtx.core.renderer, x, y, rx, ry, CINDER_COLOR_UNPACK(color));
+}
+
+void CinderDrawEllipseOutlineP(CinderPoint pos, CinderPoint radius, CinderColor color)
+{
+    CinderDrawEllipseOutline(pos.x, pos.y, radius.x, radius.y, color);
+}
+
+void CinderDrawEllipseOutlineE(CinderEllipse ellipse, CinderColor color)
+{
+    CinderDrawEllipseOutline(ellipse.x, ellipse.y, ellipse.rx, ellipse.ry, color);
 }
 
 // --------------------------------------- TRIANGLE ---------------------------------------

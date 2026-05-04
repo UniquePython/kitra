@@ -5,10 +5,18 @@
 
 void CinderClearBackground(CinderColor color);
 
+// --------------------------------------- POINT ---------------------------------------
+
+void CinderDrawPoint(int x, int y, CinderColor color);
+void CinderDrawPointP(CinderPoint pos, CinderColor color);
+
 // --------------------------------------- LINE ---------------------------------------
 
 void CinderDrawLine(int x1, int y1, int x2, int y2, CinderColor color);
 void CinderDrawLineP(CinderPoint start, CinderPoint end, CinderColor color);
+
+void CinderDrawLineThick(int x1, int y1, int x2, int y2, int width, CinderColor color);
+void CinderDrawLineThickP(CinderPoint start, CinderPoint end, int width, CinderColor color);
 
 // --------------------------------------- CIRCLE ---------------------------------------
 
@@ -17,6 +25,16 @@ void CinderDrawCircleC(CinderCircle circle, CinderColor color);
 
 void CinderDrawCircleOutline(int x, int y, int radius, CinderColor color);
 void CinderDrawCircleOutlineC(CinderCircle circle, CinderColor color);
+
+// --------------------------------------- ELLIPSE ---------------------------------------
+
+void CinderDrawEllipse(int x, int y, int rx, int ry, CinderColor color);
+void CinderDrawEllipseP(CinderPoint pos, CinderPoint radius, CinderColor color);
+void CinderDrawEllipseE(CinderEllipse ellipse, CinderColor color);
+
+void CinderDrawEllipseOutline(int x, int y, int rx, int ry, CinderColor color);
+void CinderDrawEllipseOutlineP(CinderPoint pos, CinderPoint radius, CinderColor color);
+void CinderDrawEllipseOutlineE(CinderEllipse ellipse, CinderColor color);
 
 // --------------------------------------- TRIANGLE ---------------------------------------
 
