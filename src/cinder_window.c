@@ -73,3 +73,17 @@ void CinderDestroyWindow(void)
         gCinderCtx.core.window = NULL;
     }
 }
+
+CinderSize CinderGetWindowSize(void)
+{
+    CinderSize size = {{0, 0}};
+
+    if (!gCinderCtx.core.window)
+    {
+        CINDER_LOG(CINDER_LOG_WARNING, "Window is NULL in CinderGetWindowSize");
+        return size;
+    }
+
+    SDL_GetWindowSize(gCinderCtx.core.window, &size.w, &size.h);
+    return size;
+}
