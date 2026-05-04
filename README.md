@@ -101,7 +101,7 @@ Then include the header:
 | Text & Fonts | `cinder/cinder_text.h` | Load fonts, draw text, cache rendered text |
 | Timers | `cinder/cinder_timer.h` | Delta time, FPS, and general-purpose timers |
 | RNG | `cinder/cinder_rng.h` | PCG32 random number generator — integers, floats, directions, and a global convenience API |
-| Math & Types | `cinder/cinder_math.h` | Vectors, points, sizes, rectangles, and math operations. Linkable without SDL as `Cinder::Math` |
+| Math & Types | `cinder/cinder_math.h` | Vectors, points, sizes, rectangles, circles and math operations. Linkable without SDL as `Cinder::Math` |
 | Error & Logging | `cinder/cinder_error.h` | Error state, log callbacks, and the `CINDER_LOG` macro |
 
 ## Examples
