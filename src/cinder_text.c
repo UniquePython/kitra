@@ -11,11 +11,7 @@ struct CinderFont
 struct CinderText
 {
     SDL_Texture *handle;
-    int width, height;
-
-    CinderFont *font;
-    char *text;
-    CinderColor color;
+    CinderSize size;
 };
 
 CinderFont *CinderLoadFont(const char *path, int size)
@@ -193,10 +189,7 @@ CinderText *CinderCreateText(CinderFont *font, const char *text, CinderColor col
     }
 
     ct->handle = tex;
-    SDL_QueryTexture(tex, NULL, NULL, &ct->width, &ct->height);
-    ct->font = font;
-    ct->text = strdup(text);
-    ct->color = color;
+    SDL_QueryTexture(tex, NULL, NULL, &ct->size.w, &ct->size.h);
 
     return ct;
 }
@@ -206,7 +199,7 @@ void CinderDrawCachedText(CinderText *t, int x, int y)
     if (!gCinderCtx.core.renderer || !t || !t->handle)
         return;
 
-    SDL_RenderCopy(gCinderCtx.core.renderer, t->handle, NULL, &(SDL_Rect){x, y, t->width, t->height});
+    SDL_RenderCopy(gCinderCtx.core.renderer, t->handle, NULL, &(SDL_Rect){x, y, t->size.w, t->size.h});
 }
 
 void CinderDrawCachedTextP(CinderText *t, CinderPoint pos)
@@ -220,7 +213,6 @@ void CinderDestroyCachedText(CinderText **t)
         return;
 
     SDL_DestroyTexture((*t)->handle);
-    free((*t)->text);
     free(*t);
     *t = NULL;
 }
