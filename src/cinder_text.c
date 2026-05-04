@@ -94,7 +94,7 @@ void CinderDrawText(CinderFont *font, const char *text, int x, int y, CinderColo
     SDL_DestroyTexture(tex);
 }
 
-void CinderDrawTextV(CinderFont *font, const char *text, CinderPoint pos, CinderColor color)
+void CinderDrawTextP(CinderFont *font, const char *text, CinderPoint pos, CinderColor color)
 {
     CinderDrawText(font, text, pos.x, pos.y, color);
 }
@@ -147,7 +147,7 @@ void CinderDrawCachedText(CinderText *t, int x, int y)
     SDL_RenderCopy(gCinderCtx.core.renderer, t->handle, NULL, &(SDL_Rect){x, y, t->width, t->height});
 }
 
-void CinderDrawCachedTextV(CinderText *t, CinderPoint pos)
+void CinderDrawCachedTextP(CinderText *t, CinderPoint pos)
 {
     CinderDrawCachedText(t, pos.x, pos.y);
 }

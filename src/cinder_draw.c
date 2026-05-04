@@ -29,7 +29,7 @@ void CinderDrawLine(int x1, int y1, int x2, int y2, CinderColor color)
     lineRGBA(gCinderCtx.core.renderer, x1, y1, x2, y2, CINDER_COLOR_UNPACK(color));
 }
 
-void CinderDrawLineV(CinderPoint start, CinderPoint end, CinderColor color)
+void CinderDrawLineP(CinderPoint start, CinderPoint end, CinderColor color)
 {
     CinderDrawLine(start.x, start.y, end.x, end.y, color);
 }
@@ -44,9 +44,9 @@ void CinderDrawCircle(int x, int y, int radius, CinderColor color)
     filledCircleRGBA(gCinderCtx.core.renderer, x, y, radius, CINDER_COLOR_UNPACK(color));
 }
 
-void CinderDrawCircleV(CinderPoint pos, int radius, CinderColor color)
+void CinderDrawCircleC(CinderCircle circle, CinderColor color)
 {
-    CinderDrawCircle(pos.x, pos.y, radius, color);
+    CinderDrawCircle(circle.x, circle.y, circle.radius, color);
 }
 
 void CinderDrawCircleOutline(int x, int y, int radius, CinderColor color)
@@ -57,9 +57,9 @@ void CinderDrawCircleOutline(int x, int y, int radius, CinderColor color)
     circleRGBA(gCinderCtx.core.renderer, x, y, radius, CINDER_COLOR_UNPACK(color));
 }
 
-void CinderDrawCircleOutlineV(CinderPoint pos, int radius, CinderColor color)
+void CinderDrawCircleOutlineC(CinderCircle circle, CinderColor color)
 {
-    CinderDrawCircleOutline(pos.x, pos.y, radius, color);
+    CinderDrawCircleOutline(circle.x, circle.y, circle.radius, color);
 }
 
 // --------------------------------------- TRIANGLE ---------------------------------------
@@ -72,7 +72,7 @@ void CinderDrawTriangle(int x1, int y1, int x2, int y2, int x3, int y3, CinderCo
     filledTrigonRGBA(gCinderCtx.core.renderer, x1, y1, x2, y2, x3, y3, CINDER_COLOR_UNPACK(color));
 }
 
-void CinderDrawTriangleV(CinderPoint p1, CinderPoint p2, CinderPoint p3, CinderColor color)
+void CinderDrawTriangleP(CinderPoint p1, CinderPoint p2, CinderPoint p3, CinderColor color)
 {
     CinderDrawTriangle(p1.x, p1.y, p2.x, p2.y, p3.x, p3.y, color);
 }
@@ -85,7 +85,7 @@ void CinderDrawTriangleOutline(int x1, int y1, int x2, int y2, int x3, int y3, C
     trigonRGBA(gCinderCtx.core.renderer, x1, y1, x2, y2, x3, y3, CINDER_COLOR_UNPACK(color));
 }
 
-void CinderDrawTriangleOutlineV(CinderPoint p1, CinderPoint p2, CinderPoint p3, CinderColor color)
+void CinderDrawTriangleOutlineP(CinderPoint p1, CinderPoint p2, CinderPoint p3, CinderColor color)
 {
     CinderDrawTriangleOutline(p1.x, p1.y, p2.x, p2.y, p3.x, p3.y, color);
 }

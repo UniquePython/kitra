@@ -10,11 +10,13 @@ CinderFont *CinderLoadFont(const char *path, int size);
 void CinderDestroyFont(CinderFont **font);
 
 void CinderDrawText(CinderFont *font, const char *text, int x, int y, CinderColor color);
-void CinderDrawTextV(CinderFont *font, const char *text, CinderPoint pos, CinderColor color);
+void CinderDrawTextP(CinderFont *font, const char *text, CinderPoint pos, CinderColor color);
 
 CinderText *CinderCreateText(CinderFont *font, const char *text, CinderColor color);
+
 void CinderDrawCachedText(CinderText *t, int x, int y);
-void CinderDrawCachedTextV(CinderText *t, CinderPoint pos);
+void CinderDrawCachedTextP(CinderText *t, CinderPoint pos);
+
 void CinderDestroyCachedText(CinderText **t);
 
 CinderSize CinderMeasureText(CinderFont *font, const char *text);

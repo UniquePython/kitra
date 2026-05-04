@@ -89,7 +89,7 @@ void CinderDrawTexture(CinderTexture *tex, int x, int y)
     CinderDrawTextureEx(tex, NULL, &dst);
 }
 
-void CinderDrawTextureV(CinderTexture *tex, CinderPoint pos)
+void CinderDrawTextureP(CinderTexture *tex, CinderPoint pos)
 {
     CinderDrawTexture(tex, pos.x, pos.y);
 }

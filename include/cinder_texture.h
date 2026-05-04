@@ -10,6 +10,6 @@ void CinderDestroyTexture(CinderTexture **tex);
 
 void CinderDrawTextureEx(CinderTexture *tex, const CinderRect *src, const CinderRect *dst);
 void CinderDrawTexture(CinderTexture *tex, int x, int y);
-void CinderDrawTextureV(CinderTexture *tex, CinderPoint pos);
+void CinderDrawTextureP(CinderTexture *tex, CinderPoint pos);
 
 #endif /* CINDER_TEXTURE_H_ */

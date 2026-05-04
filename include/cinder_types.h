@@ -80,6 +80,19 @@ typedef union CinderRect
     };
 } CinderRect;
 
+typedef union CinderCircle
+{
+    struct
+    {
+        int x, y, r;
+    };
+    struct
+    {
+        CinderPoint center;
+        int radius;
+    };
+} CinderCircle;
+
 // ======================================= COLOR ================================================
 
 typedef struct CinderColor
