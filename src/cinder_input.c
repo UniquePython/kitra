@@ -136,7 +136,10 @@ void CinderInputProcessEvent(const SDL_Event *event)
     {
         CinderKey key = sSdlToCinderKey[event->key.keysym.scancode];
         if (key != CINDER_KEY_UNKNOWN)
+        {
             gCinderCtx.input.keyboard.down[key] = false;
+            gCinderCtx.input.keyboard.released[key] = true;
+        }
     }
     break;
 
@@ -162,7 +165,10 @@ void CinderInputProcessEvent(const SDL_Event *event)
     {
         int index = event->button.button - 1;
         if (index >= 0 && index < CINDER_MOUSE_BUTTON_COUNT)
+        {
             gCinderCtx.input.mouse.down[index] = false;
+            gCinderCtx.input.mouse.released[index] = true;
+        }
     }
     break;
 
@@ -190,6 +196,14 @@ bool CinderIsKeyPressed(CinderKey key)
         return false;
 
     return gCinderCtx.input.keyboard.pressed[key];
+}
+
+bool CinderIsKeyReleased(CinderKey key)
+{
+    if (key < 0 || key >= CINDER_KEY_COUNT)
+        return false;
+
+    return gCinderCtx.input.keyboard.released[key];
 }
 
 CinderPoint CinderGetMousePos(void)
@@ -221,4 +235,12 @@ bool CinderIsMouseButtonPressed(CinderMouseButton button)
         return false;
 
     return gCinderCtx.input.mouse.pressed[button];
+}
+
+bool CinderIsMouseButtonReleased(CinderMouseButton button)
+{
+    if (button < 0 || button >= CINDER_MOUSE_BUTTON_COUNT)
+        return false;
+
+    return gCinderCtx.input.mouse.released[button];
 }

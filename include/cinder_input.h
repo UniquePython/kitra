@@ -135,6 +135,7 @@ typedef enum CinderMouseButton
 
 bool CinderIsKeyDown(CinderKey key);
 bool CinderIsKeyPressed(CinderKey key);
+bool CinderIsKeyReleased(CinderKey key);
 
 CinderPoint CinderGetMousePos(void);
 CinderVec2i CinderGetMouseDelta(void);
@@ -142,5 +143,6 @@ CinderVec2i CinderGetScrollDelta(void);
 
 bool CinderIsMouseButtonDown(CinderMouseButton button);
 bool CinderIsMouseButtonPressed(CinderMouseButton button);
+bool CinderIsMouseButtonReleased(CinderMouseButton button);
 
 #endif /* CINDER_INPUT_H_ */

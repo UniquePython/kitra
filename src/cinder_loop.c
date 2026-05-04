@@ -35,7 +35,9 @@ void CinderBeginFrame(void)
     // ---------------- Reset per-frame input ----------------
 
     memset(gCinderCtx.input.keyboard.pressed, 0, sizeof(gCinderCtx.input.keyboard.pressed));
+    memset(gCinderCtx.input.keyboard.released, 0, sizeof(gCinderCtx.input.keyboard.released));
     memset(gCinderCtx.input.mouse.pressed, 0, sizeof(gCinderCtx.input.mouse.pressed));
+    memset(gCinderCtx.input.mouse.released, 0, sizeof(gCinderCtx.input.mouse.released));
 
     gCinderCtx.input.mouse.delta = (CinderVec2i){{0, 0}};
     gCinderCtx.input.mouse.scrollDelta = (CinderVec2i){{0, 0}};

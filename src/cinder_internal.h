@@ -43,6 +43,7 @@ typedef struct CinderKeyboardState
 {
     bool down[CINDER_KEY_COUNT];
     bool pressed[CINDER_KEY_COUNT];
+    bool released[CINDER_KEY_COUNT];
 } CinderKeyboardState;
 
 typedef struct CinderMouseState
@@ -53,6 +54,7 @@ typedef struct CinderMouseState
     CinderVec2i scrollDelta;
     bool down[CINDER_MOUSE_BUTTON_COUNT];
     bool pressed[CINDER_MOUSE_BUTTON_COUNT];
+    bool released[CINDER_MOUSE_BUTTON_COUNT];
 } CinderMouseState;
 
 typedef struct CinderInputState
