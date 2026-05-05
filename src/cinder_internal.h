@@ -80,6 +80,9 @@ typedef struct CinderCtx
     CinderInputState input;
     CinderLogState log;
     CinderRng rng;
+
+    CinderPlugin plugins[CINDER_MAX_PLUGINS];
+    int pluginCount;
 } CinderCtx;
 
 extern CinderCtx gCinderCtx;

@@ -52,6 +52,7 @@ add_library(cinder STATIC
     src/cinder_text.c
     src/cinder_error.c
     src/cinder_rng.c
+    src/cinder_plugin.c
 )
 add_library(Cinder::Cinder ALIAS cinder)
 
@@ -124,6 +125,7 @@ install(FILES
     include/cinder_text.h
     include/cinder_error.h
     include/cinder_rng.h
+    include/cinder_plugin.h
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/cinder
 )
 

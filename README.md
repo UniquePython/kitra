@@ -102,6 +102,7 @@ Then include the header:
 | Timers | `cinder/cinder_timer.h` | Delta time, FPS, and general-purpose timers |
 | RNG | `cinder/cinder_rng.h` | PCG32 random number generator — integers, floats, directions, and a global convenience API |
 | Math & Types | `cinder/cinder_math.h` | Vectors, points, sizes, rectangles, circles and math operations. Linkable without SDL as `Cinder::Math` |
+| Plugins | `cinder/cinder_plugin.h` | Register and manage lifecycle plugins with init, update, draw, and shutdown callbacks |
 | Error & Logging | `cinder/cinder_error.h` | Error state, log callbacks, and the `CINDER_LOG` macro |
 
 ## Examples

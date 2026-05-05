@@ -56,6 +56,12 @@ void CinderBeginFrame(void)
         else
             CinderInputProcessEvent(&sdlEvent);
     }
+
+    // ---------------- Plugin callbacks ----------------
+
+    for (int i = 0; i < gCinderCtx.pluginCount; i++)
+        if (gCinderCtx.plugins[i].update)
+            gCinderCtx.plugins[i].update(gCinderCtx.timing.deltaTime, gCinderCtx.plugins[i].userdata);
 }
 
 void CinderEndFrame(void)
@@ -67,6 +73,10 @@ void CinderEndFrame(void)
     }
 
     gCinderCtx.loop.frameBegun = false;
+
+    for (int i = 0; i < gCinderCtx.pluginCount; i++)
+        if (gCinderCtx.plugins[i].draw)
+            gCinderCtx.plugins[i].draw(gCinderCtx.plugins[i].userdata);
 
     if (gCinderCtx.timing.targetFPS > 0)
     {

@@ -65,6 +65,10 @@ CinderStatus CinderInit(CinderSubsystem flags)
 
 void CinderQuit(void)
 {
+    for (int i = gCinderCtx.pluginCount - 1; i >= 0; i--)
+        if (gCinderCtx.plugins[i].shutdown)
+            gCinderCtx.plugins[i].shutdown(gCinderCtx.plugins[i].userdata);
+
     CinderDestroyWindow();
 
     gCinderCtx.core.initFlags = 0;

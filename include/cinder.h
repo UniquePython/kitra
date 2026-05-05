@@ -15,5 +15,6 @@
 #include "cinder_text.h"
 #include "cinder_error.h"
 #include "cinder_rng.h"
+#include "cinder_plugin.h"
 
 #endif /* CINDER_H_ */
