@@ -78,6 +78,49 @@ CinderSize CinderGetTextureSize(const CinderTexture *tex)
     return (CinderSize){{tex->width, tex->height}};
 }
 
+CinderStatus CinderScreenshot(const char *path)
+{
+    if (!path)
+    {
+        CINDER_LOG(CINDER_LOG_ERROR, "Path is NULL in CinderScreenshot");
+        return CINDER_STATUS_SCREENSHOT_FAILED;
+    }
+
+    if (!gCinderCtx.core.renderer)
+    {
+        CINDER_LOG(CINDER_LOG_ERROR, "Renderer is NULL in CinderScreenshot");
+        return CINDER_STATUS_SCREENSHOT_FAILED;
+    }
+
+    CinderSize size = CinderGetWindowSize();
+
+    SDL_Surface *surface = SDL_CreateRGBSurfaceWithFormat(
+        0, size.w, size.h, 32, SDL_PIXELFORMAT_RGBA32);
+
+    if (!surface)
+    {
+        CINDER_LOG(CINDER_LOG_ERROR, SDL_GetError());
+        return CINDER_STATUS_SCREENSHOT_FAILED;
+    }
+
+    if (SDL_RenderReadPixels(gCinderCtx.core.renderer, NULL, SDL_PIXELFORMAT_RGBA32, surface->pixels, surface->pitch) != 0)
+    {
+        CINDER_LOG(CINDER_LOG_ERROR, SDL_GetError());
+        SDL_FreeSurface(surface);
+        return CINDER_STATUS_SCREENSHOT_FAILED;
+    }
+
+    if (IMG_SavePNG(surface, path) != 0)
+    {
+        CINDER_LOG(CINDER_LOG_ERROR, IMG_GetError());
+        SDL_FreeSurface(surface);
+        return CINDER_STATUS_SCREENSHOT_FAILED;
+    }
+
+    SDL_FreeSurface(surface);
+    return CINDER_STATUS_OK;
+}
+
 void CinderDrawTextureEx(CinderTexture *tex, const CinderRect *src, const CinderRect *dst)
 {
     if (!gCinderCtx.core.renderer || !tex)

@@ -10,6 +10,8 @@ void CinderDestroyTexture(CinderTexture **tex);
 
 CinderSize CinderGetTextureSize(const CinderTexture *tex);
 
+CinderStatus CinderScreenshot(const char *path);
+
 void CinderDrawTextureEx(CinderTexture *tex, const CinderRect *src, const CinderRect *dst);
 void CinderDrawTexture(CinderTexture *tex, int x, int y);
 void CinderDrawTextureP(CinderTexture *tex, CinderPoint pos);
