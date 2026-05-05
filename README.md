@@ -98,6 +98,7 @@ Then include the header:
 | Input | `cinder/cinder_input.h` | Keyboard and mouse state, per-frame and held queries |
 | Drawing | `cinder/cinder_draw.h` | Lines, circles, triangles, rectangles |
 | Textures | `cinder/cinder_texture.h` | Load, draw, and destroy image textures |
+| Blend Modes | `cinder/cinder_blend.h` | Set blend modes globally or per-texture — none, alpha, additive, multiply |
 | Text & Fonts | `cinder/cinder_text.h` | Load fonts, draw text, cache rendered text |
 | Timers | `cinder/cinder_timer.h` | Delta time, FPS, and general-purpose timers |
 | RNG | `cinder/cinder_rng.h` | PCG32 random number generator — integers, floats, directions, and a global convenience API |
