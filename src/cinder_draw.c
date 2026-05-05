@@ -157,6 +157,64 @@ void CinderDrawTriangleOutlineP(CinderPoint p1, CinderPoint p2, CinderPoint p3, 
     CinderDrawTriangleOutline(p1.x, p1.y, p2.x, p2.y, p3.x, p3.y, color);
 }
 
+// --------------------------------------- POLYGON ---------------------------------------
+
+void CinderDrawPolygon(const CinderPoint *points, int count, CinderColor color)
+{
+    if (!gCinderCtx.core.renderer || !points || count < 3)
+        return;
+
+    int16_t *xs = malloc(sizeof(int16_t) * (size_t)count);
+    int16_t *ys = malloc(sizeof(int16_t) * (size_t)count);
+
+    if (!xs || !ys)
+    {
+        CINDER_LOG(CINDER_LOG_ERROR, "Failed to allocate polygon buffers");
+        free(xs);
+        free(ys);
+        return;
+    }
+
+    for (int i = 0; i < count; i++)
+    {
+        xs[i] = (int16_t)points[i].x;
+        ys[i] = (int16_t)points[i].y;
+    }
+
+    filledPolygonRGBA(gCinderCtx.core.renderer, xs, ys, count, CINDER_COLOR_UNPACK(color));
+
+    free(xs);
+    free(ys);
+}
+
+void CinderDrawPolygonOutline(const CinderPoint *points, int count, CinderColor color)
+{
+    if (!gCinderCtx.core.renderer || !points || count < 3)
+        return;
+
+    int16_t *xs = malloc(sizeof(int16_t) * (size_t)count);
+    int16_t *ys = malloc(sizeof(int16_t) * (size_t)count);
+
+    if (!xs || !ys)
+    {
+        CINDER_LOG(CINDER_LOG_ERROR, "Failed to allocate polygon buffers");
+        free(xs);
+        free(ys);
+        return;
+    }
+
+    for (int i = 0; i < count; i++)
+    {
+        xs[i] = (int16_t)points[i].x;
+        ys[i] = (int16_t)points[i].y;
+    }
+
+    polygonRGBA(gCinderCtx.core.renderer, xs, ys, count, CINDER_COLOR_UNPACK(color));
+
+    free(xs);
+    free(ys);
+}
+
 // --------------------------------------- RECTANGLE ---------------------------------------
 
 void CinderDrawRect(CinderRect rect, CinderColor color)

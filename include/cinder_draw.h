@@ -44,6 +44,11 @@ void CinderDrawTriangleP(CinderPoint p1, CinderPoint p2, CinderPoint p3, CinderC
 void CinderDrawTriangleOutline(int x1, int y1, int x2, int y2, int x3, int y3, CinderColor color);
 void CinderDrawTriangleOutlineP(CinderPoint p1, CinderPoint p2, CinderPoint p3, CinderColor color);
 
+// --------------------------------------- POLYGON ---------------------------------------
+
+void CinderDrawPolygon(const CinderPoint *points, int count, CinderColor color);
+void CinderDrawPolygonOutline(const CinderPoint *points, int count, CinderColor color);
+
 // --------------------------------------- RECTANGLE ---------------------------------------
 
 void CinderDrawRect(CinderRect rect, CinderColor color);
