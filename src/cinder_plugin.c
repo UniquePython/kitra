@@ -5,13 +5,13 @@ CinderStatus CinderRegisterPlugin(CinderPlugin plugin)
     if (gCinderCtx.pluginCount >= CINDER_MAX_PLUGINS)
     {
         CINDER_LOG(CINDER_LOG_ERROR, "Maximum plugin count reached");
-        return CINDER_STATUS_PLUGIN_NO_NAME;
+        return CINDER_STATUS_PLUGIN_MAX_REACHED;
     }
 
     if (!plugin.name)
     {
         CINDER_LOG(CINDER_LOG_ERROR, "Plugin must have a name");
-        return CINDER_STATUS_PLUGIN_MAX_REACHED;
+        return CINDER_STATUS_PLUGIN_NO_NAME;
     }
 
     for (int i = 0; i < gCinderCtx.pluginCount; i++)
