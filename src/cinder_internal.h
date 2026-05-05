@@ -90,4 +90,6 @@ extern CinderCtx gCinderCtx;
 void CinderInputInit(void);
 void CinderInputProcessEvent(const SDL_Event *event);
 
+SDL_Texture *CinderTextureGetSDL(CinderTexture *tex);
+
 #endif /* CINDER_INTERNAL_H_ */

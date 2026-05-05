@@ -114,3 +114,8 @@ void CinderDrawTextureP(CinderTexture *tex, CinderPoint pos)
 {
     CinderDrawTexture(tex, pos.x, pos.y);
 }
+
+SDL_Texture *CinderTextureGetSDL(CinderTexture *tex)
+{
+    return tex->handle;
+}
