@@ -47,10 +47,10 @@ Install the required libraries before building.
 
 ```bash
 # Ubuntu/Debian
-sudo apt install libsdl2-dev libsdl2-image-dev libsdl2-gfx-dev libsdl2-ttf-dev
+sudo apt install libsdl2-dev libsdl2-image-dev libsdl2-gfx-dev libsdl2-ttf-dev libsdl2-mixer-dev
 
 # Arch
-sudo pacman -S sdl2 sdl2_image sdl2_gfx sdl2_ttf
+sudo pacman -S sdl2 sdl2_image sdl2_gfx sdl2_ttf sdl2_mixer
 ```
 
 ### Building Cinder
@@ -98,6 +98,7 @@ Then include the header:
 | Input | `cinder/cinder_input.h` | Keyboard and mouse state, per-frame and held queries |
 | Drawing | `cinder/cinder_draw.h` | Lines, circles, triangles, rectangles |
 | Textures | `cinder/cinder_texture.h` | Load, draw, and destroy image textures |
+| Audio | `cinder/cinder_audio.h` | Load and play sound effects and music |
 | Blend Modes | `cinder/cinder_blend.h` | Set blend modes globally or per-texture — none, alpha, additive, multiply |
 | Text & Fonts | `cinder/cinder_text.h` | Load fonts, draw text, cache rendered text |
 | Timers | `cinder/cinder_timer.h` | Delta time, FPS, and general-purpose timers |

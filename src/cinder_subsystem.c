@@ -46,6 +46,26 @@ CinderStatus CinderInit(CinderSubsystem flags)
             return CINDER_STATUS_SUBSYSTEM_INIT_FAILED;
         }
         gCinderCtx.core.initFlags |= SDL_INIT_AUDIO;
+
+        int mixFlags = MIX_INIT_OGG;
+        if ((Mix_Init(mixFlags) & mixFlags) != mixFlags)
+        {
+            CINDER_LOG(CINDER_LOG_ERROR, Mix_GetError());
+            CinderRollbackSubsystems(gCinderCtx.core.initFlags);
+            gCinderCtx.core.initFlags = 0;
+            return CINDER_STATUS_SUBSYSTEM_INIT_FAILED;
+        }
+
+        if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
+        {
+            CINDER_LOG(CINDER_LOG_ERROR, Mix_GetError());
+            Mix_Quit();
+            CinderRollbackSubsystems(gCinderCtx.core.initFlags);
+            gCinderCtx.core.initFlags = 0;
+            return CINDER_STATUS_SUBSYSTEM_INIT_FAILED;
+        }
+
+        gCinderCtx.core.audioInitialized = true;
     }
 
     if (flags & CINDER_SUBSYSTEM_VIDEO)
@@ -77,6 +97,11 @@ void CinderQuit(void)
         IMG_Quit();
     if (gCinderCtx.core.ttfInitialized)
         TTF_Quit();
+    if (gCinderCtx.core.audioInitialized)
+    {
+        Mix_CloseAudio();
+        Mix_Quit();
+    }
 
     SDL_Quit();
 }

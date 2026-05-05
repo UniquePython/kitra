@@ -17,5 +17,6 @@
 #include "cinder_rng.h"
 #include "cinder_plugin.h"
 #include "cinder_blend.h"
+#include "cinder_audio.h"
 
 #endif /* CINDER_H_ */

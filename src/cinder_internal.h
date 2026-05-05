@@ -9,6 +9,7 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL2_gfxPrimitives.h>
+#include <SDL2/SDL_mixer.h>
 
 #include <stdlib.h>
 #include <string.h>
@@ -22,6 +23,7 @@ typedef struct CinderCoreState
     uint32_t initFlags;
     bool imgInitialized;
     bool ttfInitialized;
+    bool audioInitialized;
 } CinderCoreState;
 
 typedef struct CinderLoopState

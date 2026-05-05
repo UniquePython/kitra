@@ -20,6 +20,7 @@ pkg_check_modules(SDL2       REQUIRED IMPORTED_TARGET sdl2)
 pkg_check_modules(SDL2_IMAGE REQUIRED IMPORTED_TARGET SDL2_image)
 pkg_check_modules(SDL2_GFX   REQUIRED IMPORTED_TARGET SDL2_gfx)
 pkg_check_modules(SDL2_TTF   REQUIRED IMPORTED_TARGET SDL2_ttf)
+pkg_check_modules(SDL2_MIXER   REQUIRED IMPORTED_TARGET SDL2_mixer)
 
 # ============================================================
 # cinder_math — header-only interface library
@@ -54,6 +55,7 @@ add_library(cinder STATIC
     src/cinder_rng.c
     src/cinder_plugin.c
     src/cinder_blend.c
+    src/cinder_audio.c
 )
 add_library(Cinder::Cinder ALIAS cinder)
 
@@ -83,6 +85,7 @@ target_link_libraries(cinder
         PkgConfig::SDL2_IMAGE
         PkgConfig::SDL2_GFX
         PkgConfig::SDL2_TTF
+        PkgConfig::SDL2_MIXER
 )
 
 # ============================================================
@@ -128,6 +131,7 @@ install(FILES
     include/cinder_rng.h
     include/cinder_plugin.h
     include/cinder_blend.h
+    include/cinder_audio.h
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/cinder
 )
 
