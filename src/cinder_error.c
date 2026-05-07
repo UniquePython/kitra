@@ -49,7 +49,7 @@ const char *CinderGetError(void)
 void CinderClearError(void)
 {
     gCinderCtx.log.lastError = NULL;
-    gCinderCtx.log.lastLevel = CINDER_LOG_INFO;
+    gCinderCtx.log.lastLevel = CINDER_LOG_NONE;
 }
 
 CinderLogLevel CinderGetLastLevel(void)

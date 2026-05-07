@@ -5,6 +5,7 @@
 
 typedef enum
 {
+    CINDER_LOG_NONE,
     CINDER_LOG_INFO,
     CINDER_LOG_WARNING,
     CINDER_LOG_ERROR,
