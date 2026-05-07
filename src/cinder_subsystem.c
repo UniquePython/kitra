@@ -14,6 +14,9 @@ static void CinderRollbackSubsystems(uint32_t flags)
 
 CinderStatus CinderInit(CinderSubsystem flags)
 {
+    if (gCinderCtx.core.initFlags != 0)
+        return CINDER_STATUS_SUBSYSTEM_DOUBLE_INIT;
+
     gCinderCtx = (CinderCtx){0};
 
     gCinderCtx.timing.perfFrequency = SDL_GetPerformanceFrequency();
