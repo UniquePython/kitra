@@ -92,7 +92,7 @@ target_link_libraries(cinder
 # Examples
 # ============================================================
 
-foreach(EXAMPLE pong snake)
+foreach(EXAMPLE pong snake pendulum)
     add_executable(${EXAMPLE} examples/${EXAMPLE}/${EXAMPLE}.c)
     target_link_options(${EXAMPLE} PRIVATE -Wl,--allow-shlib-undefined)
     target_link_libraries(${EXAMPLE} PRIVATE Cinder::Cinder)
