@@ -39,7 +39,8 @@ int main(void)
 
 ## Building & Installation
 
-> Tested on Linux. macOS and Windows support is untested.
+> Tested on Linux and macOS. Windows support is experimental —
+> MSVC has stricter C compliance requirements that may require source changes.
 
 ### Dependencies
 
