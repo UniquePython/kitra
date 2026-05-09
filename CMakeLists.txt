@@ -17,9 +17,25 @@ set(CMAKE_C_EXTENSIONS OFF)
 if(WIN32)
     find_package(SDL2 CONFIG REQUIRED)
     find_package(SDL2_image CONFIG REQUIRED)
-    find_package(SDL2_gfx CONFIG REQUIRED)
     find_package(SDL2_ttf CONFIG REQUIRED)
     find_package(SDL2_mixer CONFIG REQUIRED)
+
+    # SDL2_gfx doesn't ship a CMake config, find it manually
+    find_path(SDL2_GFX_INCLUDE_DIR SDL2_gfxPrimitives.h
+        HINTS ${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include
+    )
+    find_library(SDL2_GFX_LIBRARY
+        NAMES SDL2_gfx
+        HINTS ${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib
+    )
+    if(NOT SDL2_GFX_INCLUDE_DIR OR NOT SDL2_GFX_LIBRARY)
+        message(FATAL_ERROR "Could not find SDL2_gfx")
+    endif()
+    add_library(SDL2_gfx::SDL2_gfx UNKNOWN IMPORTED)
+    set_target_properties(SDL2_gfx::SDL2_gfx PROPERTIES
+        IMPORTED_LOCATION "${SDL2_GFX_LIBRARY}"
+        INTERFACE_INCLUDE_DIRECTORIES "${SDL2_GFX_INCLUDE_DIR}"
+    )
 else()
     find_package(PkgConfig REQUIRED)
     pkg_check_modules(SDL2       REQUIRED IMPORTED_TARGET sdl2)
