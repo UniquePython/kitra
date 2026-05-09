@@ -93,14 +93,18 @@ target_include_directories(cinder
         ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
-target_compile_options(cinder PRIVATE
-    -Wall
-    -Wextra
-    -Wshadow
-    -Wdouble-promotion
-    -Wformat=2
-    -Wundef
-)
+if(MSVC)
+    target_compile_options(cinder PRIVATE /W4)
+else()
+    target_compile_options(cinder PRIVATE
+        -Wall
+        -Wextra
+        -Wshadow
+        -Wdouble-promotion
+        -Wformat=2
+        -Wundef
+    )
+endif()
 
 if(NOT APPLE AND NOT WIN32)
     target_link_options(cinder PRIVATE -Wl,--allow-shlib-undefined)
