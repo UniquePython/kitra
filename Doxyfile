@@ -1,0 +1,20 @@
+PROJECT_NAME           = "Cinder"
+PROJECT_NUMBER         = 0.1.0
+PROJECT_BRIEF          = "A minimal, beginner-friendly 2D graphics library for C"
+
+INPUT                  = include
+RECURSIVE              = YES
+
+OPTIMIZE_OUTPUT_FOR_C  = YES
+
+EXTRACT_ALL            = YES
+
+GENERATE_LATEX         = NO
+
+OUTPUT_DIRECTORY       = docs
+
+HAVE_DOT               = YES
+CALL_GRAPH             = NO
+CALLER_GRAPH           = NO
+
+QUIET                  = YES
