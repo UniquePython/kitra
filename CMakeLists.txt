@@ -14,13 +14,20 @@ set(CMAKE_C_EXTENSIONS OFF)
 # Dependencies
 # ============================================================
 
-find_package(PkgConfig REQUIRED)
-
-pkg_check_modules(SDL2       REQUIRED IMPORTED_TARGET sdl2)
-pkg_check_modules(SDL2_IMAGE REQUIRED IMPORTED_TARGET SDL2_image)
-pkg_check_modules(SDL2_GFX   REQUIRED IMPORTED_TARGET SDL2_gfx)
-pkg_check_modules(SDL2_TTF   REQUIRED IMPORTED_TARGET SDL2_ttf)
-pkg_check_modules(SDL2_MIXER   REQUIRED IMPORTED_TARGET SDL2_mixer)
+if(WIN32)
+    find_package(SDL2 CONFIG REQUIRED)
+    find_package(SDL2_image CONFIG REQUIRED)
+    find_package(SDL2_gfx CONFIG REQUIRED)
+    find_package(SDL2_ttf CONFIG REQUIRED)
+    find_package(SDL2_mixer CONFIG REQUIRED)
+else()
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules(SDL2       REQUIRED IMPORTED_TARGET sdl2)
+    pkg_check_modules(SDL2_IMAGE REQUIRED IMPORTED_TARGET SDL2_image)
+    pkg_check_modules(SDL2_GFX   REQUIRED IMPORTED_TARGET SDL2_gfx)
+    pkg_check_modules(SDL2_TTF   REQUIRED IMPORTED_TARGET SDL2_ttf)
+    pkg_check_modules(SDL2_MIXER REQUIRED IMPORTED_TARGET SDL2_mixer)
+endif()
 
 # ============================================================
 # cinder_math — header-only interface library
@@ -75,19 +82,32 @@ target_compile_options(cinder PRIVATE
     -Wformat=2
     -Wundef
 )
-if(NOT APPLE)
+
+if(NOT APPLE AND NOT WIN32)
     target_link_options(cinder PRIVATE -Wl,--allow-shlib-undefined)
 endif()
 
-target_link_libraries(cinder
-    PUBLIC  Cinder::Math
-    PRIVATE
-        PkgConfig::SDL2
-        PkgConfig::SDL2_IMAGE
-        PkgConfig::SDL2_GFX
-        PkgConfig::SDL2_TTF
-        PkgConfig::SDL2_MIXER
-)
+if(WIN32)
+    target_link_libraries(cinder
+        PUBLIC  Cinder::Math
+        PRIVATE
+            SDL2::SDL2
+            SDL2_image::SDL2_image
+            SDL2_gfx::SDL2_gfx
+            SDL2_ttf::SDL2_ttf
+            SDL2_mixer::SDL2_mixer
+    )
+else()
+    target_link_libraries(cinder
+        PUBLIC  Cinder::Math
+        PRIVATE
+            PkgConfig::SDL2
+            PkgConfig::SDL2_IMAGE
+            PkgConfig::SDL2_GFX
+            PkgConfig::SDL2_TTF
+            PkgConfig::SDL2_MIXER
+    )
+endif()
 
 # ============================================================
 # Examples
@@ -95,8 +115,8 @@ target_link_libraries(cinder
 
 foreach(EXAMPLE pong snake pendulum)
     add_executable(${EXAMPLE} examples/${EXAMPLE}/${EXAMPLE}.c)
-    
-    if(NOT APPLE)
+
+    if(NOT APPLE AND NOT WIN32)
         target_link_options(${EXAMPLE} PRIVATE -Wl,--allow-shlib-undefined)
     endif()
 
@@ -168,20 +188,22 @@ install(FILES
 # pkg-config
 # ============================================================
 
-configure_file(
-    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/cinder.pc.in"
-    "${CMAKE_CURRENT_BINARY_DIR}/cinder.pc"
-    @ONLY
-)
+if(NOT WIN32)
+    configure_file(
+        "${CMAKE_CURRENT_SOURCE_DIR}/cmake/cinder.pc.in"
+        "${CMAKE_CURRENT_BINARY_DIR}/cinder.pc"
+        @ONLY
+    )
 
-configure_file(
-    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/cinder_math.pc.in"
-    "${CMAKE_CURRENT_BINARY_DIR}/cinder_math.pc"
-    @ONLY
-)
+    configure_file(
+        "${CMAKE_CURRENT_SOURCE_DIR}/cmake/cinder_math.pc.in"
+        "${CMAKE_CURRENT_BINARY_DIR}/cinder_math.pc"
+        @ONLY
+    )
 
-install(FILES
-    "${CMAKE_CURRENT_BINARY_DIR}/cinder.pc"
-    "${CMAKE_CURRENT_BINARY_DIR}/cinder_math.pc"
-    DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig"
-)
+    install(FILES
+        "${CMAKE_CURRENT_BINARY_DIR}/cinder.pc"
+        "${CMAKE_CURRENT_BINARY_DIR}/cinder_math.pc"
+        DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig"
+    )
+endif()
