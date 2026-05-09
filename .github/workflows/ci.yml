@@ -36,13 +36,17 @@ jobs:
         uses: lukka/run-vcpkg@v11
         with:
           vcpkgGitCommitId: "a34c873a9717a888f58dc05268dea15592c2f0ff"
-        env:
-          ACTIONS_RUNTIME_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          ACTIONS_CACHE_URL: ${{ env.ACTIONS_CACHE_URL }}
+
+      - name: Cache vcpkg packages
+        if: runner.os == 'Windows'
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.VCPKG_ROOT }}/installed
+          key: vcpkg-${{ runner.os }}-sdl2
 
       - name: Install SDL2 packages (Windows)
         if: runner.os == 'Windows'
-        run: ${{ env.VCPKG_ROOT }}/vcpkg install sdl2 sdl2-image sdl2-gfx sdl2-ttf sdl2-mixer --triplet x64-windows
+        run: ${{ env.VCPKG_ROOT }}/vcpkg install sdl2 sdl2-image sdl2-gfx sdl2-ttf sdl2-mixer --triplet x64-windows --binarysource=clear
 
       - name: Build
         run: |
