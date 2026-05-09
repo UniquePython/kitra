@@ -35,7 +35,7 @@ jobs:
         if: runner.os == 'Windows'
         uses: lukka/run-vcpkg@v11
         with:
-          vcpkgGitCommitId: "01f602a08f29c9d6e37e79a1fb72c6b2f4d3f3be"
+          vcpkgGitCommitId: "c3867e714dd3a51c272826eea77267876517ed99"
 
       - name: Cache vcpkg packages
         if: runner.os == 'Windows'
