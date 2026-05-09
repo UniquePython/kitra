@@ -2,7 +2,11 @@
 
 A minimal, beginner-friendly 2D graphics library for C.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![CI](https://github.com/UniquePython/cinder/actions/workflows/ci.yml/badge.svg)](https://github.com/UniquePython/cinder/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Platform](https://img.shields.io/badge/platform-Linux%20%7C%20macOS-blue.svg)](README.md)
+[![C Standard](https://img.shields.io/badge/C-C11-blue.svg)](CMakeLists.txt)
+[![SDL2](https://img.shields.io/badge/built%20on-SDL2-brightgreen.svg)](https://www.libsdl.org/)
 
 ## What is Cinder
 
