@@ -48,8 +48,14 @@ jobs:
         if: runner.os == 'Windows'
         run: ${{ env.VCPKG_ROOT }}/vcpkg install sdl2 sdl2-image sdl2-gfx sdl2-ttf sdl2-mixer --triplet x64-windows --binarysource=clear
 
-      - name: Build
+      - name: Build (Windows)
+        if: runner.os == 'Windows'
         run: |
-          cmake -B build -DCMAKE_BUILD_TYPE=Release \
-            ${{ runner.os == 'Windows' && '-DCMAKE_TOOLCHAIN_FILE=${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake' || '' }}
+          cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE="${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake"
+          cmake --build build
+
+      - name: Build
+        if: runner.os != 'Windows'
+        run: |
+          cmake -B build -DCMAKE_BUILD_TYPE=Release
           cmake --build build
