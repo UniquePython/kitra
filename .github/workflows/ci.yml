@@ -28,8 +28,19 @@ jobs:
 
       - name: Install dependencies (Windows)
         if: runner.os == 'Windows'
+        uses: lukka/run-vcpkg@v11
+        with:
+          vcpkgGitCommitId: "a34c873a9717a888f58dc05268dea15592c2f0ff"
+
+      - name: Install SDL2 packages (Windows)
+        if: runner.os == 'Windows'
+        run: vcpkg install sdl2 sdl2-image sdl2-gfx sdl2-ttf sdl2-mixer --triplet x64-windows
+
+      - name: Build
         run: |
-          vcpkg install sdl2 sdl2-image sdl2-gfx sdl2-ttf sdl2-mixer
+          cmake -B build -DCMAKE_BUILD_TYPE=Release \
+            ${{ runner.os == 'Windows' && '-DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake' || '' }}
+          cmake --build build
 
       - name: Build
         run: |
