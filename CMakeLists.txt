@@ -75,8 +75,9 @@ target_compile_options(cinder PRIVATE
     -Wformat=2
     -Wundef
 )
-
-target_link_options(cinder PRIVATE -Wl,--allow-shlib-undefined)
+if(NOT APPLE)
+    target_link_options(cinder PRIVATE -Wl,--allow-shlib-undefined)
+endif()
 
 target_link_libraries(cinder
     PUBLIC  Cinder::Math
@@ -94,7 +95,11 @@ target_link_libraries(cinder
 
 foreach(EXAMPLE pong snake pendulum)
     add_executable(${EXAMPLE} examples/${EXAMPLE}/${EXAMPLE}.c)
-    target_link_options(${EXAMPLE} PRIVATE -Wl,--allow-shlib-undefined)
+    
+    if(NOT APPLE)
+        target_link_options(${EXAMPLE} PRIVATE -Wl,--allow-shlib-undefined)
+    endif()
+
     target_link_libraries(${EXAMPLE} PRIVATE Cinder::Cinder)
     set_target_properties(${EXAMPLE} PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
