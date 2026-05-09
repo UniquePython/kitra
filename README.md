@@ -109,8 +109,22 @@ Then include the header:
 
 ## Examples
 
-The `examples/` directory contains Pong and Snake built with Cinder.
-Screenshots and GIFs coming soon.
+The `examples/` directory contains Pong, Snake and Pendulum built with Cinder.
+
+<figure align="center">
+  <img src="examples/pong/assets/screenshot.png" alt="Pong game in Cinder" width="700">
+  <figcaption><em>Figure 1: Pong game in Cinder</em></figcaption>
+</figure>
+
+<figure align="center">
+  <img src="examples/snake/assets/screenshot.png" alt="Snake game in Cinder" width="700">
+  <figcaption><em>Figure 2: Snake game in Cinder</em></figcaption>
+</figure>
+
+<figure align="center">
+  <img src="examples/pendulum/assets/screenshot.png" alt="Single Pendulum simulation in Cinder" width="700">
+  <figcaption><em>Figure 3: Single Pendulum simulation in Cinder</em></figcaption>
+</figure>
 
 ## License
 
