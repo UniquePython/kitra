@@ -22,12 +22,15 @@ if(WIN32)
 
     # SDL2_gfx doesn't ship a CMake config, find it manually
     find_path(SDL2_GFX_INCLUDE_DIR SDL2_gfxPrimitives.h
-        HINTS ${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include
+        HINTS "$ENV{VCPKG_ROOT}/installed/x64-windows/include"
+        PATH_SUFFIXES SDL2
     )
     find_library(SDL2_GFX_LIBRARY
         NAMES SDL2_gfx
-        HINTS ${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib
+        HINTS "$ENV{VCPKG_ROOT}/installed/x64-windows/lib"
     )
+    message(STATUS "SDL2_GFX_INCLUDE_DIR: ${SDL2_GFX_INCLUDE_DIR}")
+    message(STATUS "SDL2_GFX_LIBRARY: ${SDL2_GFX_LIBRARY}")
     if(NOT SDL2_GFX_INCLUDE_DIR OR NOT SDL2_GFX_LIBRARY)
         message(FATAL_ERROR "Could not find SDL2_gfx")
     endif()
