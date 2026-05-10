@@ -11,12 +11,21 @@ EXTRACT_ALL            = YES
 
 GENERATE_LATEX         = NO
 
-HTML_EXTRA_STYLESHEET  = docs/doxygen-awesome-css/doxygen-awesome.css
+HTML_EXTRA_STYLESHEET  = doxygen-awesome-css/doxygen-awesome.css \
+doxygen-awesome-css/doxygen-awesome-sidebar-only.css \
+doxygen-awesome-css/doxygen-awesome-sidebar-only-darkmode-toggle.css
+
+HTML_EXTRA_FILES       = doxygen-awesome-css/doxygen-awesome-darkmode-toggle.js \
+doxygen-awesome-css/doxygen-awesome-fragment-copy-button.js \
+doxygen-awesome-css/doxygen-awesome-paragraph-link.js \
+doxygen-awesome-css/doxygen-awesome-interactive-toc.js
+
+HTML_COLORSTYLE        = DARK
 GENERATE_TREEVIEW      = YES
 DISABLE_INDEX          = NO
 FULL_SIDEBAR           = NO
-HTML_COLORSTYLE        = LIGHT
-HTML_COLORSTYLE        = DARK
+
+HTML_HEADER            = docs-config/header.html
 
 OUTPUT_DIRECTORY       = docs
 
