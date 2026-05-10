@@ -6,10 +6,15 @@ INPUT                  = include
 RECURSIVE              = YES
 
 OPTIMIZE_OUTPUT_FOR_C  = YES
-
 EXTRACT_ALL            = YES
 
 GENERATE_LATEX         = NO
+OUTPUT_DIRECTORY       = docs
+
+GENERATE_TREEVIEW      = YES
+DISABLE_INDEX          = NO
+FULL_SIDEBAR           = NO
+HTML_COLORSTYLE        = LIGHT
 
 HTML_EXTRA_STYLESHEET  = doxygen-awesome-css/doxygen-awesome.css \
 doxygen-awesome-css/doxygen-awesome-sidebar-only.css \
@@ -20,16 +25,9 @@ doxygen-awesome-css/doxygen-awesome-fragment-copy-button.js \
 doxygen-awesome-css/doxygen-awesome-paragraph-link.js \
 doxygen-awesome-css/doxygen-awesome-interactive-toc.js
 
-HTML_COLORSTYLE        = DARK
-GENERATE_TREEVIEW      = YES
-DISABLE_INDEX          = NO
-FULL_SIDEBAR           = NO
-
 HTML_HEADER            = docs-config/header.html
 
-OUTPUT_DIRECTORY       = docs
-
-HAVE_DOT               = YES
+HAVE_DOT               = NO
 CALL_GRAPH             = NO
 CALLER_GRAPH           = NO
 
