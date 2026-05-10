@@ -2,11 +2,13 @@
 
 A minimal, beginner-friendly 2D graphics library for C.
 
+[![Version](https://img.shields.io/github/v/release/UniquePython/cinder?color=orange)](https://github.com/UniquePython/cinder/releases)
 [![CI](https://github.com/UniquePython/cinder/actions/workflows/ci.yml/badge.svg)](https://github.com/UniquePython/cinder/actions/workflows/ci.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Platform](https://img.shields.io/badge/platform-Linux%20%7C%20macOS-blue.svg)](README.md)
-[![C Standard](https://img.shields.io/badge/C-C11-blue.svg)](CMakeLists.txt)
-[![SDL2](https://img.shields.io/badge/built%20on-SDL2-brightgreen.svg)](https://www.libsdl.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-orange.svg)](LICENSE)
+[![Platform](https://img.shields.io/badge/platform-Linux%20%7C%20macOS-red.svg)](README.md)
+[![C Standard](https://img.shields.io/badge/C-C11-red.svg)](CMakeLists.txt)
+[![SDL2](https://img.shields.io/badge/built%20on-SDL2-orange.svg)](https://www.libsdl.org/)
+[![Docs](https://img.shields.io/badge/docs-github.io-red.svg)](https://uniquepython.github.io/cinder)
 
 ## What is Cinder
 
