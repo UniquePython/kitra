@@ -11,6 +11,13 @@ EXTRACT_ALL            = YES
 
 GENERATE_LATEX         = NO
 
+HTML_EXTRA_STYLESHEET  = docs/doxygen-awesome-css/doxygen-awesome.css
+GENERATE_TREEVIEW      = YES
+DISABLE_INDEX          = NO
+FULL_SIDEBAR           = NO
+HTML_COLORSTYLE        = LIGHT
+HTML_COLORSTYLE        = DARK
+
 OUTPUT_DIRECTORY       = docs
 
 HAVE_DOT               = YES
