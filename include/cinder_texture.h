@@ -115,6 +115,8 @@ void CinderDrawTexture(CinderTexture *tex, int x, int y);
  */
 void CinderDrawTextureP(CinderTexture *tex, CinderPoint pos);
 
+struct SDL_Texture;
+
 /**
  * @brief Returns the underlying SDL texture handle.
  *
@@ -127,6 +129,6 @@ void CinderDrawTextureP(CinderTexture *tex, CinderPoint pos);
  *
  * @see CinderSetTextureBlendMode
  */
-SDL_Texture *CinderTextureGetSDL(CinderTexture *tex);
+struct SDL_Texture *CinderTextureGetSDL(CinderTexture *tex);
 
 #endif /* CINDER_TEXTURE_H_ */
