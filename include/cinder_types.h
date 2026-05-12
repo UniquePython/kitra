@@ -5,8 +5,6 @@
 
 // ======================================= VECTORS ================================================
 
-// --------------------------------------- 2D ---------------------------------------
-
 /**
  * @brief A 2D integer vector.
  *
@@ -42,46 +40,6 @@ typedef union CinderVec2f
         float y; /**< Vertical component. */
     };
 } CinderVec2f;
-
-// --------------------------------------- 3D ---------------------------------------
-
-/**
- * @brief A 3D integer vector.
- *
- * Can be accessed either by name (x, y, z) or by index (axes[0..2]).
- * Commonly used for 3D integer coordinates and color components.
- *
- * @see CinderVec3f
- */
-typedef union CinderVec3i
-{
-    int axes[3]; /**< Component array — axes[0] is x, axes[1] is y, axes[2] is z. */
-    struct
-    {
-        int x; /**< First component. */
-        int y; /**< Second component. */
-        int z; /**< Third component. */
-    };
-} CinderVec3i;
-
-/**
- * @brief A 3D float vector.
- *
- * Can be accessed either by name (x, y, z) or by index (axes[0..2]).
- * Commonly used for 3D directions, velocities, and continuous coordinates.
- *
- * @see CinderVec3i
- */
-typedef union CinderVec3f
-{
-    float axes[3]; /**< Component array — axes[0] is x, axes[1] is y, axes[2] is z. */
-    struct
-    {
-        float x; /**< First component. */
-        float y; /**< Second component. */
-        float z; /**< Third component. */
-    };
-} CinderVec3f;
 
 // ======================================= SCREEN TYPES ================================================
 
