@@ -1,5 +1,12 @@
 #include "cinder_internal.h"
 
+typedef struct CinderTimer
+{
+    uint64_t start;
+    uint64_t last;
+    bool repeat;
+} CinderTimer;
+
 CinderTimer CinderStartTimer(void)
 {
     uint64_t now = SDL_GetPerformanceCounter();
