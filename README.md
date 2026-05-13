@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/cinder_1024x1024.png" width="256" alt="Cinder logo">
+</p>
+
 # Cinder
 
 A minimal, beginner-friendly 2D graphics library for C.
@@ -136,3 +140,7 @@ The `examples/` directory contains Pong, Snake and Pendulum built with Cinder.
 ## License
 
 Cinder is licensed under the [MIT License](LICENSE).
+
+## Acknowledgements
+
+Cinder was heavily inspired by raylib and its philosophy of making graphics programming simple and accessible.
