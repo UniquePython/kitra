@@ -4,7 +4,12 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-typedef struct CinderTimer CinderTimer;
+typedef struct CinderTimer
+{
+    uint64_t start;
+    uint64_t last;
+    bool repeat;
+} CinderTimer;
 
 /**
  * @brief Creates and starts a new timer.
