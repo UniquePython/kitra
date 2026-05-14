@@ -6,16 +6,31 @@ on:
 
 jobs:
   release:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            name: linux-x86_64
+          - os: macos-latest
+            name: macos-x86_64
+
+    runs-on: ${{ matrix.os }}
+
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install dependencies
+      - name: Install dependencies (Linux)
+        if: runner.os == 'Linux'
         run: |
           sudo apt-get update
           sudo apt-get install -y \
             libsdl2-dev libsdl2-image-dev \
             libsdl2-gfx-dev libsdl2-ttf-dev libsdl2-mixer-dev
+
+      - name: Install dependencies (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          brew install sdl2 sdl2_image sdl2_gfx sdl2_ttf sdl2_mixer
 
       - name: Build
         run: |
@@ -25,9 +40,19 @@ jobs:
       - name: Package
         run: |
           cmake --install build --prefix dist/kitra
-          tar -czf kitra-linux-x86_64.tar.gz -C dist kitra
+          tar -czf kitra-${{ matrix.name }}.tar.gz -C dist kitra
+
+      - name: Checksum
+        run: |
+          if [ "$RUNNER_OS" == "macOS" ]; then
+            shasum -a 256 kitra-${{ matrix.name }}.tar.gz > kitra-${{ matrix.name }}.sha256
+          else
+            sha256sum kitra-${{ matrix.name }}.tar.gz > kitra-${{ matrix.name }}.sha256
+          fi
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: kitra-linux-x86_64.tar.gz
+          files: |
+            kitra-${{ matrix.name }}.tar.gz
+            kitra-${{ matrix.name }}.sha256
