@@ -1,4 +1,4 @@
-#include "cinder.h"
+#include "kitra.h"
 
 #include <math.h>
 #include <stdio.h>
@@ -91,18 +91,18 @@ typedef struct
  * Colors
  * ============================================================================= */
 
-static const CinderColor kBgColor = {15, 15, 25, 255};
-static const CinderColor kPanelColor = {0, 0, 0, 190};
-static const CinderColor kSepColor = {70, 70, 100, 200};
-static const CinderColor kLabelColor = {135, 135, 155, 255};
-static const CinderColor kValueColor = {220, 220, 235, 255};
-static const CinderColor kPivotColor = {190, 190, 200, 255};
-static const CinderColor kPivotRing = {0, 0, 0, 220};
-static const CinderColor kRodColor = {190, 195, 210, 255};
-static const CinderColor kBobColor = {80, 155, 255, 255};
-static const CinderColor kBobGlow = {80, 155, 255, 45};
-static const CinderColor kHintColor = {100, 100, 120, 255};
-static const CinderColor kPauseColor = {255, 205, 75, 255};
+static const KitraColor kBgColor = {15, 15, 25, 255};
+static const KitraColor kPanelColor = {0, 0, 0, 190};
+static const KitraColor kSepColor = {70, 70, 100, 200};
+static const KitraColor kLabelColor = {135, 135, 155, 255};
+static const KitraColor kValueColor = {220, 220, 235, 255};
+static const KitraColor kPivotColor = {190, 190, 200, 255};
+static const KitraColor kPivotRing = {0, 0, 0, 220};
+static const KitraColor kRodColor = {190, 195, 210, 255};
+static const KitraColor kBobColor = {80, 155, 255, 255};
+static const KitraColor kBobGlow = {80, 155, 255, 45};
+static const KitraColor kHintColor = {100, 100, 120, 255};
+static const KitraColor kPauseColor = {255, 205, 75, 255};
 
 /* =============================================================================
  * Physics — fourth-order Runge–Kutta
@@ -173,7 +173,7 @@ static void ClearTrail(Sim *sim)
 
 static void Reset(Sim *sim)
 {
-    sim->s = (State){(float)CINDER_DEG2RAD(45.0), 0.0f};
+    sim->s = (State){(float)KITRA_DEG2RAD(45.0), 0.0f};
     sim->length = LENGTH_INIT;
     sim->damping = DAMPING_INIT;
     sim->paused = false;
@@ -189,42 +189,42 @@ static void Update(Sim *sim, float dt)
 {
     /* ---- Parameter controls -------------------------------------------- */
 
-    if (CinderIsKeyPressed(CINDER_KEY_UP) || CinderIsKeyPressed(CINDER_KEY_W))
+    if (KitraIsKeyPressed(KITRA_KEY_UP) || KitraIsKeyPressed(KITRA_KEY_W))
     {
         sim->length += LENGTH_STEP;
         if (sim->length > LENGTH_MAX)
             sim->length = LENGTH_MAX;
         ClearTrail(sim);
     }
-    if (CinderIsKeyPressed(CINDER_KEY_DOWN) || CinderIsKeyPressed(CINDER_KEY_S))
+    if (KitraIsKeyPressed(KITRA_KEY_DOWN) || KitraIsKeyPressed(KITRA_KEY_S))
     {
         sim->length -= LENGTH_STEP;
         if (sim->length < LENGTH_MIN)
             sim->length = LENGTH_MIN;
         ClearTrail(sim);
     }
-    if (CinderIsKeyPressed(CINDER_KEY_RIGHT) || CinderIsKeyPressed(CINDER_KEY_D))
+    if (KitraIsKeyPressed(KITRA_KEY_RIGHT) || KitraIsKeyPressed(KITRA_KEY_D))
     {
         sim->damping += DAMPING_STEP;
         if (sim->damping > DAMPING_MAX)
             sim->damping = DAMPING_MAX;
     }
-    if (CinderIsKeyPressed(CINDER_KEY_LEFT) || CinderIsKeyPressed(CINDER_KEY_A))
+    if (KitraIsKeyPressed(KITRA_KEY_LEFT) || KitraIsKeyPressed(KITRA_KEY_A))
     {
         sim->damping -= DAMPING_STEP;
         if (sim->damping < DAMPING_MIN)
             sim->damping = DAMPING_MIN;
     }
-    if (CinderIsKeyPressed(CINDER_KEY_SPACE))
+    if (KitraIsKeyPressed(KITRA_KEY_SPACE))
         sim->paused = !sim->paused;
-    if (CinderIsKeyPressed(CINDER_KEY_R))
+    if (KitraIsKeyPressed(KITRA_KEY_R))
         Reset(sim);
 
     /* ---- Mouse drag ---------------------------------------------------- *
      * Click and hold the bob to reposition the pendulum interactively.
      * Releasing sets ω = 0 and lets the simulation take over.              */
 
-    CinderPoint mouse = CinderGetMousePos();
+    KitraPoint mouse = KitraGetMousePos();
     float bx, by;
     BobPos(sim, &bx, &by);
 
@@ -232,10 +232,10 @@ static void Update(Sim *sim, float dt)
     float dy = (float)mouse.y - by;
     float pickRadSq = (float)((BOB_RADIUS + 10) * (BOB_RADIUS + 10));
 
-    if (CinderIsMouseButtonPressed(CINDER_MOUSE_LEFT) && dx * dx + dy * dy < pickRadSq)
+    if (KitraIsMouseButtonPressed(KITRA_MOUSE_LEFT) && dx * dx + dy * dy < pickRadSq)
         sim->dragging = true;
 
-    if (!CinderIsMouseButtonDown(CINDER_MOUSE_LEFT))
+    if (!KitraIsMouseButtonDown(KITRA_MOUSE_LEFT))
         sim->dragging = false;
 
     if (sim->dragging)
@@ -285,22 +285,22 @@ static void DrawTrail(const Sim *sim)
         uint8_t alpha = (uint8_t)(t * t * 170.0f);
         int r = (t > 0.75f) ? 2 : 1;
 
-        CinderDrawCircle(
+        KitraDrawCircle(
             (int)sim->trailX[idx], (int)sim->trailY[idx], r,
-            (CinderColor){80, 155, 255, alpha});
+            (KitraColor){80, 155, 255, alpha});
     }
 }
 
-static void DrawHUD(const Sim *sim, CinderFont *hudFont, CinderFont *smallFont)
+static void DrawHUD(const Sim *sim, KitraFont *hudFont, KitraFont *smallFont)
 {
     /* Background panel */
-    CinderDrawRoundedRect(
-        (CinderRect){HUD_X - 8, HUD_Y - 8, HUD_W + 16, HUD_PANEL_H},
+    KitraDrawRoundedRect(
+        (KitraRect){HUD_X - 8, HUD_Y - 8, HUD_W + 16, HUD_PANEL_H},
         7, kPanelColor);
 
     /* --- Data rows ------------------------------------------------------- */
 
-    float thetaDeg = sim->s.theta * (180.0f / (float)CINDER_PI);
+    float thetaDeg = sim->s.theta * (180.0f / (float)KITRA_PI);
 
     /*
      * Energy is computed per unit mass (J/kg) so we don't need to assume
@@ -312,7 +312,7 @@ static void DrawHUD(const Sim *sim, CinderFont *hudFont, CinderFont *smallFont)
     float energy = ke + pe;
 
     /* Small-angle period: T = 2π√(L/g). Valid when |θ| is small. */
-    float period = 2.0f * (float)CINDER_PI * sqrtf(sim->length / GRAVITY);
+    float period = 2.0f * (float)KITRA_PI * sqrtf(sim->length / GRAVITY);
 
     struct
     {
@@ -334,15 +334,15 @@ static void DrawHUD(const Sim *sim, CinderFont *hudFont, CinderFont *smallFont)
 
     for (int i = 0; i < rowCount; i++, y += HUD_ROW_H)
     {
-        CinderDrawText(hudFont, rows[i].label, HUD_X, y, kLabelColor);
+        KitraDrawText(hudFont, rows[i].label, HUD_X, y, kLabelColor);
         snprintf(buf, sizeof(buf), "%.3f %s", rows[i].val, rows[i].unit);
-        CinderSize sz = CinderMeasureText(hudFont, buf);
-        CinderDrawText(hudFont, buf, HUD_X + HUD_W - sz.w, y, kValueColor);
+        KitraSize sz = KitraMeasureText(hudFont, buf);
+        KitraDrawText(hudFont, buf, HUD_X + HUD_W - sz.w, y, kValueColor);
     }
 
     /* Separator */
     y += 6;
-    CinderDrawLine(HUD_X, y, HUD_X + HUD_W, y, kSepColor);
+    KitraDrawLine(HUD_X, y, HUD_X + HUD_W, y, kSepColor);
     y += 8;
 
     /* --- Key hints ------------------------------------------------------- */
@@ -355,24 +355,24 @@ static void DrawHUD(const Sim *sim, CinderFont *hudFont, CinderFont *smallFont)
         "R \xe2\x80\x94 reset",
     };
     for (int i = 0; i < 5; i++, y += 18)
-        CinderDrawText(smallFont, hints[i], HUD_X, y, kHintColor);
+        KitraDrawText(smallFont, hints[i], HUD_X, y, kHintColor);
 
     y += 4;
-    CinderDrawText(smallFont, "\xe2\x80\xa0 small-angle approximation", HUD_X, y, kHintColor);
+    KitraDrawText(smallFont, "\xe2\x80\xa0 small-angle approximation", HUD_X, y, kHintColor);
 
     /* Pause banner */
     if (sim->paused)
     {
-        CinderSize sz = CinderMeasureText(hudFont, "PAUSED");
-        CinderDrawText(hudFont, "PAUSED",
-                       WINDOW_W / 2 - sz.w / 2, WINDOW_H - 38,
-                       kPauseColor);
+        KitraSize sz = KitraMeasureText(hudFont, "PAUSED");
+        KitraDrawText(hudFont, "PAUSED",
+                      WINDOW_W / 2 - sz.w / 2, WINDOW_H - 38,
+                      kPauseColor);
     }
 }
 
-static void DrawSim(const Sim *sim, CinderFont *hudFont, CinderFont *smallFont)
+static void DrawSim(const Sim *sim, KitraFont *hudFont, KitraFont *smallFont)
 {
-    CinderClearBackground(kBgColor);
+    KitraClearBackground(kBgColor);
 
     DrawTrail(sim);
 
@@ -380,15 +380,15 @@ static void DrawSim(const Sim *sim, CinderFont *hudFont, CinderFont *smallFont)
     BobPos(sim, &bx, &by);
 
     /* Rod */
-    CinderDrawLineThick(PIVOT_X, PIVOT_Y, (int)bx, (int)by, ROD_WIDTH, kRodColor);
+    KitraDrawLineThick(PIVOT_X, PIVOT_Y, (int)bx, (int)by, ROD_WIDTH, kRodColor);
 
     /* Pivot: dark halo so the rod doesn't bleed into it */
-    CinderDrawCircle(PIVOT_X, PIVOT_Y, PIVOT_RADIUS + 3, kPivotRing);
-    CinderDrawCircle(PIVOT_X, PIVOT_Y, PIVOT_RADIUS, kPivotColor);
+    KitraDrawCircle(PIVOT_X, PIVOT_Y, PIVOT_RADIUS + 3, kPivotRing);
+    KitraDrawCircle(PIVOT_X, PIVOT_Y, PIVOT_RADIUS, kPivotColor);
 
     /* Bob: glow ring + solid circle */
-    CinderDrawCircle((int)bx, (int)by, BOB_GLOW_R, kBobGlow);
-    CinderDrawCircle((int)bx, (int)by, BOB_RADIUS, kBobColor);
+    KitraDrawCircle((int)bx, (int)by, BOB_GLOW_R, kBobGlow);
+    KitraDrawCircle((int)bx, (int)by, BOB_RADIUS, kBobColor);
 
     DrawHUD(sim, hudFont, smallFont);
 }
@@ -399,52 +399,52 @@ static void DrawSim(const Sim *sim, CinderFont *hudFont, CinderFont *smallFont)
 
 int main(void)
 {
-    if (CinderInit(CINDER_SUBSYSTEM_ALL) != CINDER_STATUS_OK)
+    if (KitraInit(KITRA_SUBSYSTEM_ALL) != KITRA_STATUS_OK)
         return 1;
 
-    CinderWindowDesc winDesc = CinderDefaultWindowDesc();
+    KitraWindowDesc winDesc = KitraDefaultWindowDesc();
     winDesc.title = "Single Pendulum";
     winDesc.size.w = WINDOW_W;
     winDesc.size.h = WINDOW_H;
     winDesc.centerX = true;
     winDesc.centerY = true;
 
-    if (CinderCreateWindow(winDesc) != CINDER_STATUS_OK)
+    if (KitraCreateWindow(winDesc) != KITRA_STATUS_OK)
         return 1;
 
-    CinderSetBlendMode(CINDER_BLEND_ALPHA);
+    KitraSetBlendMode(KITRA_BLEND_ALPHA);
 
-    CinderFont *hudFont = CinderLoadFont(FONT_PATH, FONT_SIZE_HUD);
-    CinderFont *smallFont = CinderLoadFont(FONT_PATH, FONT_SIZE_SMALL);
+    KitraFont *hudFont = KitraLoadFont(FONT_PATH, FONT_SIZE_HUD);
+    KitraFont *smallFont = KitraLoadFont(FONT_PATH, FONT_SIZE_SMALL);
 
     if (!hudFont || !smallFont)
     {
-        CinderDestroyFont(&hudFont);
-        CinderDestroyFont(&smallFont);
-        CinderQuit();
+        KitraDestroyFont(&hudFont);
+        KitraDestroyFont(&smallFont);
+        KitraQuit();
         return 1;
     }
 
-    CinderSetTargetFPS(60);
+    KitraSetTargetFPS(60);
 
     Sim sim = {0};
     Reset(&sim);
 
-    while (CinderIsRunning())
+    while (KitraIsRunning())
     {
-        CinderBeginFrame();
+        KitraBeginFrame();
 
-        if (CinderIsKeyPressed(CINDER_KEY_ESCAPE))
-            CinderRequestQuit();
+        if (KitraIsKeyPressed(KITRA_KEY_ESCAPE))
+            KitraRequestQuit();
 
-        Update(&sim, CinderGetDeltaTime());
+        Update(&sim, KitraGetDeltaTime());
         DrawSim(&sim, hudFont, smallFont);
 
-        CinderEndFrame();
+        KitraEndFrame();
     }
 
-    CinderDestroyFont(&hudFont);
-    CinderDestroyFont(&smallFont);
-    CinderQuit();
+    KitraDestroyFont(&hudFont);
+    KitraDestroyFont(&smallFont);
+    KitraQuit();
     return 0;
 }

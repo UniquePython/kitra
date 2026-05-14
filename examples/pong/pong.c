@@ -1,4 +1,4 @@
-#include "cinder.h"
+#include "kitra.h"
 
 #include <math.h>
 #include <stdio.h>
@@ -25,7 +25,7 @@
 #define PADDLE_H 80
 #define PADDLE_SPEED 400.0f
 #define PADDLE_MARGIN 40
-#define PADDLE_RADIUS 4 /* corner radius for CinderDrawRoundedRect */
+#define PADDLE_RADIUS 4 /* corner radius for KitraDrawRoundedRect */
 
 #define BALL_RADIUS 8
 #define BALL_GLOW_RADIUS 16 /* radius of the soft glow ring behind the ball */
@@ -72,7 +72,7 @@ typedef struct
     int scoreLeft;
     int scoreRight;
     GameState state;
-    CinderTimer pauseTimer;
+    KitraTimer pauseTimer;
     int winner;   /*  0 = left, 1 = right, -1 = none yet */
     int serveDir; /* +1 = toward right, -1 = toward left */
     int serveAngleIdx;
@@ -89,10 +89,10 @@ typedef struct
 static const float kServeAngles[] = {20.f, -20.f, 30.f, -30.f, 15.f, -15.f};
 #define SERVE_ANGLE_COUNT ((int)(sizeof(kServeAngles) / sizeof(kServeAngles[0])))
 
-static const CinderColor kBgColor = {15, 15, 25, 255};
-static const CinderColor kDashColor = {255, 255, 255, 50};
-static const CinderColor kGlowColor = {255, 255, 255, 55};
-static const CinderColor kSubtextColor = {160, 160, 160, 255};
+static const KitraColor kBgColor = {15, 15, 25, 255};
+static const KitraColor kDashColor = {255, 255, 255, 50};
+static const KitraColor kGlowColor = {255, 255, 255, 55};
+static const KitraColor kSubtextColor = {160, 160, 160, 255};
 
 /* =============================================================================
  * Helpers
@@ -104,10 +104,10 @@ static float Clampf(float v, float lo, float hi)
                                 : v;
 }
 
-/* Returns the CinderRect for a paddle (used for both drawing and collision). */
-static CinderRect PaddleRect(const Paddle *p)
+/* Returns the KitraRect for a paddle (used for both drawing and collision). */
+static KitraRect PaddleRect(const Paddle *p)
 {
-    return (CinderRect){(int)p->x, (int)p->y, PADDLE_W, PADDLE_H};
+    return (KitraRect){(int)p->x, (int)p->y, PADDLE_W, PADDLE_H};
 }
 
 /*
@@ -115,18 +115,18 @@ static CinderRect PaddleRect(const Paddle *p)
  * Used for paddle collision; the ball is drawn as a circle but tested as a
  * square because it is cheaper and barely noticeable at this size.
  */
-static CinderRect BallAABB(const Ball *b)
+static KitraRect BallAABB(const Ball *b)
 {
-    return (CinderRect){
+    return (KitraRect){
         (int)(b->x - BALL_RADIUS), (int)(b->y - BALL_RADIUS),
         BALL_RADIUS * 2, BALL_RADIUS * 2};
 }
 
-static void DrawCenteredText(CinderFont *font, const char *text,
-                             int cx, int y, CinderColor color)
+static void DrawCenteredText(KitraFont *font, const char *text,
+                             int cx, int y, KitraColor color)
 {
-    CinderSize sz = CinderMeasureText(font, text);
-    CinderDrawText(font, text, cx - sz.w / 2, y, color);
+    KitraSize sz = KitraMeasureText(font, text);
+    KitraDrawText(font, text, cx - sz.w / 2, y, color);
 }
 
 /* =============================================================================
@@ -139,7 +139,7 @@ static void ServeBall(Game *g)
     g->ball.y = WINDOW_H * 0.5f;
     g->ball.speed = BALL_BASE_SPEED;
 
-    float angle = (float)CINDER_DEG2RAD(kServeAngles[g->serveAngleIdx]);
+    float angle = (float)KITRA_DEG2RAD(kServeAngles[g->serveAngleIdx]);
     g->serveAngleIdx = (g->serveAngleIdx + 1) % SERVE_ANGLE_COUNT;
 
     g->ball.vx = (float)g->serveDir * g->ball.speed * cosf(angle);
@@ -180,7 +180,7 @@ static void ResolvePaddleCollision(Ball *b, const Paddle *p, float dirX)
     float hitFactor = Clampf(
         (b->y - paddleCenterY) / (PADDLE_H * 0.5f), -1.0f, 1.0f);
 
-    float bounceAngle = hitFactor * (float)CINDER_DEG2RAD(BALL_MAX_BOUNCE_DEG);
+    float bounceAngle = hitFactor * (float)KITRA_DEG2RAD(BALL_MAX_BOUNCE_DEG);
 
     b->speed += BALL_SPEED_INC;
     b->vx = dirX * b->speed * cosf(bounceAngle);
@@ -191,13 +191,13 @@ static void UpdatePlaying(Game *g, float dt)
 {
     /* --- Paddle input ---------------------------------------------------- */
 
-    if (CinderIsKeyDown(CINDER_KEY_W))
+    if (KitraIsKeyDown(KITRA_KEY_W))
         MovePaddle(&g->left, -g->left.speed * dt);
-    if (CinderIsKeyDown(CINDER_KEY_S))
+    if (KitraIsKeyDown(KITRA_KEY_S))
         MovePaddle(&g->left, g->left.speed * dt);
-    if (CinderIsKeyDown(CINDER_KEY_UP))
+    if (KitraIsKeyDown(KITRA_KEY_UP))
         MovePaddle(&g->right, -g->right.speed * dt);
-    if (CinderIsKeyDown(CINDER_KEY_DOWN))
+    if (KitraIsKeyDown(KITRA_KEY_DOWN))
         MovePaddle(&g->right, g->right.speed * dt);
 
     /* --- Ball movement --------------------------------------------------- */
@@ -222,14 +222,14 @@ static void UpdatePlaying(Game *g, float dt)
      * Only test the paddle the ball is currently moving toward, which avoids
      * a double-hit when the ball is slow and overlaps for multiple frames.   */
 
-    CinderRect ballBox = BallAABB(&g->ball);
+    KitraRect ballBox = BallAABB(&g->ball);
 
-    if (g->ball.vx < 0.0f && CinderRectsOverlap(ballBox, PaddleRect(&g->left)))
+    if (g->ball.vx < 0.0f && KitraRectsOverlap(ballBox, PaddleRect(&g->left)))
     {
         g->ball.x = g->left.x + PADDLE_W + BALL_RADIUS;
         ResolvePaddleCollision(&g->ball, &g->left, +1.0f);
     }
-    else if (g->ball.vx > 0.0f && CinderRectsOverlap(ballBox, PaddleRect(&g->right)))
+    else if (g->ball.vx > 0.0f && KitraRectsOverlap(ballBox, PaddleRect(&g->right)))
     {
         g->ball.x = g->right.x - BALL_RADIUS;
         ResolvePaddleCollision(&g->ball, &g->right, -1.0f);
@@ -266,13 +266,13 @@ static void UpdatePlaying(Game *g, float dt)
     else
     {
         g->state = STATE_SCORED;
-        g->pauseTimer = CinderStartTimer();
+        g->pauseTimer = KitraStartTimer();
     }
 }
 
 static void UpdateScored(Game *g)
 {
-    if (CinderTimerDone(&g->pauseTimer, SCORE_PAUSE))
+    if (KitraTimerDone(&g->pauseTimer, SCORE_PAUSE))
     {
         g->state = STATE_PLAYING;
         ServeBall(g);
@@ -281,7 +281,7 @@ static void UpdateScored(Game *g)
 
 static void UpdateOver(Game *g)
 {
-    if (CinderIsKeyPressed(CINDER_KEY_ENTER))
+    if (KitraIsKeyPressed(KITRA_KEY_ENTER))
         ResetGame(g);
 }
 
@@ -293,34 +293,34 @@ static void DrawCenterLine(void)
 {
     int x = WINDOW_W / 2 - DASH_W / 2;
     for (int y = 0; y < WINDOW_H; y += DASH_H + DASH_GAP)
-        CinderDrawRect((CinderRect){x, y, DASH_W, DASH_H}, kDashColor);
+        KitraDrawRect((KitraRect){x, y, DASH_W, DASH_H}, kDashColor);
 }
 
-static void DrawGame(const Game *g, CinderFont *scoreFont, CinderFont *msgFont)
+static void DrawGame(const Game *g, KitraFont *scoreFont, KitraFont *msgFont)
 {
-    CinderClearBackground(kBgColor);
+    KitraClearBackground(kBgColor);
 
     DrawCenterLine();
 
     /* Paddles */
-    CinderDrawRoundedRect(PaddleRect(&g->left), PADDLE_RADIUS, CINDER_WHITE);
-    CinderDrawRoundedRect(PaddleRect(&g->right), PADDLE_RADIUS, CINDER_WHITE);
+    KitraDrawRoundedRect(PaddleRect(&g->left), PADDLE_RADIUS, KITRA_WHITE);
+    KitraDrawRoundedRect(PaddleRect(&g->right), PADDLE_RADIUS, KITRA_WHITE);
 
     /* Ball: soft glow ring + solid core */
     if (g->state != STATE_OVER)
     {
         int bx = (int)g->ball.x;
         int by = (int)g->ball.y;
-        CinderDrawCircle(bx, by, BALL_GLOW_RADIUS, kGlowColor);
-        CinderDrawCircle(bx, by, BALL_RADIUS, CINDER_WHITE);
+        KitraDrawCircle(bx, by, BALL_GLOW_RADIUS, kGlowColor);
+        KitraDrawCircle(bx, by, BALL_RADIUS, KITRA_WHITE);
     }
 
     /* Scores */
     char buf[8];
     snprintf(buf, sizeof(buf), "%d", g->scoreLeft);
-    DrawCenteredText(scoreFont, buf, WINDOW_W / 4, 24, CINDER_WHITE);
+    DrawCenteredText(scoreFont, buf, WINDOW_W / 4, 24, KITRA_WHITE);
     snprintf(buf, sizeof(buf), "%d", g->scoreRight);
-    DrawCenteredText(scoreFont, buf, WINDOW_W * 3 / 4, 24, CINDER_WHITE);
+    DrawCenteredText(scoreFont, buf, WINDOW_W * 3 / 4, 24, KITRA_WHITE);
 
     /* Control hints */
     if (g->state == STATE_PLAYING || g->state == STATE_SCORED)
@@ -333,7 +333,7 @@ static void DrawGame(const Game *g, CinderFont *scoreFont, CinderFont *msgFont)
     if (g->state == STATE_OVER)
     {
         const char *msg = (g->winner == 0) ? "Left Player Wins!" : "Right Player Wins!";
-        DrawCenteredText(scoreFont, msg, WINDOW_W / 2, WINDOW_H / 2 - 50, CINDER_WHITE);
+        DrawCenteredText(scoreFont, msg, WINDOW_W / 2, WINDOW_H / 2 - 50, KITRA_WHITE);
         DrawCenteredText(msgFont, "Press Enter to play again",
                          WINDOW_W / 2, WINDOW_H / 2 + 20, kSubtextColor);
     }
@@ -345,45 +345,45 @@ static void DrawGame(const Game *g, CinderFont *scoreFont, CinderFont *msgFont)
 
 int main(void)
 {
-    if (CinderInit(CINDER_SUBSYSTEM_ALL) != CINDER_STATUS_OK)
+    if (KitraInit(KITRA_SUBSYSTEM_ALL) != KITRA_STATUS_OK)
         return 1;
 
-    CinderWindowDesc winDesc = CinderDefaultWindowDesc();
+    KitraWindowDesc winDesc = KitraDefaultWindowDesc();
     winDesc.title = "Pong";
     winDesc.size.w = WINDOW_W;
     winDesc.size.h = WINDOW_H;
     winDesc.centerX = true;
     winDesc.centerY = true;
 
-    if (CinderCreateWindow(winDesc) != CINDER_STATUS_OK)
+    if (KitraCreateWindow(winDesc) != KITRA_STATUS_OK)
         return 1;
 
-    CinderSetBlendMode(CINDER_BLEND_ALPHA);
+    KitraSetBlendMode(KITRA_BLEND_ALPHA);
 
-    CinderFont *scoreFont = CinderLoadFont(FONT_PATH, FONT_SIZE_SCORE);
-    CinderFont *msgFont = CinderLoadFont(FONT_PATH, FONT_SIZE_MSG);
+    KitraFont *scoreFont = KitraLoadFont(FONT_PATH, FONT_SIZE_SCORE);
+    KitraFont *msgFont = KitraLoadFont(FONT_PATH, FONT_SIZE_MSG);
 
     if (!scoreFont || !msgFont)
     {
-        CinderDestroyFont(&scoreFont);
-        CinderDestroyFont(&msgFont);
-        CinderQuit();
+        KitraDestroyFont(&scoreFont);
+        KitraDestroyFont(&msgFont);
+        KitraQuit();
         return 1;
     }
 
-    CinderSetTargetFPS(60);
+    KitraSetTargetFPS(60);
 
     Game g = {0};
     ResetGame(&g);
 
-    while (CinderIsRunning())
+    while (KitraIsRunning())
     {
-        CinderBeginFrame();
+        KitraBeginFrame();
 
-        if (CinderIsKeyPressed(CINDER_KEY_ESCAPE))
-            CinderRequestQuit();
+        if (KitraIsKeyPressed(KITRA_KEY_ESCAPE))
+            KitraRequestQuit();
 
-        float dt = CinderGetDeltaTime();
+        float dt = KitraGetDeltaTime();
 
         switch (g.state)
         {
@@ -400,11 +400,11 @@ int main(void)
 
         DrawGame(&g, scoreFont, msgFont);
 
-        CinderEndFrame();
+        KitraEndFrame();
     }
 
-    CinderDestroyFont(&scoreFont);
-    CinderDestroyFont(&msgFont);
-    CinderQuit();
+    KitraDestroyFont(&scoreFont);
+    KitraDestroyFont(&msgFont);
+    KitraQuit();
     return 0;
 }

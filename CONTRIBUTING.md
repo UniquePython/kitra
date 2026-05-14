@@ -1,14 +1,14 @@
-# Contributing to Cinder
+# Contributing to Kitra
 
-Thanks for your interest in contributing! This document covers everything you need to know to write code that fits Cinder's style and structure.
+Thanks for your interest in contributing! This document covers everything you need to know to write code that fits Kitra's style and structure.
 
 ---
 
 ## Building the Project
 
 ```bash
-git clone https://github.com/UniquePython/cinder.git
-cd cinder
+git clone https://github.com/UniquePython/kitra.git
+cd kitra
 cmake -B build
 cmake --build build -j$(nproc)
 ```
@@ -19,29 +19,29 @@ Make sure the SDL2 dependencies are installed first — see the README for platf
 
 ## Code Style
 
-Cinder is written in C11. There is no enforced formatter, so the rule is simple: **match what's already there**.
+Kitra is written in C11. There is no enforced formatter, so the rule is simple: **match what's already there**.
 
 ### Naming
 
-- **Types** use `PascalCase` with a `Cinder` prefix — `CinderSound`, `CinderWindowDesc`.
-- **Functions** use `PascalCase` with a `Cinder` prefix — `CinderLoadTexture`, `CinderBeginFrame`.
-- **Enum values and macros** use `SCREAMING_SNAKE_CASE` with a `CINDER_` prefix — `CINDER_STATUS_OK`, `CINDER_LOG_ERROR`, `CINDER_COLOR_RGBA`.
-- **Internal/private identifiers** that should not be called directly use a trailing double underscore — `CinderLogInternal__`.
+- **Types** use `PascalCase` with a `Kitra` prefix — `KitraSound`, `KitraWindowDesc`.
+- **Functions** use `PascalCase` with a `Kitra` prefix — `KitraLoadTexture`, `KitraBeginFrame`.
+- **Enum values and macros** use `SCREAMING_SNAKE_CASE` with a `KITRA_` prefix — `KITRA_STATUS_OK`, `KITRA_LOG_ERROR`, `KITRA_COLOR_RGBA`.
+- **Internal/private identifiers** that should not be called directly use a trailing double underscore — `KitraLogInternal__`.
 - **Static helper functions** inside `.c` files have no fixed style.
-- **Global state** lives in a single struct `gCinderCtx` — don't add new global variables.
+- **Global state** lives in a single struct `gKitraCtx` — don't add new global variables.
 
 ### Functions
 
 - Every public function in a header must have a full Doxygen comment block with `@brief`, `@param`, `@return`, and `@see` where applicable.
-- Convenience wrappers (e.g. `CinderDrawCircleC`, `CinderDrawLineP`) are thin one-liners that delegate to the primary function — keep them that way.
+- Convenience wrappers (e.g. `KitraDrawCircleC`, `KitraDrawLineP`) are thin one-liners that delegate to the primary function — keep them that way.
 - Guard against NULL inputs at the top of every function; return early or return a safe zero-value rather than crashing.
-- Use `CINDER_LOG(CINDER_LOG_ERROR, "...")` for errors and `CINDER_LOG(CINDER_LOG_WARNING, "...")` for non-fatal issues.
+- Use `KITRA_LOG(KITRA_LOG_ERROR, "...")` for errors and `KITRA_LOG(KITRA_LOG_WARNING, "...")` for non-fatal issues.
 
 ### Types
 
-- Prefer Cinder's own types (`CinderPoint`, `CinderRect`, `CinderVec2f`, etc.) over raw integers or SDL types in public APIs.
-- New public types go in `include/cinder_types.h` if they are shared across modules, or in the relevant module header if they are module-specific.
-- Use anonymous structs inside unions to allow both named access (`rect.x`, `rect.w`) and array access (`rect.pos`, `rect.size`), following the pattern in `cinder_types.h`.
+- Prefer Kitra's own types (`KitraPoint`, `KitraRect`, `KitraVec2f`, etc.) over raw integers or SDL types in public APIs.
+- New public types go in `include/kitra_types.h` if they are shared across modules, or in the relevant module header if they are module-specific.
+- Use anonymous structs inside unions to allow both named access (`rect.x`, `rect.w`) and array access (`rect.pos`, `rect.size`), following the pattern in `kitra_types.h`.
 
 ### Memory
 
@@ -51,19 +51,19 @@ Cinder is written in C11. There is no enforced formatter, so the rule is simple:
 
 ### Headers
 
-- All public headers use include guards of the form `CINDER_<MODULE>_H_`.
-- Internal headers (`cinder_internal.h`) must not be included from public headers.
-- Keep `cinder_internal.h` as the single place that pulls in SDL2, stdlib, and other implementation dependencies — `.c` files include it and nothing else.
+- All public headers use include guards of the form `KITRA_<MODULE>_H_`.
+- Internal headers (`kitra_internal.h`) must not be included from public headers.
+- Keep `kitra_internal.h` as the single place that pulls in SDL2, stdlib, and other implementation dependencies — `.c` files include it and nothing else.
 
 ### File structure
 
 ```
-include/cinder_<module>.h   — public API
-src/cinder_<module>.c       — implementation
-src/cinder_internal.h       — internal shared state, SDL2 includes
+include/kitra_<module>.h   — public API
+src/kitra_<module>.c       — implementation
+src/kitra_internal.h       — internal shared state, SDL2 includes
 ```
 
-Adding a new module means adding both files and updating `include/cinder.h` to include the new header.
+Adding a new module means adding both files and updating `include/kitra.h` to include the new header.
 
 ---
 
@@ -89,10 +89,10 @@ Fill out the PR template — it exists for a reason.
 
 ## What Counts as In Scope
 
-Cinder is intentionally minimal. A good contribution fits at least one of these:
+Kitra is intentionally minimal. A good contribution fits at least one of these:
 
 - Fixes a real bug in the existing API.
 - Adds a well-scoped primitive that fills a genuine gap (e.g. a missing draw function, a missing math utility).
 - Improves documentation, examples, or CI.
 
-Cinder is **not** a game engine. PRs adding scenes, entity systems, asset pipelines, or networking will be closed. When in doubt, open an issue first.
+Kitra is **not** a game engine. PRs adding scenes, entity systems, asset pipelines, or networking will be closed. When in doubt, open an issue first.

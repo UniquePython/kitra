@@ -1,6 +1,6 @@
 ---
 name: Bug Report
-about: Something in Cinder is broken or behaving unexpectedly
+about: Something in Kitra is broken or behaving unexpectedly
 title: "[Bug] "
 labels: bug
 assignees: ''
@@ -23,7 +23,7 @@ What did you expect to happen?
 What actually happened? Include any error messages or output.
 
 ## Environment
-- **Cinder version:** (e.g. v1.2.0)
+- **Kitra version:** (e.g. v1.2.0)
 - **Platform:** (Linux / macOS / Windows)
 - **OS version:** (e.g. Ubuntu 24.04, macOS 15)
 - **Compiler & version:** (e.g. gcc 13.2, clang 17)

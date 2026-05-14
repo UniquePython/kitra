@@ -1,4 +1,4 @@
-#include "cinder.h"
+#include "kitra.h"
 
 #include <stdio.h>
 
@@ -81,22 +81,22 @@ typedef struct
     int score;
 
     GameState state;
-    CinderTimer moveTimer;
+    KitraTimer moveTimer;
     float moveInterval;
-    CinderRng rng;
+    KitraRng rng;
 } Game;
 
 /* =============================================================================
  * Constants
  * ============================================================================= */
 
-static const CinderColor kBgColor = {15, 15, 25, 255};
-static const CinderColor kSnakeHead = {120, 230, 100, 255};
-static const CinderColor kSnakeBody = {65, 165, 55, 255};
-static const CinderColor kFoodColor = {230, 75, 75, 255};
-static const CinderColor kFoodGlow = {230, 75, 75, 55};
-static const CinderColor kSubtextColor = {160, 160, 160, 255};
-static const CinderColor kOverlayColor = {0, 0, 0, 150};
+static const KitraColor kBgColor = {15, 15, 25, 255};
+static const KitraColor kSnakeHead = {120, 230, 100, 255};
+static const KitraColor kSnakeBody = {65, 165, 55, 255};
+static const KitraColor kFoodColor = {230, 75, 75, 255};
+static const KitraColor kFoodGlow = {230, 75, 75, 55};
+static const KitraColor kSubtextColor = {160, 160, 160, 255};
+static const KitraColor kOverlayColor = {0, 0, 0, 150};
 
 /* =============================================================================
  * Helpers
@@ -124,23 +124,23 @@ static void SpawnFood(Game *g)
     Cell c;
     do
     {
-        c.x = (int)CinderRngUint(&g->rng, GRID_W);
-        c.y = (int)CinderRngUint(&g->rng, GRID_H);
+        c.x = (int)KitraRngUint(&g->rng, GRID_W);
+        c.y = (int)KitraRngUint(&g->rng, GRID_H);
     } while (CellOnSnake(g, c, g->length)); /* retry until off the snake */
     g->food = c;
 }
 
-static void DrawCenteredText(CinderFont *font, const char *text,
-                             int cx, int y, CinderColor color)
+static void DrawCenteredText(KitraFont *font, const char *text,
+                             int cx, int y, KitraColor color)
 {
-    CinderSize sz = CinderMeasureText(font, text);
-    CinderDrawText(font, text, cx - sz.w / 2, y, color);
+    KitraSize sz = KitraMeasureText(font, text);
+    KitraDrawText(font, text, cx - sz.w / 2, y, color);
 }
 
 /* Pixel rect for a grid cell, inset by CELL_PAD for a grid-line effect. */
-static CinderRect CellRect(int x, int y)
+static KitraRect CellRect(int x, int y)
 {
-    return (CinderRect){
+    return (KitraRect){
         x * CELL_SIZE + CELL_PAD,
         y * CELL_SIZE + CELL_PAD,
         CELL_SIZE - CELL_PAD * 2,
@@ -153,7 +153,7 @@ static CinderRect CellRect(int x, int y)
 
 static void ResetGame(Game *g)
 {
-    CinderRngSeedAuto(&g->rng);
+    KitraRngSeedAuto(&g->rng);
 
     g->length = 4;
     g->head = g->length - 1;
@@ -171,8 +171,8 @@ static void ResetGame(Game *g)
 
     SpawnFood(g);
 
-    g->moveTimer = CinderStartTimer();
-    CinderTimerSetRepeat(&g->moveTimer, true);
+    g->moveTimer = KitraStartTimer();
+    KitraTimerSetRepeat(&g->moveTimer, true);
 }
 
 /* Advance the snake one grid step. Sets STATE_OVER on any collision. */
@@ -250,13 +250,13 @@ static void HandleInput(Game *g)
     Direction req = g->nextDir;
 
     /* Accept both arrow keys and WASD. */
-    if (CinderIsKeyPressed(CINDER_KEY_UP) || CinderIsKeyPressed(CINDER_KEY_W))
+    if (KitraIsKeyPressed(KITRA_KEY_UP) || KitraIsKeyPressed(KITRA_KEY_W))
         req = DIR_UP;
-    if (CinderIsKeyPressed(CINDER_KEY_DOWN) || CinderIsKeyPressed(CINDER_KEY_S))
+    if (KitraIsKeyPressed(KITRA_KEY_DOWN) || KitraIsKeyPressed(KITRA_KEY_S))
         req = DIR_DOWN;
-    if (CinderIsKeyPressed(CINDER_KEY_LEFT) || CinderIsKeyPressed(CINDER_KEY_A))
+    if (KitraIsKeyPressed(KITRA_KEY_LEFT) || KitraIsKeyPressed(KITRA_KEY_A))
         req = DIR_LEFT;
-    if (CinderIsKeyPressed(CINDER_KEY_RIGHT) || CinderIsKeyPressed(CINDER_KEY_D))
+    if (KitraIsKeyPressed(KITRA_KEY_RIGHT) || KitraIsKeyPressed(KITRA_KEY_D))
         req = DIR_RIGHT;
 
     /* Ignore a 180-degree reversal — it would immediately cause self-collision. */
@@ -268,13 +268,13 @@ static void UpdatePlaying(Game *g)
 {
     HandleInput(g);
 
-    if (CinderTimerDone(&g->moveTimer, g->moveInterval))
+    if (KitraTimerDone(&g->moveTimer, g->moveInterval))
         StepSnake(g);
 }
 
 static void UpdateOver(Game *g)
 {
-    if (CinderIsKeyPressed(CINDER_KEY_ENTER))
+    if (KitraIsKeyPressed(KITRA_KEY_ENTER))
         ResetGame(g);
 }
 
@@ -282,31 +282,31 @@ static void UpdateOver(Game *g)
  * Rendering
  * ============================================================================= */
 
-static void DrawGame(const Game *g, CinderFont *scoreFont, CinderFont *msgFont)
+static void DrawGame(const Game *g, KitraFont *scoreFont, KitraFont *msgFont)
 {
-    CinderClearBackground(kBgColor);
+    KitraClearBackground(kBgColor);
 
     /* Snake body (tail → neck, drawn first so the head renders on top). */
     for (int i = g->length - 1; i >= 1; i--)
     {
         Cell s = SnakeSegment(g, i);
-        CinderDrawRoundedRect(CellRect(s.x, s.y), SEG_RADIUS, kSnakeBody);
+        KitraDrawRoundedRect(CellRect(s.x, s.y), SEG_RADIUS, kSnakeBody);
     }
 
     /* Head */
     Cell head = SnakeSegment(g, 0);
-    CinderDrawRoundedRect(CellRect(head.x, head.y), SEG_RADIUS, kSnakeHead);
+    KitraDrawRoundedRect(CellRect(head.x, head.y), SEG_RADIUS, kSnakeHead);
 
     /* Food: glow ring + solid circle */
     int fx = g->food.x * CELL_SIZE + CELL_SIZE / 2;
     int fy = g->food.y * CELL_SIZE + CELL_SIZE / 2;
-    CinderDrawCircle(fx, fy, FOOD_GLOW_R, kFoodGlow);
-    CinderDrawCircle(fx, fy, FOOD_RADIUS, kFoodColor);
+    KitraDrawCircle(fx, fy, FOOD_GLOW_R, kFoodGlow);
+    KitraDrawCircle(fx, fy, FOOD_RADIUS, kFoodColor);
 
     /* Score */
     char buf[32];
     snprintf(buf, sizeof(buf), "Score: %d", g->score);
-    DrawCenteredText(scoreFont, buf, WINDOW_W / 2, 10, CINDER_WHITE);
+    DrawCenteredText(scoreFont, buf, WINDOW_W / 2, 10, KITRA_WHITE);
 
     /* Controls hint */
     DrawCenteredText(msgFont, "WASD / Arrow keys",
@@ -315,13 +315,13 @@ static void DrawGame(const Game *g, CinderFont *scoreFont, CinderFont *msgFont)
     /* Game-over overlay */
     if (g->state == STATE_OVER)
     {
-        CinderDrawRect((CinderRect){0, 0, WINDOW_W, WINDOW_H}, kOverlayColor);
+        KitraDrawRect((KitraRect){0, 0, WINDOW_W, WINDOW_H}, kOverlayColor);
 
         snprintf(buf, sizeof(buf), "Score: %d", g->score);
         DrawCenteredText(scoreFont, "Game Over",
-                         WINDOW_W / 2, WINDOW_H / 2 - 60, CINDER_WHITE);
+                         WINDOW_W / 2, WINDOW_H / 2 - 60, KITRA_WHITE);
         DrawCenteredText(scoreFont, buf,
-                         WINDOW_W / 2, WINDOW_H / 2 - 10, CINDER_WHITE);
+                         WINDOW_W / 2, WINDOW_H / 2 - 10, KITRA_WHITE);
         DrawCenteredText(msgFont, "Press Enter to play again",
                          WINDOW_W / 2, WINDOW_H / 2 + 50, kSubtextColor);
     }
@@ -333,43 +333,43 @@ static void DrawGame(const Game *g, CinderFont *scoreFont, CinderFont *msgFont)
 
 int main(void)
 {
-    if (CinderInit(CINDER_SUBSYSTEM_ALL) != CINDER_STATUS_OK)
+    if (KitraInit(KITRA_SUBSYSTEM_ALL) != KITRA_STATUS_OK)
         return 1;
 
-    CinderWindowDesc winDesc = CinderDefaultWindowDesc();
+    KitraWindowDesc winDesc = KitraDefaultWindowDesc();
     winDesc.title = "Snake";
     winDesc.size.w = WINDOW_W;
     winDesc.size.h = WINDOW_H;
     winDesc.centerX = true;
     winDesc.centerY = true;
 
-    if (CinderCreateWindow(winDesc) != CINDER_STATUS_OK)
+    if (KitraCreateWindow(winDesc) != KITRA_STATUS_OK)
         return 1;
 
-    CinderSetBlendMode(CINDER_BLEND_ALPHA);
+    KitraSetBlendMode(KITRA_BLEND_ALPHA);
 
-    CinderFont *scoreFont = CinderLoadFont(FONT_PATH, FONT_SIZE_SCORE);
-    CinderFont *msgFont = CinderLoadFont(FONT_PATH, FONT_SIZE_MSG);
+    KitraFont *scoreFont = KitraLoadFont(FONT_PATH, FONT_SIZE_SCORE);
+    KitraFont *msgFont = KitraLoadFont(FONT_PATH, FONT_SIZE_MSG);
 
     if (!scoreFont || !msgFont)
     {
-        CinderDestroyFont(&scoreFont);
-        CinderDestroyFont(&msgFont);
-        CinderQuit();
+        KitraDestroyFont(&scoreFont);
+        KitraDestroyFont(&msgFont);
+        KitraQuit();
         return 1;
     }
 
-    CinderSetTargetFPS(60);
+    KitraSetTargetFPS(60);
 
     Game g = {0};
     ResetGame(&g);
 
-    while (CinderIsRunning())
+    while (KitraIsRunning())
     {
-        CinderBeginFrame();
+        KitraBeginFrame();
 
-        if (CinderIsKeyPressed(CINDER_KEY_ESCAPE))
-            CinderRequestQuit();
+        if (KitraIsKeyPressed(KITRA_KEY_ESCAPE))
+            KitraRequestQuit();
 
         switch (g.state)
         {
@@ -383,11 +383,11 @@ int main(void)
 
         DrawGame(&g, scoreFont, msgFont);
 
-        CinderEndFrame();
+        KitraEndFrame();
     }
 
-    CinderDestroyFont(&scoreFont);
-    CinderDestroyFont(&msgFont);
-    CinderQuit();
+    KitraDestroyFont(&scoreFont);
+    KitraDestroyFont(&msgFont);
+    KitraQuit();
     return 0;
 }

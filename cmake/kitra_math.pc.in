@@ -1,0 +1,9 @@
+prefix=@CMAKE_INSTALL_PREFIX@
+libdir=@CMAKE_INSTALL_FULL_LIBDIR@
+includedir=@CMAKE_INSTALL_FULL_INCLUDEDIR@/kitra
+
+Name: Kitra-Math
+Description: Math utilities and types from the Kitra library. No SDL dependency.
+Version: @PROJECT_VERSION@
+Libs: -L${libdir} -lm
+Cflags: -I${includedir}

@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.21)
 
-project(Cinder
+project(Kitra
     VERSION 0.1.0
     DESCRIPTION "A minimal, beginner-friendly 2D graphics library built on SDL2"
     LANGUAGES C
@@ -23,43 +23,43 @@ pkg_check_modules(SDL2_TTF   REQUIRED IMPORTED_TARGET SDL2_ttf)
 pkg_check_modules(SDL2_MIXER REQUIRED IMPORTED_TARGET SDL2_mixer)
 
 # ============================================================
-# cinder_math — header-only interface library
+# kitra_math — header-only interface library
 # ============================================================
 
-add_library(cinder_math INTERFACE)
-add_library(Cinder::Math ALIAS cinder_math)
+add_library(kitra_math INTERFACE)
+add_library(Kitra::Math ALIAS kitra_math)
 
-target_include_directories(cinder_math
+target_include_directories(kitra_math
     INTERFACE
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:include>
 )
 
-target_link_libraries(cinder_math INTERFACE m)
+target_link_libraries(kitra_math INTERFACE m)
 
 # ============================================================
-# cinder — main static library
+# kitra — main static library
 # ============================================================
 
-add_library(cinder STATIC
-    src/cinder_subsystem.c
-    src/cinder_color.c
-    src/cinder_window.c
-    src/cinder_loop.c
-    src/cinder_timer.c
-    src/cinder_input.c
-    src/cinder_draw.c
-    src/cinder_texture.c
-    src/cinder_text.c
-    src/cinder_error.c
-    src/cinder_rng.c
-    src/cinder_plugin.c
-    src/cinder_blend.c
-    src/cinder_audio.c
+add_library(kitra STATIC
+    src/kitra_subsystem.c
+    src/kitra_color.c
+    src/kitra_window.c
+    src/kitra_loop.c
+    src/kitra_timer.c
+    src/kitra_input.c
+    src/kitra_draw.c
+    src/kitra_texture.c
+    src/kitra_text.c
+    src/kitra_error.c
+    src/kitra_rng.c
+    src/kitra_plugin.c
+    src/kitra_blend.c
+    src/kitra_audio.c
 )
-add_library(Cinder::Cinder ALIAS cinder)
+add_library(Kitra::Kitra ALIAS kitra)
 
-target_include_directories(cinder
+target_include_directories(kitra
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:include>
@@ -67,7 +67,7 @@ target_include_directories(cinder
         ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
-target_compile_options(cinder PRIVATE
+target_compile_options(kitra PRIVATE
     -Wall
     -Wextra
     -Wshadow
@@ -77,11 +77,11 @@ target_compile_options(cinder PRIVATE
 )
 
 if(NOT APPLE)
-    target_link_options(cinder PRIVATE -Wl,--allow-shlib-undefined)
+    target_link_options(kitra PRIVATE -Wl,--allow-shlib-undefined)
 endif()
 
-target_link_libraries(cinder
-    PUBLIC  Cinder::Math
+target_link_libraries(kitra
+    PUBLIC  Kitra::Math
     PRIVATE
         PkgConfig::SDL2
         PkgConfig::SDL2_IMAGE
@@ -101,7 +101,7 @@ foreach(EXAMPLE pong snake pendulum)
         target_link_options(${EXAMPLE} PRIVATE -Wl,--allow-shlib-undefined)
     endif()
 
-    target_link_libraries(${EXAMPLE} PRIVATE Cinder::Cinder)
+    target_link_libraries(${EXAMPLE} PRIVATE Kitra::Kitra)
     set_target_properties(${EXAMPLE} PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     )
@@ -114,55 +114,55 @@ endforeach()
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 
-install(TARGETS cinder cinder_math
-    EXPORT  CinderTargets
+install(TARGETS kitra kitra_math
+    EXPORT  KitraTargets
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )
 
 install(FILES
-    include/cinder.h
-    include/cinder_types.h
-    include/cinder_math.h
-    include/cinder_status.h
-    include/cinder_subsystem.h
-    include/cinder_window.h
-    include/cinder_loop.h
-    include/cinder_timer.h
-    include/cinder_input.h
-    include/cinder_color.h
-    include/cinder_draw.h
-    include/cinder_texture.h
-    include/cinder_text.h
-    include/cinder_error.h
-    include/cinder_rng.h
-    include/cinder_plugin.h
-    include/cinder_blend.h
-    include/cinder_audio.h
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/cinder
+    include/kitra.h
+    include/kitra_types.h
+    include/kitra_math.h
+    include/kitra_status.h
+    include/kitra_subsystem.h
+    include/kitra_window.h
+    include/kitra_loop.h
+    include/kitra_timer.h
+    include/kitra_input.h
+    include/kitra_color.h
+    include/kitra_draw.h
+    include/kitra_texture.h
+    include/kitra_text.h
+    include/kitra_error.h
+    include/kitra_rng.h
+    include/kitra_plugin.h
+    include/kitra_blend.h
+    include/kitra_audio.h
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/kitra
 )
 
-install(EXPORT CinderTargets
-    FILE      CinderTargets.cmake
-    NAMESPACE Cinder::
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/Cinder
+install(EXPORT KitraTargets
+    FILE      KitraTargets.cmake
+    NAMESPACE Kitra::
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/Kitra
 )
 
 write_basic_package_version_file(
-    "${CMAKE_CURRENT_BINARY_DIR}/CinderConfigVersion.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/KitraConfigVersion.cmake"
     VERSION ${PROJECT_VERSION}
     COMPATIBILITY SameMajorVersion
 )
 
 configure_package_config_file(
-    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/CinderConfig.cmake.in"
-    "${CMAKE_CURRENT_BINARY_DIR}/CinderConfig.cmake"
-    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/Cinder
+    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/KitraConfig.cmake.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/KitraConfig.cmake"
+    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/Kitra
 )
 
 install(FILES
-    "${CMAKE_CURRENT_BINARY_DIR}/CinderConfig.cmake"
-    "${CMAKE_CURRENT_BINARY_DIR}/CinderConfigVersion.cmake"
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/Cinder
+    "${CMAKE_CURRENT_BINARY_DIR}/KitraConfig.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/KitraConfigVersion.cmake"
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/Kitra
 )
 
 # ============================================================
@@ -170,19 +170,19 @@ install(FILES
 # ============================================================
 
 configure_file(
-    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/cinder.pc.in"
-    "${CMAKE_CURRENT_BINARY_DIR}/cinder.pc"
+    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/kitra.pc.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/kitra.pc"
     @ONLY
 )
 
 configure_file(
-    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/cinder_math.pc.in"
-    "${CMAKE_CURRENT_BINARY_DIR}/cinder_math.pc"
+    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/kitra_math.pc.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/kitra_math.pc"
     @ONLY
 )
 
 install(FILES
-    "${CMAKE_CURRENT_BINARY_DIR}/cinder.pc"
-    "${CMAKE_CURRENT_BINARY_DIR}/cinder_math.pc"
+    "${CMAKE_CURRENT_BINARY_DIR}/kitra.pc"
+    "${CMAKE_CURRENT_BINARY_DIR}/kitra_math.pc"
     DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig"
 )

@@ -2,30 +2,30 @@
 
 ## Supported Versions
 
-Only the latest release of Cinder receives security fixes. If you are using an older version, please upgrade before reporting.
+Only the latest release of Kitra receives security fixes. If you are using an older version, please upgrade before reporting.
 
 ## Reporting a Vulnerability
 
-If you discover a security vulnerability in Cinder, please **do not open a public issue**. Instead, use GitHub's private disclosure feature:
+If you discover a security vulnerability in Kitra, please **do not open a public issue**. Instead, use GitHub's private disclosure feature:
 
-👉 [Report a vulnerability](https://github.com/UniquePython/cinder/security/advisories/new)
+👉 [Report a vulnerability](https://github.com/UniquePython/kitra/security/advisories/new)
 
 Please include as much of the following as you can:
 - A description of the vulnerability and its potential impact
 - Steps to reproduce, or a minimal code sample that triggers the issue
-- The version of Cinder you are using
+- The version of Kitra you are using
 - Your platform (Linux / macOS) and compiler version
 
 ## What to Expect
 
-Since Cinder is maintained by a single developer, I'll do my best to:
+Since Kitra is maintained by a single developer, I'll do my best to:
 - **Acknowledge** your report within a few days
 - **Investigate and patch** the issue as quickly as I can
 - **Credit you** in the release notes, unless you prefer to stay anonymous
 
 ## Scope
 
-Cinder is a 2D graphics library, not a networked application or server. That said, valid security concerns include:
+Kitra is a 2D graphics library, not a networked application or server. That said, valid security concerns include:
 
 - A crafted image file that causes memory corruption when loaded via the texture API
 - A crafted audio file that causes unsafe behavior via the audio API

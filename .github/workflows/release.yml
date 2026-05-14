@@ -24,10 +24,10 @@ jobs:
 
       - name: Package
         run: |
-          cmake --install build --prefix dist/cinder
-          tar -czf cinder-linux-x86_64.tar.gz -C dist cinder
+          cmake --install build --prefix dist/kitra
+          tar -czf kitra-linux-x86_64.tar.gz -C dist kitra
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: cinder-linux-x86_64.tar.gz
+          files: kitra-linux-x86_64.tar.gz

@@ -1,0 +1,164 @@
+#include "kitra_internal.h"
+
+struct KitraTexture
+{
+    SDL_Texture *handle;
+    int width, height;
+};
+
+KitraTexture *KitraLoadTexture(const char *path)
+{
+    if (!gKitraCtx.core.imgInitialized)
+    {
+        int flags = IMG_INIT_PNG | IMG_INIT_JPG | IMG_INIT_WEBP | IMG_INIT_TIF;
+        int impFormats = IMG_INIT_PNG | IMG_INIT_JPG;
+
+        if ((IMG_Init(flags) & impFormats) != impFormats)
+        {
+            KITRA_LOG(KITRA_LOG_ERROR, IMG_GetError());
+            return NULL;
+        }
+        gKitraCtx.core.imgInitialized = true;
+    }
+
+    if (!gKitraCtx.core.renderer)
+    {
+        KITRA_LOG(KITRA_LOG_ERROR, "Renderer not initialized");
+        return NULL;
+    }
+
+    SDL_Surface *surface = IMG_Load(path);
+    if (!surface)
+    {
+        KITRA_LOG(KITRA_LOG_ERROR, IMG_GetError());
+        return NULL;
+    }
+
+    SDL_Texture *tex = SDL_CreateTextureFromSurface(gKitraCtx.core.renderer, surface);
+    SDL_FreeSurface(surface);
+
+    if (!tex)
+    {
+        KITRA_LOG(KITRA_LOG_ERROR, SDL_GetError());
+        return NULL;
+    }
+
+    KitraTexture *cTex = malloc(sizeof(KitraTexture));
+    if (!cTex)
+    {
+        KITRA_LOG(KITRA_LOG_ERROR, "Failed to allocate KitraTexture");
+        SDL_DestroyTexture(tex);
+        return NULL;
+    }
+
+    cTex->handle = tex;
+    SDL_QueryTexture(tex, NULL, NULL, &cTex->width, &cTex->height);
+
+    return cTex;
+}
+
+void KitraDestroyTexture(KitraTexture **tex)
+{
+    if (!tex || !*tex)
+        return;
+
+    SDL_DestroyTexture((*tex)->handle);
+    free(*tex);
+    *tex = NULL;
+}
+
+KitraSize KitraGetTextureSize(const KitraTexture *tex)
+{
+    if (!tex)
+    {
+        KITRA_LOG(KITRA_LOG_WARNING, "Texture is NULL in KitraGetTextureSize");
+        return (KitraSize){{0, 0}};
+    }
+
+    return (KitraSize){{tex->width, tex->height}};
+}
+
+KitraStatus KitraScreenshot(const char *path)
+{
+    if (!path)
+    {
+        KITRA_LOG(KITRA_LOG_ERROR, "Path is NULL in KitraScreenshot");
+        return KITRA_STATUS_SCREENSHOT_FAILED;
+    }
+
+    if (!gKitraCtx.core.renderer)
+    {
+        KITRA_LOG(KITRA_LOG_ERROR, "Renderer is NULL in KitraScreenshot");
+        return KITRA_STATUS_SCREENSHOT_FAILED;
+    }
+
+    KitraSize size = KitraGetWindowSize();
+
+    SDL_Surface *surface = SDL_CreateRGBSurfaceWithFormat(
+        0, size.w, size.h, 32, SDL_PIXELFORMAT_RGBA32);
+
+    if (!surface)
+    {
+        KITRA_LOG(KITRA_LOG_ERROR, SDL_GetError());
+        return KITRA_STATUS_SCREENSHOT_FAILED;
+    }
+
+    if (SDL_RenderReadPixels(gKitraCtx.core.renderer, NULL, SDL_PIXELFORMAT_RGBA32, surface->pixels, surface->pitch) != 0)
+    {
+        KITRA_LOG(KITRA_LOG_ERROR, SDL_GetError());
+        SDL_FreeSurface(surface);
+        return KITRA_STATUS_SCREENSHOT_FAILED;
+    }
+
+    if (IMG_SavePNG(surface, path) != 0)
+    {
+        KITRA_LOG(KITRA_LOG_ERROR, IMG_GetError());
+        SDL_FreeSurface(surface);
+        return KITRA_STATUS_SCREENSHOT_FAILED;
+    }
+
+    SDL_FreeSurface(surface);
+    return KITRA_STATUS_OK;
+}
+
+void KitraDrawTextureEx(KitraTexture *tex, const KitraRect *src, const KitraRect *dst)
+{
+    if (!gKitraCtx.core.renderer || !tex)
+        return;
+
+    SDL_Rect sdlSrc, sdlDst;
+    SDL_Rect *pSrc = NULL, *pDst = NULL;
+
+    if (src)
+    {
+        sdlSrc = (SDL_Rect){src->x, src->y, src->w, src->h};
+        pSrc = &sdlSrc;
+    }
+
+    if (dst)
+    {
+        sdlDst = (SDL_Rect){dst->x, dst->y, dst->w, dst->h};
+        pDst = &sdlDst;
+    }
+
+    SDL_RenderCopy(gKitraCtx.core.renderer, tex->handle, pSrc, pDst);
+}
+
+void KitraDrawTexture(KitraTexture *tex, int x, int y)
+{
+    if (!tex)
+        return;
+
+    KitraRect dst = {{x, y, tex->width, tex->height}};
+    KitraDrawTextureEx(tex, NULL, &dst);
+}
+
+void KitraDrawTextureP(KitraTexture *tex, KitraPoint pos)
+{
+    KitraDrawTexture(tex, pos.x, pos.y);
+}
+
+SDL_Texture *KitraTextureGetSDL(KitraTexture *tex)
+{
+    return tex->handle;
+}

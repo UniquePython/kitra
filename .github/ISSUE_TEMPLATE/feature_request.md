@@ -1,6 +1,6 @@
 ---
 name: Feature Request
-about: Suggest a new feature or improvement for Cinder
+about: Suggest a new feature or improvement for Kitra
 title: "[Feature] "
 labels: enhancement
 assignees: ''
@@ -10,14 +10,14 @@ assignees: ''
 A clear description of the feature or change you're proposing.
 
 ## Why do you need it?
-Explain your use case. What are you building, and why does Cinder's current API not cover it?
+Explain your use case. What are you building, and why does Kitra's current API not cover it?
 Vague requests like "add X" without context are likely to be closed.
 
 ## What does it look like?
 If you can, sketch out what the API might look like — even rough pseudocode helps.
 
 ```c
-// e.g. CinderDoSomethingNew(...)
+// e.g. KitraDoSomethingNew(...)
 ```
 
 ## Alternatives you've considered

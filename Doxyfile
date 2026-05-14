@@ -1,4 +1,4 @@
-PROJECT_NAME           = "Cinder"
+PROJECT_NAME           = "Kitra"
 PROJECT_NUMBER         = 0.1.0
 PROJECT_BRIEF          = "A minimal, beginner-friendly 2D graphics library for C"
 
