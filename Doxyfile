@@ -7,6 +7,7 @@ RECURSIVE              = YES
 
 OPTIMIZE_OUTPUT_FOR_C  = YES
 EXTRACT_ALL            = YES
+EXTRACT_STATIC         = YES
 
 GENERATE_LATEX         = NO
 OUTPUT_DIRECTORY       = docs
