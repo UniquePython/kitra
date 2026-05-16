@@ -269,117 +269,264 @@ static inline float KitraVec2fAngle(KitraVec2f v)
 
 // ======================================= COLLISION ================================================
 
-/**
- * @brief Tests whether a point lies inside a rectangle.
- * @param p    Point to test.
- * @param rect Rectangle to test against.
- * @return True if @p p is inside @p rect, false otherwise.
- */
-static inline bool KitraPointInRect(KitraPoint p, KitraRect rect)
-{
-    return p.x >= rect.x && p.x < rect.x + rect.w && p.y >= rect.y && p.y < rect.y + rect.h;
-}
+// ======================================= COLLISION ================================================
 
 /**
- * @brief Tests whether a point lies inside a circle.
- * @param p      Point to test.
- * @param circle Circle to test against.
- * @return True if @p p is inside @p circle, false otherwise.
- */
-static inline bool KitraPointInCircle(KitraPoint p, KitraCircle circle)
-{
-    int dx = p.x - circle.x;
-    int dy = p.y - circle.y;
-    return dx * dx + dy * dy < circle.radius * circle.radius;
-}
-
-/**
- * @brief Tests whether two rectangles overlap.
- * @param a First rectangle.
- * @param b Second rectangle.
- * @return True if @p a and @p b intersect, false otherwise.
- */
-static inline bool KitraRectsOverlap(KitraRect a, KitraRect b)
-{
-    return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
-}
-
-/**
- * @brief Tests whether two circles overlap.
- * @param a First circle.
- * @param b Second circle.
- * @return True if @p a and @p b intersect, false otherwise.
- */
-static inline bool KitraCirclesOverlap(KitraCircle a, KitraCircle b)
-{
-    int dx = a.x - b.x;
-    int dy = a.y - b.y;
-    int radSum = a.radius + b.radius;
-    return dx * dx + dy * dy < radSum * radSum;
-}
-
-/**
- * @brief Tests whether a rectangle and a circle overlap.
+ * @brief Returns the distance between two points.
  *
- * Uses the nearest-point method — finds the closest point on the
- * rectangle to the circle center and checks if it falls within
- * the circle's radius.
+ * @param a  First point.
+ * @param b  Second point.
+ * @return   Euclidean distance between @p a and @p b in pixels.
  *
- * @param rect   Rectangle to test.
- * @param circle Circle to test against.
- * @return True if @p rect and @p circle intersect, false otherwise.
+ * @see KitraPointRectDistance, KitraPointCircleDistance
  */
-static inline bool KitraRectCircleOverlap(KitraRect rect, KitraCircle circle)
+static inline float KitraPointPointDistance(KitraPoint a, KitraPoint b)
 {
-    int nearX = circle.x < rect.x ? rect.x : circle.x > rect.x + rect.w ? rect.x + rect.w
-                                                                        : circle.x;
-    int nearY = circle.y < rect.y ? rect.y : circle.y > rect.y + rect.h ? rect.y + rect.h
-                                                                        : circle.y;
-    int dx = circle.x - nearX;
-    int dy = circle.y - nearY;
-    return dx * dx + dy * dy < circle.radius * circle.radius;
-}
-
-// ======================================= GEOMETRY ================================================
-
-/**
- * @brief Returns the area of a rectangle.
- * @param rect Input rectangle.
- * @return Area in pixels — w × h.
- */
-static inline int KitraRectArea(KitraRect rect)
-{
-    return rect.w * rect.h;
+    float dx = (float)(a.x - b.x);
+    float dy = (float)(a.y - b.y);
+    return sqrtf(dx * dx + dy * dy);
 }
 
 /**
- * @brief Returns the perimeter of a rectangle.
- * @param rect Input rectangle.
- * @return Perimeter in pixels — 2 × (w + h).
+ * @brief Returns the signed distance between a point and a rectangle.
+ *
+ * Positive values indicate the point lies outside @p rect; negative values
+ * indicate it lies inside, with the magnitude representing the depth of
+ * penetration to the nearest edge.
+ *
+ * @param p     Point to test.
+ * @param rect  Rectangle to test against.
+ * @return      Signed distance from @p p to the nearest edge of @p rect,
+ *              in pixels.
+ *
+ * @see KitraPointPointDistance, KitraRectRectDistance
  */
-static inline int KitraRectPerimeter(KitraRect rect)
+static inline float KitraPointRectDistance(KitraPoint p, KitraRect rect)
 {
-    return 2 * (rect.w + rect.h);
+    int cx = p.x < rect.x ? rect.x : p.x > rect.x + rect.w ? rect.x + rect.w
+                                                           : p.x;
+    int cy = p.y < rect.y ? rect.y : p.y > rect.y + rect.h ? rect.y + rect.h
+                                                           : p.y;
+    float dx = (float)(p.x - cx);
+    float dy = (float)(p.y - cy);
+    float outside = sqrtf(dx * dx + dy * dy);
+    if (outside > 0.0f)
+        return outside;
+    float dLeft = (float)(p.x - rect.x);
+    float dRight = (float)(rect.x + rect.w - p.x);
+    float dTop = (float)(p.y - rect.y);
+    float dBottom = (float)(rect.y + rect.h - p.y);
+    float minDist = dLeft < dRight ? dLeft : dRight;
+    if (dTop < minDist)
+        minDist = dTop;
+    if (dBottom < minDist)
+        minDist = dBottom;
+    return -minDist;
 }
 
 /**
- * @brief Returns the area of a circle.
- * @param circle Input circle.
- * @return Area in pixels — π × r².
+ * @brief Returns the signed distance between a point and a circle.
+ *
+ * Positive values indicate the point lies outside @p circle; negative values
+ * indicate it lies inside.
+ *
+ * @param p       Point to test.
+ * @param circle  Circle to test against.
+ * @return        Signed distance from @p p to the circumference of @p circle,
+ *                in pixels.
+ *
+ * @see KitraPointPointDistance, KitraCircleCircleDistance
  */
-static inline float KitraCircleArea(KitraCircle circle)
+static inline float KitraPointCircleDistance(KitraPoint p, KitraCircle circle)
 {
-    return (float)KITRA_PI * (float)circle.radius * (float)circle.radius;
+    float dx = (float)(p.x - circle.x);
+    float dy = (float)(p.y - circle.y);
+    return sqrtf(dx * dx + dy * dy) - (float)circle.radius;
 }
 
 /**
- * @brief Returns the circumference of a circle.
- * @param circle Input circle.
- * @return Circumference in pixels — 2 × π × r.
+ * @brief Returns the approximate signed distance between a point and an ellipse.
+ *
+ * Uses a Euler approximation of the ellipse radius in the direction of @p p
+ * to estimate the signed distance. Positive values indicate the point lies
+ * outside @p ellipse; negative values indicate it lies inside.
+ *
+ * @param p        Point to test.
+ * @param ellipse  Ellipse to test against.
+ * @return         Approximate signed distance from @p p to the boundary of
+ *                 @p ellipse, in pixels.
+ *
+ * @see KitraPointCircleDistance, KitraEllipseEllipseDistance
  */
-static inline float KitraCirclePerimeter(KitraCircle circle)
+static inline float KitraPointEllipseDistance(KitraPoint p, KitraEllipse ellipse)
 {
-    return 2.0f * (float)KITRA_PI * (float)circle.radius;
+    float dx = (float)(p.x - ellipse.x) / (float)ellipse.rx;
+    float dy = (float)(p.y - ellipse.y) / (float)ellipse.ry;
+    float normalized = sqrtf(dx * dx + dy * dy);
+    float rx = (float)ellipse.rx;
+    float ry = (float)ellipse.ry;
+    float avgRadius = (2.0f * rx * ry) / (rx + ry);
+    return (normalized - 1.0f) * avgRadius;
+}
+
+/**
+ * @brief Returns the signed distance between two rectangles.
+ *
+ * Positive values indicate the rectangles are separated, with the magnitude
+ * equal to the gap between their nearest edges. Negative values indicate
+ * overlap, with the magnitude representing the minimum penetration depth
+ * along either axis.
+ *
+ * @param a  First rectangle.
+ * @param b  Second rectangle.
+ * @return   Signed distance between @p a and @p b, in pixels.
+ *
+ * @see KitraPointRectDistance, KitraRectCircleDistance
+ */
+static inline float KitraRectRectDistance(KitraRect a, KitraRect b)
+{
+    float dx = 0.0f, dy = 0.0f;
+    if (b.x + b.w <= a.x)
+        dx = (float)(a.x - (b.x + b.w));
+    else if (a.x + a.w <= b.x)
+        dx = (float)(b.x - (a.x + a.w));
+    if (b.y + b.h <= a.y)
+        dy = (float)(a.y - (b.y + b.h));
+    else if (a.y + a.h <= b.y)
+        dy = (float)(b.y - (a.y + a.h));
+    if (dx > 0.0f || dy > 0.0f)
+        return sqrtf(dx * dx + dy * dy);
+    float dLeft = (float)(a.x - b.x);
+    float dRight = (float)((b.x + b.w) - (a.x + a.w));
+    float dTop = (float)(a.y - b.y);
+    float dBottom = (float)((b.y + b.h) - (a.y + a.h));
+    float minPen = dLeft < dRight ? dLeft : dRight;
+    if (dTop < minPen)
+        minPen = dTop;
+    if (dBottom < minPen)
+        minPen = dBottom;
+    return -minPen;
+}
+
+/**
+ * @brief Returns the signed distance between a rectangle and a circle.
+ *
+ * Positive values indicate the shapes are separated; negative values indicate
+ * overlap, with the magnitude equal to the penetration depth.
+ *
+ * @param rect    Rectangle to test.
+ * @param circle  Circle to test against.
+ * @return        Signed distance between @p rect and @p circle, in pixels.
+ *
+ * @see KitraRectRectDistance, KitraCircleCircleDistance
+ */
+static inline float KitraRectCircleDistance(KitraRect rect, KitraCircle circle)
+{
+    int cx = circle.x < rect.x ? rect.x : circle.x > rect.x + rect.w ? rect.x + rect.w
+                                                                     : circle.x;
+    int cy = circle.y < rect.y ? rect.y : circle.y > rect.y + rect.h ? rect.y + rect.h
+                                                                     : circle.y;
+    float dx = (float)(circle.x - cx);
+    float dy = (float)(circle.y - cy);
+    float dist = sqrtf(dx * dx + dy * dy);
+    return dist - (float)circle.radius;
+}
+
+/**
+ * @brief Returns the approximate signed distance between a rectangle and an ellipse.
+ *
+ * Clamps the ellipse centre to the nearest point on @p rect, then estimates
+ * the signed distance using a Euler radius approximation. Positive values
+ * indicate separation; negative values indicate overlap.
+ *
+ * @param rect     Rectangle to test.
+ * @param ellipse  Ellipse to test against.
+ * @return         Approximate signed distance between @p rect and @p ellipse,
+ *                 in pixels.
+ *
+ * @see KitraRectCircleDistance, KitraEllipseEllipseDistance
+ */
+static inline float KitraRectEllipseDistance(KitraRect rect, KitraEllipse ellipse)
+{
+    int cx = ellipse.x < rect.x ? rect.x : ellipse.x > rect.x + rect.w ? rect.x + rect.w
+                                                                       : ellipse.x;
+    int cy = ellipse.y < rect.y ? rect.y : ellipse.y > rect.y + rect.h ? rect.y + rect.h
+                                                                       : ellipse.y;
+    float dx = (float)(ellipse.x - cx) / (float)ellipse.rx;
+    float dy = (float)(ellipse.y - cy) / (float)ellipse.ry;
+    float normalized = sqrtf(dx * dx + dy * dy);
+    float rx = (float)ellipse.rx;
+    float ry = (float)ellipse.ry;
+    float avgRadius = (2.0f * rx * ry) / (rx + ry);
+    return (normalized - 1.0f) * avgRadius;
+}
+
+/**
+ * @brief Returns the signed distance between two circles.
+ *
+ * Positive values indicate the circles are separated; negative values indicate
+ * overlap, with the magnitude equal to the penetration depth.
+ *
+ * @param a  First circle.
+ * @param b  Second circle.
+ * @return   Signed distance between @p a and @p b, in pixels.
+ *
+ * @see KitraCircleEllipseDistance, KitraRectCircleDistance
+ */
+static inline float KitraCircleCircleDistance(KitraCircle a, KitraCircle b)
+{
+    float dx = (float)(a.x - b.x);
+    float dy = (float)(a.y - b.y);
+    return sqrtf(dx * dx + dy * dy) - (float)(a.radius + b.radius);
+}
+
+/**
+ * @brief Returns the approximate signed distance between a circle and an ellipse.
+ *
+ * Estimates the signed distance by normalizing into ellipse space and applying
+ * a Euler radius approximation, then subtracting the circle radius. Positive
+ * values indicate separation; negative values indicate overlap.
+ *
+ * @param circle   Circle to test.
+ * @param ellipse  Ellipse to test against.
+ * @return         Approximate signed distance between @p circle and @p ellipse,
+ *                 in pixels.
+ *
+ * @see KitraCircleCircleDistance, KitraEllipseEllipseDistance
+ */
+static inline float KitraCircleEllipseDistance(KitraCircle circle, KitraEllipse ellipse)
+{
+    float dx = (float)(circle.x - ellipse.x) / (float)ellipse.rx;
+    float dy = (float)(circle.y - ellipse.y) / (float)ellipse.ry;
+    float normalized = sqrtf(dx * dx + dy * dy);
+    float rx = (float)ellipse.rx;
+    float ry = (float)ellipse.ry;
+    float avgRadius = (2.0f * rx * ry) / (rx + ry);
+    return (normalized - 1.0f) * avgRadius - (float)circle.radius;
+}
+
+/**
+ * @brief Returns the approximate signed distance between two ellipses.
+ *
+ * Normalizes the centre separation by the mean radii of the two ellipses and
+ * applies a Euler radius approximation to estimate the signed distance.
+ * Positive values indicate separation; negative values indicate overlap.
+ *
+ * @param a  First ellipse.
+ * @param b  Second ellipse.
+ * @return   Approximate signed distance between @p a and @p b, in pixels.
+ *
+ * @see KitraCircleEllipseDistance, KitraRectEllipseDistance
+ */
+static inline float KitraEllipseEllipseDistance(KitraEllipse a, KitraEllipse b)
+{
+    float dx = (float)(a.x - b.x) / ((float)(a.rx + b.rx) * 0.5f);
+    float dy = (float)(a.y - b.y) / ((float)(a.ry + b.ry) * 0.5f);
+    float normalized = sqrtf(dx * dx + dy * dy);
+    float avgRx = (float)(a.rx + b.rx) * 0.5f;
+    float avgRy = (float)(a.ry + b.ry) * 0.5f;
+    float avgRadius = (2.0f * avgRx * avgRy) / (avgRx + avgRy);
+    return (normalized - 1.0f) * avgRadius;
 }
 
 // ======================================= EASING ================================================
