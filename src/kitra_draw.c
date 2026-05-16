@@ -256,3 +256,32 @@ void KitraDrawRoundedRectOutline(KitraRect rect, int radius, KitraColor color)
                          rect.x, rect.y, rect.x + rect.w - 1, rect.y + rect.h - 1,
                          radius, KITRA_COLOR_UNPACK(color));
 }
+
+static SDL_BlendMode KitraToSDLBlendMode(KitraBlendMode mode)
+{
+    switch (mode)
+    {
+    case KITRA_BLEND_NONE:
+        return SDL_BLENDMODE_NONE;
+    case KITRA_BLEND_ALPHA:
+        return SDL_BLENDMODE_BLEND;
+    case KITRA_BLEND_ADDITIVE:
+        return SDL_BLENDMODE_ADD;
+    case KITRA_BLEND_MULTIPLY:
+        return SDL_BLENDMODE_MUL;
+    default:
+        return SDL_BLENDMODE_NONE;
+    }
+}
+
+KitraStatus KitraSetBlendMode(KitraBlendMode mode)
+{
+    if (!gKitraCtx.core.renderer)
+    {
+        KITRA_LOG(KITRA_LOG_ERROR, "Renderer is NULL in KitraSetBlendMode");
+        return KITRA_STATUS_RENDERER_MISSING;
+    }
+
+    SDL_SetRenderDrawBlendMode(gKitraCtx.core.renderer, KitraToSDLBlendMode(mode));
+    return KITRA_STATUS_OK;
+}

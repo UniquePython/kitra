@@ -121,13 +121,15 @@ KitraStatus KitraScreenshot(const char *path)
     return KITRA_STATUS_OK;
 }
 
-void KitraDrawTextureEx(KitraTexture *tex, const KitraRect *src, const KitraRect *dst)
+void KitraDrawTextureEx(KitraTexture *tex, const KitraRect *src, const KitraRect *dst,
+                        float angle, const KitraPoint *pivot, int flip)
 {
     if (!gKitraCtx.core.renderer || !tex)
         return;
 
     SDL_Rect sdlSrc, sdlDst;
     SDL_Rect *pSrc = NULL, *pDst = NULL;
+    SDL_Point sdlPivot, *pPivot = NULL;
 
     if (src)
     {
@@ -141,7 +143,13 @@ void KitraDrawTextureEx(KitraTexture *tex, const KitraRect *src, const KitraRect
         pDst = &sdlDst;
     }
 
-    SDL_RenderCopy(gKitraCtx.core.renderer, tex->handle, pSrc, pDst);
+    if (pivot)
+    {
+        sdlPivot = (SDL_Point){pivot->x, pivot->y};
+        pPivot = &sdlPivot;
+    }
+
+    SDL_RenderCopyEx(gKitraCtx.core.renderer, tex->handle, pSrc, pDst, (double)angle, pPivot, (SDL_RendererFlip)flip);
 }
 
 void KitraDrawTexture(KitraTexture *tex, int x, int y)
@@ -150,7 +158,7 @@ void KitraDrawTexture(KitraTexture *tex, int x, int y)
         return;
 
     KitraRect dst = {{x, y, tex->width, tex->height}};
-    KitraDrawTextureEx(tex, NULL, &dst);
+    KitraDrawTextureEx(tex, NULL, &dst, 0.0f, NULL, 0);
 }
 
 void KitraDrawTextureP(KitraTexture *tex, KitraPoint pos)
@@ -161,4 +169,47 @@ void KitraDrawTextureP(KitraTexture *tex, KitraPoint pos)
 SDL_Texture *KitraTextureGetSDL(KitraTexture *tex)
 {
     return tex->handle;
+}
+
+KitraStatus KitraSetTextureBlendMode(KitraTexture *tex, KitraBlendMode mode)
+{
+    if (!tex)
+        return KITRA_STATUS_TEXTURE_NULL;
+
+    SDL_BlendMode sdlMode;
+    switch (mode)
+    {
+    case KITRA_BLEND_NONE:
+        sdlMode = SDL_BLENDMODE_NONE;
+        break;
+    case KITRA_BLEND_ALPHA:
+        sdlMode = SDL_BLENDMODE_BLEND;
+        break;
+    case KITRA_BLEND_ADDITIVE:
+        sdlMode = SDL_BLENDMODE_ADD;
+        break;
+    case KITRA_BLEND_MULTIPLY:
+        sdlMode = SDL_BLENDMODE_MUL;
+        break;
+    default:
+        sdlMode = SDL_BLENDMODE_NONE;
+        break;
+    }
+
+    SDL_SetTextureBlendMode(tex->handle, sdlMode);
+    return KITRA_STATUS_OK;
+}
+
+void KitraSetTextureTint(KitraTexture *tex, KitraColor color)
+{
+    if (!tex)
+        return;
+    SDL_SetTextureColorMod(tex->handle, color.r, color.g, color.b);
+}
+
+void KitraSetTextureAlpha(KitraTexture *tex, uint8_t alpha)
+{
+    if (!tex)
+        return;
+    SDL_SetTextureAlphaMod(tex->handle, alpha);
 }

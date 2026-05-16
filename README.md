@@ -110,7 +110,6 @@ Then include the header:
 | Drawing | `kitra/kitra_draw.h` | Lines, circles, triangles, rectangles |
 | Textures | `kitra/kitra_texture.h` | Load, draw, and destroy image textures |
 | Audio | `kitra/kitra_audio.h` | Load and play sound effects and music |
-| Blend Modes | `kitra/kitra_blend.h` | Set blend modes globally or per-texture — none, alpha, additive, multiply |
 | Text & Fonts | `kitra/kitra_text.h` | Load fonts, draw text, cache rendered text |
 | Timers | `kitra/kitra_timer.h` | Delta time, FPS, and general-purpose timers |
 | RNG | `kitra/kitra_rng.h` | PCG32 random number generator — integers, floats, directions, and a global convenience API |

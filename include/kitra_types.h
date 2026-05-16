@@ -152,7 +152,7 @@ typedef union KitraEllipse
     };
 } KitraEllipse;
 
-// ======================================= COLOR ================================================
+// ======================================= RENDERING PRIMITIVES ================================================
 
 /**
  * @brief An RGBA color with 8 bits per channel.
@@ -169,5 +169,21 @@ typedef struct KitraColor
     uint8_t b; /**< Blue channel (0–255). */
     uint8_t a; /**< Alpha channel (0–255). 0 = fully transparent, 255 = fully opaque. */
 } KitraColor;
+
+/**
+ * @brief Blend modes controlling how a texture is composited onto the render target.
+ *
+ * Passed to blending functions to control how source and destination pixel
+ * colours are combined during rendering.
+ *
+ * @see KitraSetTextureBlendMode, KitraSetBlendMode
+ */
+typedef enum KitraBlendMode
+{
+    KITRA_BLEND_NONE,     /**< No blending — source pixels overwrite the destination. */
+    KITRA_BLEND_ALPHA,    /**< Alpha blending — source is composited over destination using its alpha channel. */
+    KITRA_BLEND_ADDITIVE, /**< Additive blending — source colour is added to the destination, brightening it. */
+    KITRA_BLEND_MULTIPLY, /**< Multiply blending — source and destination colours are multiplied together, darkening the result. */
+} KitraBlendMode;
 
 #endif /* KITRA_TYPES_H_ */

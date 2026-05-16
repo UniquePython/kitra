@@ -1,6 +1,7 @@
 #ifndef KITRA_DRAW_H_
 #define KITRA_DRAW_H_
 
+#include "kitra_status.h"
 #include "kitra_types.h"
 
 /**
@@ -357,5 +358,21 @@ void KitraDrawRoundedRect(KitraRect rect, int radius, KitraColor color);
  * @see KitraDrawRoundedRect(), KitraDrawRectOutline()
  */
 void KitraDrawRoundedRectOutline(KitraRect rect, int radius, KitraColor color);
+
+// --------------------------------------- BLEND MODE ---------------------------------------
+
+/**
+ * @brief Sets the blend mode used for primitive drawing operations.
+ *
+ * Controls how shapes and lines drawn with the renderer (rather than
+ * textures) are composited onto the render target.
+ *
+ * @param mode  Blend mode to apply to subsequent draw calls.
+ * @return      @p KITRA_STATUS_OK on success, or
+ *              @p KITRA_STATUS_RENDERER_MISSING if the renderer is @p NULL.
+ *
+ * @see KitraSetTextureBlendMode, KitraBlendMode
+ */
+KitraStatus KitraSetBlendMode(KitraBlendMode mode);
 
 #endif /* KITRA_DRAW_H_ */

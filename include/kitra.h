@@ -16,7 +16,6 @@
 #include "kitra_error.h"
 #include "kitra_rng.h"
 #include "kitra_plugin.h"
-#include "kitra_blend.h"
 #include "kitra_audio.h"
 
 #endif /* KITRA_H_ */

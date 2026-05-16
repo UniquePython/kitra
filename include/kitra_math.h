@@ -269,8 +269,6 @@ static inline float KitraVec2fAngle(KitraVec2f v)
 
 // ======================================= COLLISION ================================================
 
-// ======================================= COLLISION ================================================
-
 /**
  * @brief Returns the distance between two points.
  *

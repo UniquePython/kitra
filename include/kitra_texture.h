@@ -1,6 +1,7 @@
 #ifndef KITRA_TEXTURE_H_
 #define KITRA_TEXTURE_H_
 
+#include "kitra_status.h"
 #include "kitra_types.h"
 
 typedef struct KitraTexture KitraTexture;
@@ -71,22 +72,30 @@ KitraSize KitraGetTextureSize(const KitraTexture *tex);
 KitraStatus KitraScreenshot(const char *path);
 
 /**
- * @brief Draws a texture with explicit source and destination rectangles.
+ * @brief Draws a texture with explicit source and destination rectangles,
+ *        rotation, pivot, and flip.
  *
  * Copies a region of @p tex defined by @p src onto the render target at the
  * region defined by @p dst, scaling to fit if the rectangles differ in size.
- * Passing @p NULL for @p src uses the entire texture; passing @p NULL for
- * @p dst stretches the texture to fill the entire render target. Does nothing
- * if the renderer or @p tex is @p NULL.
+ * The texture is rotated clockwise by @p angle degrees around @p pivot. If
+ * @p pivot is @p NULL, the center of @p dst is used. Passing @p NULL for
+ * @p src uses the entire texture; passing @p NULL for @p dst stretches the
+ * texture to fill the entire render target. Does nothing if the renderer or
+ * @p tex is @p NULL.
  *
- * @param tex  Texture to draw.
- * @param src  Source region within @p tex, or @p NULL for the full texture.
- * @param dst  Destination region on the render target, or @p NULL to fill
- *             the entire render target.
+ * @param tex    Texture to draw.
+ * @param src    Source region within @p tex, or @p NULL for the full texture.
+ * @param dst    Destination region on the render target, or @p NULL to fill
+ *               the entire render target.
+ * @param angle  Clockwise rotation angle in degrees.
+ * @param pivot  Point around which to rotate, relative to @p dst, or @p NULL
+ *               for the center of @p dst.
+ * @param flip   Flip flags — @p SDL_FLIP_NONE, @p SDL_FLIP_HORIZONTAL, or
+ *               @p SDL_FLIP_VERTICAL.
  *
- * @see KitraDrawTexture, KitraDrawTextureP, KitraSetTextureBlendMode
+ * @see KitraDrawTexture, KitraDrawTextureP
  */
-void KitraDrawTextureEx(KitraTexture *tex, const KitraRect *src, const KitraRect *dst);
+void KitraDrawTextureEx(KitraTexture *tex, const KitraRect *src, const KitraRect *dst, float angle, const KitraPoint *pivot, int flip);
 
 /**
  * @brief Draws a texture at the given coordinates at its natural size.
@@ -130,5 +139,50 @@ struct SDL_Texture;
  * @see KitraSetTextureBlendMode
  */
 struct SDL_Texture *KitraTextureGetSDL(KitraTexture *tex);
+
+/**
+ * @brief Sets the blend mode of a texture.
+ *
+ * Controls how @p tex is composited onto the render target when drawn.
+ * The mode is stored on the texture itself and applies whenever it is
+ * rendered.
+ *
+ * @param tex   Texture to modify.
+ * @param mode  Blend mode to apply to @p tex.
+ * @return      @p KITRA_STATUS_OK on success, or
+ *              @p KITRA_STATUS_TEXTURE_NULL if @p tex is @p NULL.
+ *
+ * @see KitraSetBlendMode, KitraBlendMode
+ */
+KitraStatus KitraSetTextureBlendMode(KitraTexture *tex, KitraBlendMode mode);
+
+/**
+ * @brief Sets the tint colour of a texture.
+ *
+ * Modulates the RGB channels of @p tex by @p color when drawn. A tint
+ * of (255, 255, 255) is neutral and leaves the texture unchanged. The
+ * alpha channel of @p color is ignored — use @p KitraSetTextureAlpha
+ * to control transparency separately.
+ *
+ * @param tex    Texture to modify.
+ * @param color  Tint colour to apply. Alpha channel is ignored.
+ *
+ * @see KitraSetTextureAlpha, KitraSetTextureBlendMode
+ */
+void KitraSetTextureTint(KitraTexture *tex, KitraColor color);
+
+/**
+ * @brief Sets the alpha transparency of a texture.
+ *
+ * Modulates the alpha channel of @p tex when drawn. 0 is fully
+ * transparent, 255 is fully opaque. Has no visible effect unless
+ * the texture's blend mode is set to @p KITRA_BLEND_ALPHA.
+ *
+ * @param tex    Texture to modify.
+ * @param alpha  Alpha value to apply (0–255).
+ *
+ * @see KitraSetTextureTint, KitraSetTextureBlendMode
+ */
+void KitraSetTextureAlpha(KitraTexture *tex, uint8_t alpha);
 
 #endif /* KITRA_TEXTURE_H_ */

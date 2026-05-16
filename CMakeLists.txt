@@ -54,7 +54,6 @@ add_library(kitra STATIC
     src/kitra_error.c
     src/kitra_rng.c
     src/kitra_plugin.c
-    src/kitra_blend.c
     src/kitra_audio.c
 )
 add_library(Kitra::Kitra ALIAS kitra)
@@ -136,7 +135,6 @@ install(FILES
     include/kitra_error.h
     include/kitra_rng.h
     include/kitra_plugin.h
-    include/kitra_blend.h
     include/kitra_audio.h
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/kitra
 )
