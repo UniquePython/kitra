@@ -159,6 +159,8 @@ bool KitraRngChance(KitraRng *rng, float p)
  * Global RNG
  * -------------------------------------------------------------------- */
 
+void KitraRandSeed(uint64_t seed, uint64_t stream) { KitraRngSeed(&gKitraCtx.rng, seed, stream); }
+void KitraRandSeedAuto(void) { KitraRngSeedAuto(&gKitraCtx.rng); }
 uint32_t KitraRandNext(void) { return KitraRngNext(&gKitraCtx.rng); }
 uint32_t KitraRandUint(uint32_t bound) { return KitraRngUint(&gKitraCtx.rng, bound); }
 int KitraRandInt(int min, int max) { return KitraRngInt(&gKitraCtx.rng, min, max); }

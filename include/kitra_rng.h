@@ -149,6 +149,18 @@ KitraVec2f KitraRngDirection(KitraRng *rng);
 bool KitraRngChance(KitraRng *rng, float p);
 
 /**
+ * @brief Seeds the global RNG with an explicit seed and stream.
+ * @see KitraRngSeed
+ */
+void KitraRandSeed(uint64_t seed, uint64_t stream);
+
+/**
+ * @brief Seeds the global RNG automatically from the system clock.
+ * @see KitraRngSeedAuto
+ */
+void KitraRandSeedAuto(void);
+
+/**
  * @brief Returns the next raw 32-bit value from the global RNG.
  * @see KitraRngNext
  */
