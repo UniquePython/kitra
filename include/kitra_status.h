@@ -22,6 +22,7 @@ typedef enum
     KITRA_STATUS_RENDERER_MISSING,       /**< An operation requiring a renderer was attempted before the renderer was created. */
     KITRA_STATUS_TEXTURE_NULL,           /**< A NULL texture was passed to a function that requires a valid texture. */
     KITRA_STATUS_SCREENSHOT_FAILED,      /**< The screenshot could not be saved to disk. */
+    KITRA_STATUS_MSGBOX_FAILED,          /**< SDL failed to display the message box. */
 
 } KitraStatus;
 

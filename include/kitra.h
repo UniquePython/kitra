@@ -17,5 +17,6 @@
 #include "kitra_rng.h"
 #include "kitra_plugin.h"
 #include "kitra_audio.h"
+#include "kitra_dialog.h"
 
 #endif /* KITRA_H_ */
