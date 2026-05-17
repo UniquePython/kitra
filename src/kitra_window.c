@@ -93,6 +93,43 @@ bool KitraIsWindowResized(void)
     return gKitraCtx.loop.resized;
 }
 
+void KitraSetWindowTitle(const char *title)
+{
+    if (!gKitraCtx.core.window)
+    {
+        KITRA_LOG(KITRA_LOG_WARNING, "Window is NULL in KitraSetWindowTitle");
+        return;
+    }
+    if (!title)
+    {
+        KITRA_LOG(KITRA_LOG_WARNING, "title is NULL in KitraSetWindowTitle");
+        return;
+    }
+    SDL_SetWindowTitle(gKitraCtx.core.window, title);
+}
+
+KitraPoint KitraGetWindowPos(void)
+{
+    KitraPoint pos = {{0, 0}};
+    if (!gKitraCtx.core.window)
+    {
+        KITRA_LOG(KITRA_LOG_WARNING, "Window is NULL in KitraGetWindowPos");
+        return pos;
+    }
+    SDL_GetWindowPosition(gKitraCtx.core.window, &pos.x, &pos.y);
+    return pos;
+}
+
+void KitraSetWindowSize(KitraSize size)
+{
+    if (!gKitraCtx.core.window)
+    {
+        KITRA_LOG(KITRA_LOG_WARNING, "Window is NULL in KitraSetWindowSize");
+        return;
+    }
+    SDL_SetWindowSize(gKitraCtx.core.window, size.w, size.h);
+}
+
 // Backdoor functions
 
 struct SDL_Window *KitraGetSDLWindow(void)

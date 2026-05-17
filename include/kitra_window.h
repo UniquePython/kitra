@@ -117,6 +117,38 @@ KitraSize KitraGetWindowSize(void);
 bool KitraIsWindowResized(void);
 
 /**
+ * @brief Sets the window title.
+ *
+ * Does nothing if the window is NULL or @p title is NULL.
+ *
+ * @param title  Null-terminated string to display in the title bar.
+ *
+ * @see KitraDefaultWindowDesc
+ */
+void KitraSetWindowTitle(const char *title);
+
+/**
+ * @brief Returns the current position of the window on the display.
+ *
+ * @return  Top-left corner of the window in screen coordinates as a
+ *          @p KitraPoint, or a zero point if the window is NULL.
+ *
+ * @see KitraGetWindowSize
+ */
+KitraPoint KitraGetWindowPos(void);
+
+/**
+ * @brief Resizes the window.
+ *
+ * Does nothing if the window is NULL.
+ *
+ * @param size  New window dimensions in pixels.
+ *
+ * @see KitraGetWindowSize
+ */
+void KitraSetWindowSize(KitraSize size);
+
+/**
  * @brief Returns the underlying SDL window handle.
  *
  * Provides access to the raw @p SDL_Window pointer for interoperability
