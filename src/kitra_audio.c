@@ -3,6 +3,7 @@
 struct KitraSound
 {
     Mix_Chunk *chunk;
+    int channel;
 };
 
 struct KitraMusic
@@ -36,6 +37,7 @@ KitraSound *KitraLoadSound(const char *path)
     }
 
     sound->chunk = chunk;
+    sound->channel = -1;
     return sound;
 }
 
@@ -54,7 +56,16 @@ void KitraPlaySound(KitraSound *sound)
     if (!sound)
         return;
 
-    Mix_PlayChannel(-1, sound->chunk, 0);
+    sound->channel = Mix_PlayChannel(-1, sound->chunk, 0);
+}
+
+void KitraStopSound(KitraSound *sound)
+{
+    if (!sound || sound->channel == -1)
+        return;
+
+    if (Mix_GetChunk(sound->channel) == sound->chunk)
+        Mix_HaltChannel(sound->channel);
 }
 
 void KitraSetSoundVolume(KitraSound *sound, float volume)
@@ -68,6 +79,32 @@ void KitraSetSoundVolume(KitraSound *sound, float volume)
         volume = 1.0f;
 
     Mix_VolumeChunk(sound->chunk, (int)(volume * MIX_MAX_VOLUME));
+}
+
+void KitraPlaySoundVolume(KitraSound *sound, float volume)
+{
+    if (!sound)
+        return;
+
+    if (volume < 0.0f)
+        volume = 0.0f;
+    if (volume > 1.0f)
+        volume = 1.0f;
+
+    int saved = Mix_VolumeChunk(sound->chunk, -1);
+    Mix_VolumeChunk(sound->chunk, (int)(volume * MIX_MAX_VOLUME));
+    sound->channel = Mix_PlayChannel(-1, sound->chunk, 0);
+    Mix_VolumeChunk(sound->chunk, saved);
+}
+
+void KitraSetMasterSoundVolume(float volume)
+{
+    if (volume < 0.0f)
+        volume = 0.0f;
+    if (volume > 1.0f)
+        volume = 1.0f;
+
+    Mix_Volume(-1, (int)(volume * MIX_MAX_VOLUME));
 }
 
 // --------------------------------------- MUSIC ---------------------------------------
@@ -135,6 +172,11 @@ void KitraResumeMusic(void)
 bool KitraIsMusicPlaying(void)
 {
     return Mix_PlayingMusic() && !Mix_PausedMusic();
+}
+
+bool KitraIsMusicPaused(void)
+{
+    return Mix_PausedMusic() == 1;
 }
 
 void KitraSetMusicVolume(float volume)

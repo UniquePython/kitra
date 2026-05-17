@@ -52,6 +52,18 @@ void KitraDestroySound(KitraSound **sound);
 void KitraPlaySound(KitraSound *sound);
 
 /**
+ * @brief Stops a currently playing sound effect.
+ *
+ * Halts playback of @p sound on the channel it was last played on.
+ * Has no effect if @p sound is @p NULL or has never been played.
+ *
+ * @param sound  Sound to stop.
+ *
+ * @see KitraPlaySound, KitraPlaySoundVolume
+ */
+void KitraStopSound(KitraSound *sound);
+
+/**
  * @brief Sets the playback volume of a sound effect.
  *
  * @p volume is clamped to [0.0, 1.0] and mapped to the mixer's internal
@@ -64,6 +76,32 @@ void KitraPlaySound(KitraSound *sound);
  * @see KitraPlaySound
  */
 void KitraSetSoundVolume(KitraSound *sound, float volume);
+
+/**
+ * @brief Plays a sound effect at a temporary volume.
+ *
+ * Plays @p sound once at @p volume without permanently changing the
+ * sound's volume. The original volume is restored after playback begins.
+ *
+ * @param sound   Sound to play.
+ * @param volume  Temporary volume in the range [0.0, 1.0].
+ *
+ * @see KitraPlaySound, KitraSetSoundVolume
+ */
+void KitraPlaySoundVolume(KitraSound *sound, float volume);
+
+/**
+ * @brief Sets the volume for all currently active sound channels.
+ *
+ * Applies @p volume globally to all open mixer channels. Does not
+ * affect the stored volume of individual sounds, and does not apply
+ * to sounds played in the future.
+ *
+ * @param volume  Desired volume in the range [0.0, 1.0].
+ *
+ * @see KitraSetSoundVolume, KitraSetMusicVolume
+ */
+void KitraSetMasterSoundVolume(float volume);
 
 /**
  * @brief Loads a music track from a file.
@@ -154,6 +192,15 @@ void KitraResumeMusic(void);
  * @see KitraPlayMusic, KitraPauseMusic
  */
 bool KitraIsMusicPlaying(void);
+
+/**
+ * @brief Returns whether music is currently paused.
+ *
+ * @return @p true if a music track is paused, @p false otherwise.
+ *
+ * @see KitraPauseMusic, KitraResumeMusic, KitraIsMusicPlaying
+ */
+bool KitraIsMusicPaused(void);
 
 /**
  * @brief Sets the global music playback volume.
