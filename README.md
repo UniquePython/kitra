@@ -110,6 +110,7 @@ Then include the header:
 | Drawing | `kitra/kitra_draw.h` | Points, plain and thick lines, filled and outlined circles, ellipses, triangles, polygons, and rectangles (plain and rounded); blend mode control |
 | Color | `kitra/kitra_color.h` | Color construction via RGBA/HSV; lerp, fade, brighten, darken, invert, equality test, and pack/unpack to `uint32_t` |
 | Textures | `kitra/kitra_texture.h` | Load images (PNG, JPG, WebP, TIFF); draw at natural size or with source/destination rects, rotation, pivot, and flip; set tint, alpha, and blend mode; save screenshots; access raw SDL texture handle |
+| Surfaces | `kitra/kitra_surface.h` | CPU-side pixel buffers — create, load, read, write, and convert to texture |
 | Audio | `kitra/kitra_audio.h` | Load and play WAV sound effects; load and stream music tracks with loop, pause, resume, stop, and per-source volume control |
 | Text & Fonts | `kitra/kitra_text.h` | Load TTF fonts; draw plain, point-positioned, and `printf`-formatted text; pre-rasterize strings into cached textures; measure text dimensions |
 | Timers | `kitra/kitra_timer.h` | Per-frame delta time, smoothed FPS, target FPS cap, and general-purpose one-shot or repeating timers |

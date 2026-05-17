@@ -74,6 +74,23 @@ void KitraDestroyWindow(void)
     }
 }
 
+void KitraSetWindowIcon(KitraSurface *surface)
+{
+    if (!surface)
+    {
+        KITRA_LOG(KITRA_LOG_WARNING, "Surface is NULL in KitraSetWindowIcon");
+        return;
+    }
+
+    if (!gKitraCtx.core.window)
+    {
+        KITRA_LOG(KITRA_LOG_ERROR, "Window not initialized");
+        return;
+    }
+
+    SDL_SetWindowIcon(gKitraCtx.core.window, KitraSurfaceGetSDL(surface));
+}
+
 KitraSize KitraGetWindowSize(void)
 {
     KitraSize size = {{0, 0}};

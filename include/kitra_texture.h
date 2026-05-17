@@ -72,6 +72,22 @@ KitraSize KitraGetTextureSize(const KitraTexture *tex);
 KitraStatus KitraScreenshot(const char *path);
 
 /**
+ * @brief Captures the current render target as a surface.
+ *
+ * Reads the current contents of the render target into a newly allocated
+ * @p KitraSurface. Unlike @p KitraScreenshot, the result is not written
+ * to disk — the caller receives the raw pixel data and is responsible for
+ * freeing it with @p KitraDestroySurface when it is no longer needed.
+ *
+ * @return  Pointer to a newly allocated @p KitraSurface on success, or
+ *          @p NULL if the renderer is not initialized, pixel readback
+ *          fails, or memory allocation fails.
+ *
+ * @see KitraScreenshot, KitraDestroySurface
+ */
+KitraSurface *KitraScreenshotSurface(void);
+
+/**
  * @brief Draws a texture with explicit source and destination rectangles,
  *        rotation, pivot, and flip.
  *

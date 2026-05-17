@@ -94,6 +94,19 @@ KitraStatus KitraCreateWindow(KitraWindowDesc winDesc);
 void KitraDestroyWindow(void);
 
 /**
+ * @brief Sets the window icon.
+ *
+ * Uses the pixel data of @p surface as the window icon. SDL copies
+ * the data internally, so the surface may be destroyed immediately
+ * after this call.
+ *
+ * @param surface  Surface to use as the window icon.
+ *
+ * @see KitraLoadSurface, KitraDestroySurface
+ */
+void KitraSetWindowIcon(KitraSurface *surface);
+
+/**
  * @brief Returns the current size of the application window.
  *
  * Queries the window for its current dimensions, reflecting any resizes

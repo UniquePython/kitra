@@ -162,5 +162,8 @@ void KitraInputInit(void);
 void KitraInputProcessEvent(const SDL_Event *event);
 
 SDL_Texture *KitraTextureGetSDL(KitraTexture *tex);
+KitraTexture *KitraTextureFromSDL(SDL_Texture *tex, int w, int h);
+
+KitraSurface *KitraSurfaceFromSDL(SDL_Surface *surface);
 
 #endif /* KITRA_INTERNAL_H_ */

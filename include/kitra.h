@@ -5,6 +5,7 @@
 #include "kitra_subsystem.h"
 #include "kitra_types.h"
 #include "kitra_math.h"
+#include "kitra_surface.h"
 #include "kitra_window.h"
 #include "kitra_loop.h"
 #include "kitra_timer.h"

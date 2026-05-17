@@ -121,6 +121,45 @@ KitraStatus KitraScreenshot(const char *path)
     return KITRA_STATUS_OK;
 }
 
+KitraSurface *KitraScreenshotSurface(void)
+{
+    if (!gKitraCtx.core.renderer)
+    {
+        KITRA_LOG(KITRA_LOG_ERROR, "Renderer is NULL in KitraScreenshotSurface");
+        return NULL;
+    }
+
+    KitraSize size = KitraGetWindowSize();
+
+    SDL_Surface *sdlSurface = SDL_CreateRGBSurfaceWithFormat(
+        0, size.w, size.h, 32, SDL_PIXELFORMAT_RGBA32);
+
+    if (!sdlSurface)
+    {
+        KITRA_LOG(KITRA_LOG_ERROR, SDL_GetError());
+        return NULL;
+    }
+
+    if (SDL_RenderReadPixels(gKitraCtx.core.renderer, NULL,
+                             SDL_PIXELFORMAT_RGBA32,
+                             sdlSurface->pixels,
+                             sdlSurface->pitch) != 0)
+    {
+        KITRA_LOG(KITRA_LOG_ERROR, SDL_GetError());
+        SDL_FreeSurface(sdlSurface);
+        return NULL;
+    }
+
+    KitraSurface *surface = KitraSurfaceFromSDL(sdlSurface);
+    if (!surface)
+    {
+        SDL_FreeSurface(sdlSurface);
+        return NULL;
+    }
+
+    return surface;
+}
+
 void KitraDrawTextureEx(KitraTexture *tex, const KitraRect *src, const KitraRect *dst,
                         float angle, const KitraPoint *pivot, int flip)
 {
@@ -212,4 +251,19 @@ void KitraSetTextureAlpha(KitraTexture *tex, uint8_t alpha)
     if (!tex)
         return;
     SDL_SetTextureAlphaMod(tex->handle, alpha);
+}
+
+KitraTexture *KitraTextureFromSDL(SDL_Texture *tex, int w, int h)
+{
+    KitraTexture *t = malloc(sizeof(KitraTexture));
+    if (!t)
+    {
+        KITRA_LOG(KITRA_LOG_ERROR, "Failed to allocate KitraTexture");
+        return NULL;
+    }
+
+    t->handle = tex;
+    t->width = w;
+    t->height = h;
+    return t;
 }
