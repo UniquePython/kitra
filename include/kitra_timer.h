@@ -4,11 +4,23 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+/**
+ * @brief State for a high-resolution timer.
+ *
+ * Tracks elapsed time using the performance counter, with support for
+ * repeat firing and pausing. Initialise with @p KitraStartTimer and
+ * interact via the timer API rather than accessing fields directly.
+ *
+ * @see KitraStartTimer, KitraResetTimer, KitraTimerDone, KitraPauseTimer
+ */
 typedef struct KitraTimer
 {
-    uint64_t start;
-    uint64_t last;
-    bool repeat;
+    uint64_t start;    /**< Performance counter value at the time the timer was started or last reset. */
+    uint64_t last;     /**< Performance counter value at the last repeat tick, used by @p KitraTimerDone. */
+    uint64_t pausedAt; /**< Performance counter value at the moment the timer was paused. */
+    bool repeat;       /**< If @p true, the timer fires repeatedly at each interval rather than once. */
+    bool paused;       /**< If @p true, the timer is currently paused and not advancing. */
+
 } KitraTimer;
 
 /**
@@ -46,6 +58,41 @@ void KitraResetTimer(KitraTimer *t);
  * @see KitraStartTimer, KitraResetTimer, KitraTimerDone
  */
 float KitraGetTimerElapsed(const KitraTimer *t);
+
+/**
+ * @brief Pauses a timer, freezing elapsed time.
+ *
+ * Has no effect if @p t is NULL or already paused.
+ *
+ * @param t  Timer to pause.
+ *
+ * @see KitraTimerResume, KitraTimerDone
+ */
+void KitraTimerPause(KitraTimer *t);
+
+/**
+ * @brief Resumes a paused timer.
+ *
+ * Has no effect if @p t is NULL or not paused.
+ *
+ * @param t  Timer to resume.
+ *
+ * @see KitraTimerPause
+ */
+void KitraTimerResume(KitraTimer *t);
+
+/**
+ * @brief Returns the time remaining until a timer reaches @p duration.
+ *
+ * Returns 0.0f if the timer has already expired or @p t is NULL.
+ *
+ * @param t         Timer to query.
+ * @param duration  Target duration in seconds.
+ * @return          Seconds remaining, or 0.0f if already elapsed.
+ *
+ * @see KitraGetTimerElapsed, KitraTimerDone
+ */
+float KitraGetTimerRemaining(const KitraTimer *t, float duration);
 
 /**
  * @brief Returns whether a timer has reached the given duration.
@@ -103,6 +150,17 @@ float KitraGetDeltaTime(void);
  * @see KitraGetFPS, KitraGetDeltaTime
  */
 void KitraSetTargetFPS(int fps);
+
+/**
+ * @brief Returns the target frame rate set by KitraSetTargetFPS.
+ *
+ * Returns 0 if no cap is set.
+ *
+ * @return  Target FPS, or 0 if uncapped.
+ *
+ * @see KitraSetTargetFPS, KitraGetFPS
+ */
+int KitraGetTargetFPS(void);
 
 /**
  * @brief Returns the current measured frame rate.
