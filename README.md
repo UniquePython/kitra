@@ -116,6 +116,10 @@ LIBS    += $(shell pkg-config --libs kitra)
 
 **Raw gcc:**
 ```bash
+# Linux
+gcc main.c $(pkg-config --cflags --libs kitra) -Wl,--allow-shlib-undefined -o myapp
+
+# macOS
 gcc main.c $(pkg-config --cflags --libs kitra) -o myapp
 ```
 

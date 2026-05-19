@@ -5,6 +5,6 @@ includedir=@CMAKE_INSTALL_FULL_INCLUDEDIR@/kitra
 Name: Kitra
 Description: A minimal, beginner-friendly 2D graphics library for C
 Version: @PROJECT_VERSION@
-Requires: sdl2 SDL2_image SDL2_gfx SDL2_ttf
+Requires: sdl2 SDL2_image SDL2_gfx SDL2_ttf SDL2_mixer
 Libs: -L${libdir} -lkitra
 Cflags: -I${includedir}
