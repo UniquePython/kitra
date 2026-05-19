@@ -58,8 +58,8 @@ tar -xzf "/tmp/$TARBALL" -C /tmp/kitra-install
 
 echo "Installing Kitra..."
 sudo mkdir -p "$INSTALL_INCLUDE"
-sudo cp -r /tmp/kitra-install/include/kitra/* "$INSTALL_INCLUDE/"
-sudo cp /tmp/kitra-install/lib/libkitra.a "$INSTALL_LIB/"
+sudo cp -r /tmp/kitra-install/kitra/include/kitra/* "$INSTALL_INCLUDE/"
+sudo cp /tmp/kitra-install/kitra/lib/libkitra.a "$INSTALL_LIB/"
 
 # ── Clean up ───────────────────────────────────────────────────────────────────
 
