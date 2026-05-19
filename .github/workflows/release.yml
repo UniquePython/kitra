@@ -50,9 +50,21 @@ jobs:
             sha256sum kitra-${{ matrix.name }}.tar.gz > kitra-${{ matrix.name }}.sha256
           fi
 
-      - name: Create GitHub Release
+      - name: Upload release assets
         uses: softprops/action-gh-release@v2
         with:
           files: |
             kitra-${{ matrix.name }}.tar.gz
             kitra-${{ matrix.name }}.sha256
+
+  upload-install-script:
+    needs: release
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Upload install.sh
+        uses: softprops/action-gh-release@v2
+        with:
+          files: install.sh
