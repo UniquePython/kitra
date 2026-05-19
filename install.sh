@@ -61,6 +61,13 @@ sudo mkdir -p "$INSTALL_INCLUDE"
 sudo cp -r /tmp/kitra-install/kitra/include/kitra/* "$INSTALL_INCLUDE/"
 sudo cp /tmp/kitra-install/kitra/lib/libkitra.a "$INSTALL_LIB/"
 
+sudo mkdir -p /usr/local/lib/pkgconfig
+sudo cp /tmp/kitra-install/kitra/lib/pkgconfig/kitra.pc /usr/local/lib/pkgconfig/
+sudo cp /tmp/kitra-install/kitra/lib/pkgconfig/kitra_math.pc /usr/local/lib/pkgconfig/
+
+sudo mkdir -p /usr/local/lib/cmake/Kitra
+sudo cp /tmp/kitra-install/kitra/lib/cmake/Kitra/* /usr/local/lib/cmake/Kitra/
+
 # ── Clean up ───────────────────────────────────────────────────────────────────
 
 rm -rf "/tmp/$TARBALL" /tmp/kitra-install
