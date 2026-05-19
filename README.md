@@ -47,14 +47,22 @@ int main(void)
 }
 ```
 
-## Building & Installation
+## Installation
 
 > Tested on Linux and macOS. Windows support is experimental —
 > MSVC has stricter C compliance requirements that may require source changes.
 
-### Dependencies
+### Method 1: install.sh (recommended)
 
-Install the required libraries before building.
+The easiest way. One command installs SDL2 dependencies, downloads the latest release, and sets everything up automatically.
+
+```bash
+curl -sSL https://github.com/UniquePython/kitra/releases/latest/download/install.sh | bash
+```
+
+### Method 2: Tarball
+
+Download the prebuilt tarball for your platform from the [releases page](https://github.com/UniquePython/kitra/releases/latest). Then install SDL2 dependencies manually:
 
 ```bash
 # Ubuntu/Debian
@@ -62,17 +70,35 @@ sudo apt install libsdl2-dev libsdl2-image-dev libsdl2-gfx-dev libsdl2-ttf-dev l
 
 # Arch
 sudo pacman -S sdl2 sdl2_image sdl2_gfx sdl2_ttf sdl2_mixer
+
+# Fedora
+sudo dnf install SDL2-devel SDL2_image-devel SDL2_gfx-devel SDL2_ttf-devel SDL2_mixer-devel
+
+# macOS
+brew install sdl2 sdl2_image sdl2_gfx sdl2_ttf sdl2_mixer
 ```
 
-### Building Kitra
+Then extract and copy the files:
 
 ```bash
+tar -xzf kitra-linux-x86_64.tar.gz
+sudo cp -r kitra/include/kitra /usr/local/include/
+sudo cp kitra/lib/libkitra.a /usr/local/lib/
+```
+
+### Method 3: From Source
+
+```bash
+# Install SDL2 dependencies first (see Method 2 above)
+
 git clone https://github.com/UniquePython/kitra.git
 cd kitra
 cmake -B build
 cmake --build build -j$(nproc)
 sudo cmake --install build
 ```
+
+---
 
 ### Using Kitra in Your Project
 
