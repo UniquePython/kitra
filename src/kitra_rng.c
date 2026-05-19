@@ -1,5 +1,4 @@
 #include "kitra_internal.h"
-#include "kitra_rng.h"
 
 #include <math.h>
 #include <time.h>

@@ -3,7 +3,7 @@
 
 #define _POSIX_C_SOURCE 200809L
 
-#include "kitra.h"
+#include "kitra/kitra.h"
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>

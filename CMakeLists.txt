@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.21)
 
 project(Kitra
-    VERSION 0.1.0
+    VERSION 0.2.0
     DESCRIPTION "A minimal, beginner-friendly 2D graphics library built on SDL2"
     LANGUAGES C
 )
@@ -121,25 +121,25 @@ install(TARGETS kitra kitra_math
 )
 
 install(FILES
-    include/kitra.h
-    include/kitra_types.h
-    include/kitra_math.h
-    include/kitra_status.h
-    include/kitra_subsystem.h
-    include/kitra_window.h
-    include/kitra_loop.h
-    include/kitra_timer.h
-    include/kitra_input.h
-    include/kitra_color.h
-    include/kitra_draw.h
-    include/kitra_texture.h
-    include/kitra_text.h
-    include/kitra_error.h
-    include/kitra_rng.h
-    include/kitra_plugin.h
-    include/kitra_audio.h
-    include/kitra_dialog.h
-    include/kitra_surface.h
+    include/kitra/kitra.h
+    include/kitra/kitra_types.h
+    include/kitra/kitra_math.h
+    include/kitra/kitra_status.h
+    include/kitra/kitra_subsystem.h
+    include/kitra/kitra_window.h
+    include/kitra/kitra_loop.h
+    include/kitra/kitra_timer.h
+    include/kitra/kitra_input.h
+    include/kitra/kitra_color.h
+    include/kitra/kitra_draw.h
+    include/kitra/kitra_texture.h
+    include/kitra/kitra_text.h
+    include/kitra/kitra_error.h
+    include/kitra/kitra_rng.h
+    include/kitra/kitra_plugin.h
+    include/kitra/kitra_audio.h
+    include/kitra/kitra_dialog.h
+    include/kitra/kitra_surface.h
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/kitra
 )
 
